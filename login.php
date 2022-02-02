@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 ?>
 
 <!DOCTYPE html>
@@ -13,23 +12,28 @@ session_start();
   </head>
   <body>
     <div id="login-signup-form">
-      <p id="sitename">LISTAHAN</p>
+      <p id="sitename">CREDIT PAD</p>
 
-      <?php
-        if (isset($_GET['error'])){ ?>
+      <?php if (isset($_GET['error'])) { ?>
         <p id="error">
-          <?php 
-          echo $_GET['error'];
-          ?>
+          <?php echo $_GET['error']; ?>
         </p>
       <?php } ?>
 
-      <form id="" action="validate_login.php" autocomplete="off" method="post">
+      <form action="validate-login.php" autocomplete="off" method="post"> <!-- method=post for sensitive information we don't want displayed in the URL -->
         <p class="field-name">name</p>
-        <input type="text" class="field" name="username" value="<?php if(isset($_SESSION['username'])){echo $_SESSION['username'];}?>"/>
+        <input type="text" class="field" name="username" value="<?php if (
+            isset($_SESSION['username'])
+        ) {
+            echo $_SESSION['username'];
+        } ?>"/>
         <p class="field-name">password</p>
-        <input type="password" class="field" name="password" value="<?php if(isset($_SESSION['password'])){echo $_SESSION['password'];}?>"/>
-        <button type="submit" class="button" id="submit-form-button">LOG IN</button>
+        <input type="password" class="field" name="password" value="<?php if (
+            isset($_SESSION['password'])
+        ) {
+            echo $_SESSION['password'];
+        } ?>"/>
+        <button type="submit" class="button" id="submit-form-button">LOG IN</button> <!-- if button is outside of form tags, we can add the form attribute and give it the id of the form -->
         <a href="signup.php"><p id="switch-form-link">SIGN UP</p></a>
       </form>
     </div>

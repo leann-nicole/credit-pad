@@ -1,25 +1,25 @@
-<?php 
+<?php
 session_start();
-
 include "connection.php";
 
 $store_operator = $_SESSION['username'];
 $store_operator = mysqli_real_escape_string($con, $store_operator);
 
-if (isset($_POST['ccolname'])){
-    if (!isset($_SESSION[$_POST['ccolname']])){
-        $_SESSION[$_POST['ccolname']] = "ASC";
+if (isset($_POST['ccolname'])){ // if loading list with an order to sort by a particular column (happens through the ajax)
+    if (!isset($_SESSION[$_POST['ccolname']])){ // default action is to sort names in ascending order
+        $_SESSION[$_POST['ccolname']] = "ASC"; // remember the order, to be used when table column header is clicked again, see if-else codes below
     }
+    // asc to desc, desc to asc
     if ($_SESSION[$_POST['ccolname']] == "ASC"){
         $_SESSION[$_POST['ccolname']] = "DESC";
-        $query = "SELECT * FROM customers WHERE store_operator = '$store_operator' ORDER BY {$_POST['ccolname']} DESC";
+        $query = "SELECT * FROM customers WHERE store_operator = '$store_operator' ORDER BY {$_POST['ccolname']} DESC, name ASC";
     }
     else {
         $_SESSION[$_POST['ccolname']] = "ASC";
-        $query = "SELECT * FROM customers WHERE store_operator = '$store_operator' ORDER BY {$_POST['ccolname']} ASC";
+        $query = "SELECT * FROM customers WHERE store_operator = '$store_operator' ORDER BY {$_POST['ccolname']} ASC, name ASC";
     }
 }
-else {
+else { // default is sort by the time the record was created in the database
     $query = "SELECT * FROM customers WHERE store_operator = '$store_operator' ORDER BY id DESC";
 }
 $result = mysqli_query($con, $query);

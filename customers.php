@@ -1,6 +1,9 @@
 <?php
 session_start();
-
+if (!isset($_SESSION['username'])) {
+    header('Location: login.php');
+    die();
+}
 ?>
 
 <!DOCTYPE html>
@@ -13,44 +16,100 @@ session_start();
   </head>
   <body>
     <header>
-      <p id="sitename-header"><a href="customers.php">LISTAHAN</a></p>
+      <p id="sitename-header"><a href="customers.php">CREDIT PAD</a></p>
       <a href="logout.php"><div id="logoutIcon"></div></a>
     </header>
     <div id="content">
       <nav>
         <ul>
-          <li style="background-color: <?php if(basename($_SERVER['PHP_SELF']) == 'customers.php') {echo '#505050';} ?>"><a href="customers.php" style="color: <?php if(basename($_SERVER['PHP_SELF']) == 'customers.php') {echo '#ffff7d';} ?>">CUSTOMERS</a></li>
-          <li style="background-color: <?php if(basename($_SERVER['PHP_SELF']) == 'products.php') {echo '#505050';} ?>"><a href="products.php" style="color: <?php if(basename($_SERVER['PHP_SELF']) == 'products.php') {echo '#ffff7d';} ?>">PRODUCTS</a></li>
+          <li style="background-color: <?php if (
+              basename($_SERVER['PHP_SELF']) == 'customers.php'
+          ) {
+              echo '#505050';
+          } ?>"><a href="customers.php" style="color: <?php if (
+    basename($_SERVER['PHP_SELF']) == 'customers.php'
+) {
+    echo '#ffff7d';
+} ?>">CUSTOMERS</a></li>
+          <li style="background-color: <?php if (
+              basename($_SERVER['PHP_SELF']) == 'products.php'
+          ) {
+              echo '#505050';
+          } ?>"><a href="products.php" style="color: <?php if (
+    basename($_SERVER['PHP_SELF']) == 'products.php'
+) {
+    echo '#ffff7d';
+} ?>">PRODUCTS</a></li>
         </ul>
       </nav>
       <main>
-        <div id="create-form-div-c" class="<?php if(!isset($_GET['error']) and !isset($_GET['success'])){echo "hidden-item";}?>">
-          <div id="form-name"">CREATE CUSTOMER ACCOUNT</div>
-          <p id="error" style="<?php if (isset($_GET['error'])){ echo "visibility:visible";}else { echo "visibility:hidden";}?>">
-            <?php 
-              if (isset($_GET['error'])){ echo $_GET['error']; } else { echo "account created successfully"; }
-            ?>
+        <div id="create-form-div-c" class="<?php if (
+            !isset($_GET['error']) and !isset($_GET['success'])
+        ) {
+            echo 'hidden-item';
+        } ?>">
+          <div id="form-name">CREATE CUSTOMER ACCOUNT</div>
+          <p id="error" style="<?php if (isset($_GET['error'])) {
+              echo 'visibility:visible';
+          } else {
+              echo 'visibility:hidden';
+          } ?>">
+            <?php if (isset($_GET['error'])) {
+                echo $_GET['error'];
+            } else {
+                echo 'account created successfully';
+            } ?>
           </p>        
-          <form id="create-form" autocomplete="off" action="validate_new_account.php" method="post">
+          <form id="create-form" autocomplete="off" action="validate-new-account.php" method="post">
             <div class="form-column">
               <p class="field-name">name</p>
-              <input class="field" type="text" name="username" maxlength="50" value="<?php if(isset($_SESSION['cusername'])){echo $_SESSION['cusername'];}?>"/>
+              <input class="field" type="text" name="username" maxlength="50" value="<?php if (
+                  isset($_SESSION['cusername'])
+              ) {
+                  echo $_SESSION['cusername'];
+              } ?>"/>
               <p class="field-name">birthdate</p>
-              <input class="field" type="date" name="birthdate" value="<?php if(isset($_SESSION['cbirthdate'])){echo $_SESSION['cbirthdate'];}?>"/>
+              <input class="field" type="date" name="birthdate" value="<?php if (
+                  isset($_SESSION['cbirthdate'])
+              ) {
+                  echo $_SESSION['cbirthdate'];
+              } ?>"/>
               <p class="field-name">sex</p>
               <select name="sex" class="field">
-                <option value="m" <?php if(isset($_SESSION['csex']) and $_SESSION['csex'] == 'm'){ echo "selected";} ?>>male</option>
-                <option value="f" <?php if(isset($_SESSION['csex']) and $_SESSION['csex'] == 'f'){ echo "selected";} ?>>female</option>
+                <option value="m" <?php if (
+                    isset($_SESSION['csex']) and
+                    $_SESSION['csex'] == 'm'
+                ) {
+                    echo 'selected';
+                } ?>>male</option>
+                <option value="f" <?php if (
+                    isset($_SESSION['csex']) and
+                    $_SESSION['csex'] == 'f'
+                ) {
+                    echo 'selected';
+                } ?>>female</option>
               </select>
             </div>
             
             <div class="form-column">
               <p class="field-name">mobile number</p>
-              <input class="field" type="text" name="mobile_no" maxlength="11" value="<?php if(isset($_SESSION['cmobile_no'])){echo $_SESSION['cmobile_no'];}?>"/>
+              <input class="field" type="text" name="mobile_no" maxlength="11" value="<?php if (
+                  isset($_SESSION['cmobile_no'])
+              ) {
+                  echo $_SESSION['cmobile_no'];
+              } ?>"/>
               <p class="field-name">email address</p>
-              <input class="field" type="text" name="email" maxlength="100" value="<?php if(isset($_SESSION['cemail'])){echo $_SESSION['cemail'];}?>"/>
+              <input class="field" type="text" name="email" maxlength="100" value="<?php if (
+                  isset($_SESSION['cemail'])
+              ) {
+                  echo $_SESSION['cemail'];
+              } ?>"/>
               <p class="field-name">home address</p>
-              <input class="field" type="text" name="address" maxlength="100" value="<?php if(isset($_SESSION['caddress'])){echo $_SESSION['caddress'];}?>"/>
+              <input class="field" type="text" name="address" maxlength="100" value="<?php if (
+                  isset($_SESSION['caddress'])
+              ) {
+                  echo $_SESSION['caddress'];
+              } ?>"/>
             </div>
             <div id="form-buttons-div">
               <div id="cancel" class="button" onclick="showHide()">CANCEL</div>
@@ -62,15 +121,40 @@ session_start();
           <div id="rating-div">
             <p class="field-name" id="rating-field-name">rating</p>           
             <div id="rating">
-              <input form="create-form" type="radio" id="star5" name="rate" value="5" <?php if(isset($_SESSION['crate']) and $_SESSION['crate'] == 5){ echo "checked";}?>/>
+              <input form="create-form" type="radio" id="star5" name="rate" value="5" <?php if (
+                  isset($_SESSION['crate']) and
+                  $_SESSION['crate'] == 5
+              ) {
+                  echo 'checked';
+              } ?>/>
               <label for="star5">&#128970;</label>
-              <input form="create-form" type="radio" id="star4" name="rate" value="4" <?php if(isset($_SESSION['crate']) and $_SESSION['crate'] == 4){ echo "checked";}?>/>
+              <input form="create-form" type="radio" id="star4" name="rate" value="4" <?php if (
+                  isset($_SESSION['crate']) and
+                  $_SESSION['crate'] == 4
+              ) {
+                  echo 'checked';
+              } ?>/>
               <label for="star4">&#128970;</label>
-              <input form="create-form" type="radio" id="star3" name="rate" value="3" <?php if(isset($_SESSION['crate']) and $_SESSION['crate'] == 3){ echo "checked";}?>/>
+              <input form="create-form" type="radio" id="star3" name="rate" value="3" <?php if (
+                  isset($_SESSION['crate']) and
+                  $_SESSION['crate'] == 3
+              ) {
+                  echo 'checked';
+              } ?>/>
               <label for="star3">&#128970;</label>
-              <input form="create-form" type="radio" id="star2" name="rate" value="2" <?php if(isset($_SESSION['crate']) and $_SESSION['crate'] == 2){ echo "checked";}?>/>
+              <input form="create-form" type="radio" id="star2" name="rate" value="2" <?php if (
+                  isset($_SESSION['crate']) and
+                  $_SESSION['crate'] == 2
+              ) {
+                  echo 'checked';
+              } ?>/>
               <label for="star2">&#128970;</label>
-              <input form="create-form" type="radio" id="star1" name="rate" value="1" <?php if(isset($_SESSION['crate']) and $_SESSION['crate'] == 1){ echo "checked";}?>/>
+              <input form="create-form" type="radio" id="star1" name="rate" value="1" <?php if (
+                  isset($_SESSION['crate']) and
+                  $_SESSION['crate'] == 1
+              ) {
+                  echo 'checked';
+              } ?>/>
               <label for="star1">&#128970;</label> 
             </div>
           </div>
@@ -78,7 +162,7 @@ session_start();
         <div id="tools">
           <div id="add" class="button" onclick="showHide()"><p></p></div>
           <div id="search-div">
-            <input type="text" name="search-value" id="search-field" class="field" onkeyup="filterList()">
+            <input type="text" id="search-field" class="field" onkeyup="filterList()">
             <div id="search-icon"></div>
           </div>
         </div>
@@ -86,10 +170,15 @@ session_start();
       </main>
     </div>
     <footer></footer>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.js"></script>
     <script>
-      // show list of customers under user
+      // show list of customers belonging to the current store owner
       function loadCustomers() {
+            // will be using ajax here, ajax allows you to connect to a server in the background, that is without reloading the page
+            // syntax: $.ajax({});
+            // creates XMLHttpRequest object
+            // response from server is processed by JavaScript
+            // AJAX: Asynchronous JavaScript and XML
             $.ajax({
             url: "load-customers.php",
             type: "POST",
@@ -111,37 +200,37 @@ session_start();
             });
       }
 
-
       $(document).ready(function () {
         loadCustomers();
       });
+      // shorthand for $(document).ready(); is $();
+      // can also do $(window).on("load", function(){}); 
+      // that is if you want code inside to run once entire page is ready, not just DOM
 
       // show or hide form
       function showHide(){
             document.getElementById("create-form-div-c").classList.toggle("hidden-item");
-            document.getElementById("error").style.visibility = "hidden";
+            document.getElementById("error").style.visibility = "hidden"; // can also do document.getElementById("error").setAttribute("style","visibility: hidden;"); but is considered bad practice since it will overwrite properties which may already be specified in the style attribute
             $("input").val("");
             $("textarea").val("");
       }
 
       function filterList(){
-        let input, filter, table, tr, td, i, txtValue;
-        input = document.getElementById("search-field");
-        filter = input.value.toLowerCase();
-        table = document.getElementById("list-table");
-        tr = table.getElementsByTagName("tr");
+        let searchInput = document.getElementById("search-field").value.toLowerCase(); // get search bar and value in it
+        let tableRows = document.getElementById("list-table").getElementsByTagName("tr"); // get table and rows in it
 
-        for (i = 0; i < tr.length; i++){
-          td = tr[i].getElementsByTagName("td")[0];
-          if (td){
-            textValue = td.textContent || td.innerText;
-            if (textValue.toLowerCase().indexOf(filter) > -1){
-              tr[i].style.display = "";
+        for (let i = 1; i < tableRows.length; i++){ // loop through rows  
+          let columns = tableRows[i].getElementsByTagName("td"); // get the items in each row
+          let showRow = false; // hide row by default
+          for (let j = 0; j < columns.length; j++){ // loop through items in each row to check if there is a match with the searchInput value 
+            let item = columns[j].textContent;
+            if (item.toLowerCase().indexOf(searchInput) > -1){
+              showRow = true;
+              break;
             }
-            else {
-              tr[i].style.display = "none";
-            }            
           }
+          if (!showRow){tableRows[i].style.display = "none";}
+          else {tableRows[i].style.display = "";}
         }
       }
     </script>
