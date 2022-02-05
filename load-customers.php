@@ -35,7 +35,7 @@ if (mysqli_num_rows($result) > 0){
 <?php
     while($row = mysqli_fetch_assoc($result)){
 ?>
-    <tr>
+    <tr onclick="selectCustomer(this)">
         <td><?php echo $row['name']; ?></td>
         <td><?php echo $row['current_debt']; ?></td>
         <td id="stars"><?php for($i = 1; $i <= $row['rating']; $i++){ echo "&#128970;";} ?></td>

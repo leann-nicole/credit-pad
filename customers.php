@@ -15,31 +15,26 @@ if (!isset($_SESSION['username'])) {
     <link rel="stylesheet" href="style.css"/>
   </head>
   <body>
+    <p id="error" style="<?php if (isset($_GET['error'])) {
+          echo 'visibility:visible';
+      } else {
+          echo 'visibility:hidden';
+      } ?>">
+        <?php if (isset($_GET['error'])) {
+            echo $_GET['error'];
+        } else {
+            echo 'account created successfully';
+        } ?>
+    </p>        
     <header>
       <p id="sitename-header"><a href="customers.php">CREDIT PAD</a></p>
-      <a href="logout.php"><div id="logoutIcon"></div></a>
+      <a href="logout.php"><span id="username"><?php echo $_SESSION["username"]; ?></span></a>
     </header>
     <div id="content">
       <nav>
         <ul>
-          <li style="background-color: <?php if (
-              basename($_SERVER['PHP_SELF']) == 'customers.php'
-          ) {
-              echo '#505050';
-          } ?>"><a href="customers.php" style="color: <?php if (
-    basename($_SERVER['PHP_SELF']) == 'customers.php'
-) {
-    echo '#ffff7d';
-} ?>">CUSTOMERS</a></li>
-          <li style="background-color: <?php if (
-              basename($_SERVER['PHP_SELF']) == 'products.php'
-          ) {
-              echo '#505050';
-          } ?>"><a href="products.php" style="color: <?php if (
-    basename($_SERVER['PHP_SELF']) == 'products.php'
-) {
-    echo '#ffff7d';
-} ?>">PRODUCTS</a></li>
+          <li style="background-color: #d9d9d9;"><a href="customers.php">CUSTOMERS</a></li>
+          <li><a href="products.php">PRODUCTS</a></li>
         </ul>
       </nav>
       <main>
@@ -49,17 +44,6 @@ if (!isset($_SESSION['username'])) {
             echo 'hidden-item';
         } ?>">
           <div id="form-name">CREATE CUSTOMER ACCOUNT</div>
-          <p id="error" style="<?php if (isset($_GET['error'])) {
-              echo 'visibility:visible';
-          } else {
-              echo 'visibility:hidden';
-          } ?>">
-            <?php if (isset($_GET['error'])) {
-                echo $_GET['error'];
-            } else {
-                echo 'account created successfully';
-            } ?>
-          </p>        
           <form id="create-form" autocomplete="off" action="validate-new-account.php" method="post">
             <div class="form-column">
               <p class="field-name">name</p>
@@ -162,12 +146,20 @@ if (!isset($_SESSION['username'])) {
         <div id="tools">
           <div id="add" class="button" onclick="showHide()"><p></p></div>
           <div id="search-div">
-            <input type="text" id="search-field" class="field" onkeyup="filterList()">
+            <input type="text" id="search-field" class="field" placeholder="Search" onkeyup="filterList()">
             <div id="search-icon"></div>
           </div>
         </div>
-        <div id="list"></div>
+        <div id="list-div">
+          <div id="list-inner-div">
+          
+          </div>
+        </div>
       </main>
+      <div id="extra">
+        <div id="notes-header">NOTES</div>
+        <textarea id="notes" class="field" placeholder="Write your quick notes here" onkeyup="updateNotes(this)" spellcheck="false"><?php if(!empty($_SESSION["notes"])){echo $_SESSION["notes"];}?></textarea>
+      </div>
     </div>
     <footer></footer>
     <script type="text/javascript" src="jquery.js"></script>
@@ -183,7 +175,7 @@ if (!isset($_SESSION['username'])) {
             url: "load-customers.php",
             type: "POST",
             success: function (data) {
-                $("#list").html(data);
+                $("#list-inner-div").html(data);
             }
             });
         }
@@ -195,13 +187,14 @@ if (!isset($_SESSION['username'])) {
               type: "POST",
               data: {ccolname: ccolname},
               success: function (data) {
-                  $("#list").html(data);
+                  $("#list-inner-div").html(data);
               }
             });
       }
 
       $(document).ready(function () {
         loadCustomers();
+        fetchNotes();
       });
       // shorthand for $(document).ready(); is $();
       // can also do $(window).on("load", function(){}); 
@@ -212,7 +205,8 @@ if (!isset($_SESSION['username'])) {
             document.getElementById("create-form-div-c").classList.toggle("hidden-item");
             document.getElementById("error").style.visibility = "hidden"; // can also do document.getElementById("error").setAttribute("style","visibility: hidden;"); but is considered bad practice since it will overwrite properties which may already be specified in the style attribute
             $("input").val("");
-            $("textarea").val("");
+            $("select[name='sex'] option").prop("selected", false);
+            $("input[name='rate']:radio").prop("checked", false);
       }
 
       function filterList(){
@@ -232,6 +226,28 @@ if (!isset($_SESSION['username'])) {
           if (!showRow){tableRows[i].style.display = "none";}
           else {tableRows[i].style.display = "";}
         }
+      }
+
+      function fetchNotes(){
+        $.ajax({
+          url: "update-note.php", 
+          type: "POST"
+        });        
+      }
+
+      function updateNotes(element){
+        let notes = element.value;
+        $.ajax({
+          url: "update-note.php", 
+          type: "POST",
+          data: {notes: notes}
+        });        
+      }
+
+      function selectCustomer(element){
+        let customer = element.getElementsByTagName("td")[0].textContent;
+        let url = "account.php?customer=" + customer;
+        window.location.href=url;
       }
     </script>
   </body>

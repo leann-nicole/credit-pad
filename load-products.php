@@ -31,7 +31,7 @@ if (mysqli_num_rows($result) > 0) { ?>
     </tr>
 <?php
 while ($row = mysqli_fetch_assoc($result)) { ?>
-    <tr>
+    <tr onclick="selectProduct(this)">
         <td><?php echo $row['name']; ?></td>
         <td><?php echo $row['category']; ?></td>
         <td><?php echo $row['price']; ?></td>

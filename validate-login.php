@@ -1,7 +1,8 @@
 <?php
 session_start();
-if (!isset($_POST['username'])){ // if the $_POST superglobal is not populated, it means the user didn't come from login page
-    header("Location: login.php");
+if (!isset($_POST['username'])) {
+    // if the $_POST superglobal is not populated, it means the user didn't come from login page
+    header('Location: login.php');
     die();
 }
 
@@ -50,6 +51,20 @@ if (mysqli_num_rows($result) == 0 or $row['password'] != $password) {
     header('Location: login.php?error=incorrect username or password');
     die();
 } else {
+    // prepare user notes
+    $query = "SELECT * FROM notes WHERE store_operator = '$username'";
+    $result = mysqli_query($con, $query);
+    if (mysqli_num_rows($result)) {
+        $query = "SELECT * FROM notes WHERE store_operator = '$username'";
+        $result = mysqli_query($con, $query);
+        $rows = mysqli_fetch_assoc($result);
+        $_SESSION["notes"] = $rows["content"];
+    } else {
+        $query = "INSERT INTO notes (store_operator, content) VALUES ('$username','$notes')";
+        mysqli_query($con, $query);
+        $_SESSION["notes"] = "";
+    }
+
     header('Location: customers.php');
     die();
 }

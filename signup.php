@@ -11,15 +11,13 @@ session_start(); // if you want to use the $_SESSION superglobal, for accessing 
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <?php if (isset($_GET['error'])) { ?>
+    <p id="error">
+      <?php echo $_GET['error']; ?>
+    </p>
+    <?php } ?>
     <div id="login-signup-form">
-      <p id="sitename">CREDIT PAD</p>
-
-      <?php if (isset($_GET['error'])) { ?>
-        <p id="error">
-          <?php echo $_GET['error']; ?>
-        </p>
-      <?php } ?>
-      
+      <p id="sitename">CREDIT PAD</p>      
       <form action="validate-signup.php" autocomplete="off" method="post">
         <p class="field-name">name</p>
         <input type="text" class="field" name="username" maxlength="50" value="<?php if (
