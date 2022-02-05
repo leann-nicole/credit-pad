@@ -204,7 +204,8 @@ if (!isset($_SESSION['username'])) {
       function showHide(){
             document.getElementById("create-form-div-c").classList.toggle("hidden-item");
             document.getElementById("error").style.visibility = "hidden"; // can also do document.getElementById("error").setAttribute("style","visibility: hidden;"); but is considered bad practice since it will overwrite properties which may already be specified in the style attribute
-            $("input").val("");
+            $("input[type='text']").val("");
+            $("input[type='date']").val("");
             $("select[name='sex'] option").prop("selected", false);
             $("input[name='rate']:radio").prop("checked", false);
       }
