@@ -16,9 +16,9 @@ session_start();
       <?php echo $_GET['error']; ?>
     </p>
     <?php } ?>
-    <div id="login-signup-form">
+    <div id="login-signup-form-div">
       <p id="sitename">CREDIT PAD</p>
-      <form action="validate-login.php" autocomplete="off" method="post"> <!-- method=post for sensitive information we don't want displayed in the URL -->
+      <form id="login-form" action="validate-login.php" autocomplete="off" method="post"> <!-- method=post for sensitive information we don't want displayed in the URL -->
         <p class="field-name">name</p>
         <input type="text" class="field" name="username" value="<?php if (
             isset($_SESSION['username'])
@@ -31,9 +31,11 @@ session_start();
         ) {
             echo $_SESSION['password'];
         } ?>"/>
-        <button type="submit" class="button" id="submit-form-button">LOG IN</button> <!-- if button is outside of form tags, we can add the form attribute and give it the id of the form -->
-        <a href="signup.php"><p id="switch-form-link">SIGN UP</p></a>
       </form>
+      <div id="login-signup-buttons">
+        <button type="submit" form="login-form" class="button" id="submit-form-button">LOG IN</button>
+        <a href="signup.php"><p id="switch-form-link">SIGN UP</p></a>
+      </div>
     </div>
   </body>
 </html>

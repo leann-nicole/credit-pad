@@ -16,49 +16,58 @@ a {
   text-decoration: none;
 }
 
+.field {
+  height: 40px;
+  padding: 10px;
+  outline: none;
+  margin-bottom: 5px;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #c9c9c9;
+}
+
 #sitename {
   text-align: center;
   margin-bottom: 20px;
+  background-color: rgb(0, 128, 32);
+  line-height: 40px;
 }
 
 #sitename,
 #sitename-header > a {
   font-size: 22px;
   font-family: 'Righteous', cursive;
-}
-
-#sitename-header > a {
   color: white;
 }
 
-#login-signup-form {
+#login-signup-form-div {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex column;
   padding: 20px;
-  width: 300px;
-  border: 1px solid #d9d9d9;
-  background-color: white;
-}
-
-form {
-  clear: right;
-}
-
-#login-signup-form .field {
-  width: 100%;
-}
-
-.field {
-  height: 40px;
-  padding: 10px;
-  outline: none;
-  margin-bottom: 5px;
-  width: 95%;
-  background-color: white;
+  width: fit-content;
   border: 1px solid #c9c9c9;
+  background-color: white;
+  border-radius: 5px;
+}
+
+#login-form {
+  width: 250px;
+  display: flex column;
+}
+
+#signup-form div {
+  width: 250px;
+}
+
+#signup-form {
+  display: flex;
+}
+
+#signup-form div:first-child {
+  margin-right: 10px;
 }
 
 #switch-form-link {
@@ -68,7 +77,7 @@ form {
 }
 
 #switch-form-link:hover {
-  color: #0099ff;
+  color: rgb(0, 128, 32);
 }
 
 .button {
@@ -163,7 +172,7 @@ li {
 }
 
 li:hover {
-  background-color: #f4f4f4;
+  background-color: #e6e6e6;
 }
 
 li > a {
@@ -194,7 +203,7 @@ main {
 
 #notes-header{
   height: 40px;
-  background-color: #ffd9ab;
+  background-color: #d9d9d9;
   text-align: center;
   line-height: 40px;
   position: sticky;
@@ -205,11 +214,10 @@ main {
 #notes {
   resize: none;
   height: calc(100vh/3);
-  width: 100%;
   position: sticky;
   top: 100px;
-  border: 1px solid #ffd9ab;
   width: 75%;
+  border-top: 0;
 }
 
 #create-form-div-c,
@@ -220,7 +228,7 @@ main {
   align-items: center;
   padding: 10px;
   margin-bottom: 10px;
-  border: 1px solid #d9d9d9;
+  border: 1px solid #c9c9c9;
   background-color: white;
 }
 
@@ -244,8 +252,12 @@ main {
 }
 
 .form-column {
-  width: 30%;
+  width: 250px;
   display: flex column;
+}
+
+#create-form .form-column{
+  margin-right: 10px;
 }
 
 #form-buttons-div {
@@ -304,25 +316,17 @@ main {
 }
 
 #category-price-div {
-  width: 95%;
   display: flex;
   justify-content: space-between;
+  margin-top: 5px;
 }
 
 #cp-category {
-  width: 65%;
+  width: calc(65% - 10px);
 }
 
 #cp-price {
   width: 35%;
-}
-
-#category {
-  width: calc(100%-10px);
-}
-
-#price {
-  width: 100%;
 }
 
 #add::before {
@@ -377,7 +381,7 @@ main {
 
 #list-div {
   height: calc(100vh - 130px);
-  border: 1px solid #d9d9d9;
+  border: 1px solid #c9c9c9;
   padding: 10px;
   background-color: white;
 }
