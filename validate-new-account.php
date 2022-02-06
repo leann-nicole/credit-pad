@@ -9,7 +9,7 @@ $sex = $_POST['sex'];
 $mobile_no = $_POST['mobile_no'];
 $email = $_POST['email'];
 $address = $_POST['address'];
-if (isset($_POST['rate'])) {
+if (isset($_POST['rate'])) { // isset() is false if the input field referred by post variable was not filled
     $rating = $_POST['rate'];
 } else {
     $rating = 0;

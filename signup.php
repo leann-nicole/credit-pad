@@ -16,7 +16,7 @@ session_start(); // if you want to use the $_SESSION superglobal, for accessing 
       <?php echo $_GET['error']; ?>
     </p>
     <?php } ?>
-    <div id="login-signup-form-div">
+    <div id="login-signup-form-div" class="container">
       <p id="sitename">CREDIT PAD</p>      
       <form id="signup-form" action="validate-signup.php" autocomplete="off" method="post">
 

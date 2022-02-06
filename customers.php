@@ -42,7 +42,7 @@ if (!isset($_SESSION['username'])) {
             !isset($_GET['error']) and !isset($_GET['success'])
         ) {
             echo 'hidden-item';
-        } ?>">
+        } ?> container">
           <div id="form-name">CREATE CUSTOMER ACCOUNT</div>
           <form id="create-form" autocomplete="off" action="validate-new-account.php" method="post">
             <div class="form-column">
@@ -150,7 +150,7 @@ if (!isset($_SESSION['username'])) {
             <div id="search-icon"></div>
           </div>
         </div>
-        <div id="list-div">
+        <div id="list-div" class="container">
           <div id="list-inner-div">
           
           </div>
@@ -178,18 +178,18 @@ if (!isset($_SESSION['username'])) {
                 $("#list-inner-div").html(data);
             }
             });
-        }
+      }
 
-        function sortCustomers(element) {
-            let ccolname = element.getAttribute("data-colname");
-            $.ajax({
-              url: "load-customers.php",
-              type: "POST",
-              data: {ccolname: ccolname},
-              success: function (data) {
-                  $("#list-inner-div").html(data);
-              }
-            });
+      function sortCustomers(element) {
+          let ccolname = element.getAttribute("data-colname");
+          $.ajax({
+            url: "load-customers.php",
+            type: "POST",
+            data: {ccolname: ccolname},
+            success: function (data) {
+                $("#list-inner-div").html(data);
+            }
+          });
       }
 
       $(document).ready(function () {
@@ -247,7 +247,7 @@ if (!isset($_SESSION['username'])) {
 
       function selectCustomer(element){
         let customer = element.getElementsByTagName("td")[0].textContent;
-        let url = "account.php?customer=" + customer;
+        let url = "customer-account.php?customer=" + customer;
         window.location.href=url;
       }
     </script>

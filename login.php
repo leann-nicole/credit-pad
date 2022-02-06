@@ -16,7 +16,7 @@ session_start();
       <?php echo $_GET['error']; ?>
     </p>
     <?php } ?>
-    <div id="login-signup-form-div">
+    <div id="login-signup-form-div" class="container">
       <p id="sitename">CREDIT PAD</p>
       <form id="login-form" action="validate-login.php" autocomplete="off" method="post"> <!-- method=post for sensitive information we don't want displayed in the URL -->
         <p class="field-name">name</p>

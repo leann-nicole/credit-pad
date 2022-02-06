@@ -44,7 +44,7 @@ if (!isset($_SESSION['username'])) {
             !isset($_GET['error']) and !isset($_GET['success'])
         ) {
             echo 'hidden-item';
-        } ?>">
+        } ?> container">
           <div id="form-name">ADD NEW PRODUCT</div>
           <form id="create-form" autocomplete="off" action="validate-new-product.php" method="post">
             <div class="form-column">
@@ -96,7 +96,7 @@ if (!isset($_SESSION['username'])) {
             <div id="search-icon"></div>
           </div>
         </div>
-        <div id="list-div">
+        <div id="list-div" class="container">
           <div id="list-inner-div">
           
           </div>
