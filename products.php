@@ -73,7 +73,7 @@ if (!isset($_SESSION['username'])) {
                 </div>
                 <div id="cp-price">
                   <p class="field-name">price</p>
-                  <input class="field" type="number" id="price" name="price" min="1" title="" value="<?php if (
+                  <input class="field" type="number" step=".01" id="price" name="price" min="1" title="" value="<?php if (
                       isset($_SESSION['price'])
                   ) {
                       echo $_SESSION['price'];

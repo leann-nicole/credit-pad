@@ -105,35 +105,35 @@ if (!isset($_SESSION['username'])) {
           <div id="rating-div">
             <p class="field-name" id="rating-field-name">rating</p>           
             <div id="rating">
-              <input form="create-form" type="radio" id="star5" name="rate" value="5" <?php if (
+              <input form="create-form" type="radio" id="star5" class="star" name="rate" value="5" <?php if (
                   isset($_SESSION['crate']) and
                   $_SESSION['crate'] == 5
               ) {
                   echo 'checked';
               } ?>/>
               <label for="star5">&#128970;</label>
-              <input form="create-form" type="radio" id="star4" name="rate" value="4" <?php if (
+              <input form="create-form" type="radio" id="star4" class="star" name="rate" value="4" <?php if (
                   isset($_SESSION['crate']) and
                   $_SESSION['crate'] == 4
               ) {
                   echo 'checked';
               } ?>/>
               <label for="star4">&#128970;</label>
-              <input form="create-form" type="radio" id="star3" name="rate" value="3" <?php if (
+              <input form="create-form" type="radio" id="star3" class="star" name="rate" value="3" <?php if (
                   isset($_SESSION['crate']) and
                   $_SESSION['crate'] == 3
               ) {
                   echo 'checked';
               } ?>/>
               <label for="star3">&#128970;</label>
-              <input form="create-form" type="radio" id="star2" name="rate" value="2" <?php if (
+              <input form="create-form" type="radio" id="star2" class="star" name="rate" value="2" <?php if (
                   isset($_SESSION['crate']) and
                   $_SESSION['crate'] == 2
               ) {
                   echo 'checked';
               } ?>/>
               <label for="star2">&#128970;</label>
-              <input form="create-form" type="radio" id="star1" name="rate" value="1" <?php if (
+              <input form="create-form" type="radio" id="star1" class="star" name="rate" value="1" <?php if (
                   isset($_SESSION['crate']) and
                   $_SESSION['crate'] == 1
               ) {

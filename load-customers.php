@@ -29,7 +29,7 @@ if (mysqli_num_rows($result) > 0){
 <table id="list-table">
     <tr>
         <th class="sortable-header" id="col1" onclick="sortCustomers(this)" data-colname="name">CUSTOMER</th>
-        <th class="sortable-header" id="col2" onclick="sortCustomers(this)" data-colname="current_debt">CURRENT DEBT</th>
+        <th class="sortable-header" id="col2" onclick="sortCustomers(this)" data-colname="current_debt">CREDIT</th>
         <th class="sortable-header" id="col3" onclick="sortCustomers(this)" data-colname="rating">RATING</th>
     </tr>
 <?php
@@ -37,8 +37,8 @@ if (mysqli_num_rows($result) > 0){
 ?>
     <tr onclick="selectCustomer(this)">
         <td><?php echo $row['name']; ?></td>
-        <td><?php echo $row['current_debt']; ?></td>
-        <td id="stars"><?php for($i = 1; $i <= $row['rating']; $i++){ echo "&#128970;";} ?></td>
+        <td><?php echo number_format($row['current_debt'], 2, '.', ','); ?></td>
+        <td class="star"><?php for($i = 1; $i <= $row['rating']; $i++){ echo "&#128970;";} ?></td>
     </tr>
 <?php 
     }

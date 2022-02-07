@@ -96,6 +96,7 @@ a {
   align-items: center;
   justify-content: center;
   border-radius: 5px;
+  user-select: none;
 }
 
 .button:hover {
@@ -142,7 +143,7 @@ header > a {
 #username {
   color: white;
   font-family: 'Quicksand', sans-serif;
-  border: 1px solid rgba(255, 255, 255, 0.600);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   padding: 0px 10px;
   border-radius: 13px;
   line-height: 26px;
@@ -185,6 +186,7 @@ li > a {
   display: inline-block;
   width: 100%;
   line-height: 40px;
+  user-select: none;
 }
 
 main {
@@ -195,7 +197,7 @@ main {
   align-items: center;
 }
 
-main > *{
+main > * {
   width: 95%;
 }
 
@@ -204,7 +206,7 @@ main > *{
   padding-right: 40px;
 }
 
-#notes-header{
+#notes-header {
   height: 40px;
   background-color: #d9d9d9;
   text-align: center;
@@ -216,7 +218,7 @@ main > *{
 
 #notes {
   resize: none;
-  height: calc(100vh/3);
+  height: calc(100vh / 3);
   position: sticky;
   top: 100px;
   border-top: 0;
@@ -255,7 +257,7 @@ main > *{
   display: flex column;
 }
 
-#create-form .form-column{
+#create-form .form-column {
   margin-right: 10px;
 }
 
@@ -300,7 +302,7 @@ main > *{
 
 #rating > input:hover ~ label,
 #rating > input:checked ~ label,
-#stars {
+.star {
   color: rgb(255, 155, 0);
 }
 
@@ -392,8 +394,8 @@ main > *{
 }
 
 #list-inner-div {
-  -ms-overflow-style: none;  
-  scrollbar-width: none;  
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 #list-table,
@@ -406,7 +408,7 @@ main > *{
   height: 100%;
 }
 
-th {
+#list-table th {
   position: sticky;
   top: 0;
   background-color: #d9d9d9;
@@ -418,17 +420,17 @@ th {
   background-color: #c9c9c9;
 }
 
-tr {
+#list-table tr {
   height: 40px;
   border-bottom: 1px solid #d9d9d9;
 }
 
-tr:hover {
+#list-table tr:hover {
   background-color: #e6e6e6;
   cursor: pointer;
 }
 
-td {
+#list-table td {
   padding-left: 20px;
 }
 
@@ -449,24 +451,64 @@ footer {
 }
 
 #customer-info-div {
+  position: relative;
   padding: 20px 40px;
   display: flex;
+}
+
+#edit-button {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  margin: 15px 15px 0px 0px;
+}
+
+#customer-img-rate-div {
+  margin-right: 20px;
+  height: 100%;
+  display: flex column;
 }
 
 #customer-image {
   height: 120px;
   width: 120px;
-  border-radius: 60px;
-  margin-right: 40px;
-  background-color: #f4f4f4;
+  border-radius: 5px;
+  background-image: url("images/blue-pokemon-pp.jpg");
+  background-size: cover;
 }
 
-#customer-profile {
-  height: 120px;
-  width: calc(100% - 120px);
+#customer-rating {
+  text-align: center;
+  font-size: 16px;
+}
+
+
+#customer-details tr {
+  height: 22px;
+  cursor: default;
+}
+
+#customer-details tr td:first-of-type {
+  text-align: right;
+}
+
+#customer-details tr td:nth-of-type(2) {
+  padding-left: 20px;
+}
+
+#customer-header {
+  border-bottom: 1px solid #c9c9c9;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 
 #customer-name {
-  line-height: 40px;
-  font-size: 15px;
+  line-height: 22px;
+}
+
+#customer-credit {
+  font-weight: bold;
+  font-size: 22px;
 }
