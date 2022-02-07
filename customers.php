@@ -135,7 +135,7 @@ if (!isset($_SESSION['username'])) {
               <label for="star2">&#128970;</label>
               <input form="create-form" type="radio" id="star1" class="star" name="rate" value="1" <?php if (
                   isset($_SESSION['crate']) and
-                  $_SESSION['crate'] == 1
+                  $_SESSION['crate'] == 1 or !isset($_SESSION['crate'])
               ) {
                   echo 'checked';
               } ?>/>
@@ -208,6 +208,7 @@ if (!isset($_SESSION['username'])) {
             $("input[type='date']").val("");
             $("select[name='sex'] option").prop("selected", false);
             $("input[name='rate']:radio").prop("checked", false);
+            $("#star1").prop("checked", true);
       }
 
       function filterList(){

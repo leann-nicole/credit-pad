@@ -9,11 +9,8 @@ $sex = $_POST['sex'];
 $mobile_no = $_POST['mobile_no'];
 $email = $_POST['email'];
 $address = $_POST['address'];
-if (isset($_POST['rate'])) { // isset() is false if the input field referred by post variable was not filled
-    $rating = $_POST['rate'];
-} else {
-    $rating = 0;
-}
+$rating = $_POST['rate'];
+
 $store_owner = $_SESSION['username'];
 
 // store variables in $_SESSION superglobal to be able to access them across pages

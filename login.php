@@ -33,8 +33,8 @@ session_start();
         } ?>"/>
       </form>
       <div id="login-signup-buttons">
-        <button type="submit" form="login-form" class="button" id="submit-form-button">LOG IN</button>
         <a href="signup.php"><p id="switch-form-link">SIGN UP</p></a>
+        <button type="submit" form="login-form" class="button" id="submit-form-button">LOG IN</button>
       </div>
     </div>
   </body>
