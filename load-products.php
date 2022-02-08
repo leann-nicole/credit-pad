@@ -23,7 +23,7 @@ if (isset($_POST['pcolname'])) {
 $result = mysqli_query($con, $query);
 
 if (mysqli_num_rows($result) > 0) { ?>
-<table id="list-table">
+<table class="list-table" id="product-list-table">
     <tr>
         <th class="sortable-header" id="col1" onclick="sortProducts(this)" data-colname="name">PRODUCT</th>
         <th class="sortable-header" id="col2" onclick="sortProducts(this)" data-colname="category">CATEGORY</th>

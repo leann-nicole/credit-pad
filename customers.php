@@ -157,8 +157,10 @@ if (!isset($_SESSION['username'])) {
         </div>
       </main>
       <div id="extra">
-        <div id="notes-header">NOTES</div>
-        <textarea id="notes" class="field" placeholder="Write your quick notes here" onkeyup="updateNotes(this)" spellcheck="false"><?php if(!empty($_SESSION["notes"])){echo $_SESSION["notes"];}?></textarea>
+        <div id="notes-div">
+          <div id="notes-header">NOTES</div>
+          <textarea id="notes" class="field" placeholder="Write your quick notes here" onkeyup="updateNotes(this)" spellcheck="false"><?php if(!empty($_SESSION["notes"])){echo $_SESSION["notes"];}?></textarea>
+        </div>
       </div>
     </div>
     <footer></footer>
@@ -213,7 +215,7 @@ if (!isset($_SESSION['username'])) {
 
       function filterList(){
         let searchInput = document.getElementById("search-field").value.toLowerCase(); // get search bar and value in it
-        let tableRows = document.getElementById("list-table").getElementsByTagName("tr"); // get table and rows in it
+        let tableRows = document.getElementById("customer-list-table").getElementsByTagName("tr"); // get table and rows in it
 
         for (let i = 1; i < tableRows.length; i++){ // loop through rows  
           let columns = tableRows[i].getElementsByTagName("td"); // get the items in each row

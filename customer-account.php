@@ -43,9 +43,11 @@ if (!isset($_SESSION['username'])) {
         </div>
       </main>
       <div id="extra">
-        <div id="notes-header">NOTES</div>
-        <textarea id="notes" class="field" placeholder="Write your quick notes here" onkeyup="updateNotes(this)" spellcheck="false"><?php if(!empty($_SESSION["notes"])){echo $_SESSION["notes"];}?></textarea>
-      </div>
+        <div id="notes-div">
+          <div id="notes-header">NOTES</div>
+          <textarea id="notes" class="field" placeholder="Write your quick notes here" onkeyup="updateNotes(this)" spellcheck="false"><?php if(!empty($_SESSION["notes"])){echo $_SESSION["notes"];}?></textarea>
+        </div>
+    </div>
     </div>
     <footer></footer>
     <script type="text/javascript" src="jquery.js"></script>
