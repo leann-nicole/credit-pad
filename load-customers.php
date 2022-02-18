@@ -37,7 +37,7 @@ if (mysqli_num_rows($result) > 0){
 ?>
     <tr onclick="selectCustomer(this)">
         <td><?php echo $row['name']; ?></td>
-        <td><?php echo number_format($row['current_debt'], 2, '.', ','); ?></td>
+        <td><?php $floor = floor($row['current_debt']); if ($row['current_debt'] - $floor == 0){ echo number_format($floor, 0, '.', ',');;} else { echo number_format($row['current_debt'], 2, '.', ','); } ?></td>
         <td class="star"><?php for($i = 1; $i <= $row['rating']; $i++){ echo "&#128970;";} ?></td>
     </tr>
 <?php 

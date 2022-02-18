@@ -62,8 +62,7 @@ if (mysqli_num_rows($result)) {
 }
 
 // save data to database
-$query = "INSERT INTO products (name, description, category, price, store_operator) VALUES ('$product
-', '$description', '$category', '$price', '$store_owner')";
+$query = "INSERT INTO products (name, description, category, price, store_operator) VALUES ('$product', '$description', '$category', '$price', '$store_owner')";
 
 if (mysqli_query($con, $query)) {
     // upon successfully saving the new product information to the database, unset the following variables to clear the form

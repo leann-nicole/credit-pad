@@ -38,8 +38,40 @@ if (!isset($_SESSION['username'])) {
         </ul>
       </nav>
       <main>
-        <div id="customer-info-div" class="container" data-name="<?php echo $_GET['customer'];?>">
+        <div id="customer-profile-info-div" class="container" data-name="<?php echo $_GET['customer'];?>">
           
+        </div>
+        <div id="tab-section">
+            <div>CREDIT</div>
+            <div>HISTORY</div>
+            <div>STATISTICS</div>
+        </div>
+        <div id="tab-content" class="container">
+          <div id="credit-div">
+            <div id="cart-labels-div" class="cart-article">
+              <span id="product-name-label">PRODUCT</span>
+              <span id="product-quantity-label">QUANTITY</span>
+              <span id="product-price-label">PRICE</span>
+              <span id="product-subtotal-label">SUBTOTAL</span>
+              <div id="dummy-ok-button" class="button">OK</div>
+            </div>
+            <div id="cart-list-div">
+              <div id="cart-list"></div>
+              <div id="cart-input-div" class="cart-article">
+                <input id="product-name" class="field" list="product-list" oninput="getPrice(this)">
+                  <datalist id="product-list"></datalist>
+                <input id="product-quantity"  class="field" type="number" min="0" oninput="calcTotal()"> 
+                <input id="product-price" class="field" type="number" oninput="calcTotal()">
+                <input id="product-subtotal" class="field" type="number" oninput="calcQuantity(this)">
+                <div id="ok-button" class="button" onclick="addCartItem()">OK</div>
+              </div>
+            </div>
+            <div id="save-transaction-div">
+              <input type="date" id="transaction-date" class="field" value="<?php echo date('Y-m-d'); ?>">
+              <div id="save-transaction-button" class="button">SAVE</div>
+              <div id="grand-total">0.00</div>
+            </div>
+          </div>
         </div>
       </main>
       <div id="extra">
@@ -52,11 +84,100 @@ if (!isset($_SESSION['username'])) {
     <footer></footer>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
-      $(document).ready(function () {
-        let name = $("#customer-info-div").data("name");
-        fetchCustomerInfo(name);
-        fetchNotes();
-      });
+      // global variables
+      let products = []; // array for storing textcontent of option elements
+      let grandTotal = 0;
+      function calcQuantity(element){
+        let total = element.value;
+        let price = $("#product-price").val();
+        $("#product-quantity").val(total/price);
+      }
+
+      function calcTotal(){
+        let quantity = $("#product-quantity").val();
+        let price = $("#product-price").val();
+        if (quantity != "" && price != ""){
+          let total = quantity * price;
+          $("#product-subtotal").val(total);
+        }
+      }
+
+      function getPrice(element){
+        let product = element.value;
+        if (product == ""){
+          $("#product-quantity").val("");
+          $("#product-price").val("");
+          $("#product-subtotal").val("");
+        }
+        else {
+          if ($("#product-quantity").val() == ""){ // default quantity if quantity not specified
+            $("#product-quantity").val(1);
+          }
+          if (products.includes(product)){ // if product exists, query database for price
+            $.ajax({
+              url: "get-price.php",
+              type: "POST", 
+              data: {product: product},
+              success: function(data){
+              $("#product-price").val(data);
+              calcTotal();
+              }
+            });
+          }
+        }
+      }
+
+
+      function addCartItem(){
+        // get input values
+        let productName = $("#product-name").val();
+        let productQty = $("#product-quantity").val();
+        let productPrice = $("#product-price").val();
+        let productSubTotal = $("#product-subtotal").val();
+
+        if (productName != "" && productQty != "" && productPrice != "" && productSubTotal != ""){
+          // create cart item element
+          let item = document.createElement("div");
+          item.id = "cart-item";
+          item.classList.add("cart-article");
+
+          // create span element for each input value and append to cart item element
+          let pName = document.createElement("span");
+          pName.textContent = productName;
+          item.appendChild(pName)
+          let pQty = document.createElement("span");
+          pQty.textContent = productQty;
+          item.appendChild(pQty)
+          let pPrice = document.createElement("span");
+          pPrice.textContent = productPrice;
+          item.appendChild(pPrice)
+          let pSubT = document.createElement("span");
+          pSubT.textContent = productSubTotal;
+          item.appendChild(pSubT)
+
+          // add del button to cart item element
+          let delButton = document.createElement("div");
+          delButton.id = "del-button";
+          delButton.classList.add("button");
+          delButton.onclick = function(){
+            let cartItem = this.parentElement; // vs parentNode which returns Document node when no parent is found (ex. parent element of <html>), parentElement returns null in that case
+            document.getElementById("cart-list").removeChild(cartItem);
+          }
+          item.appendChild(delButton);
+
+          // put cart item element in cart list element
+          let cart = document.getElementById("cart-list");
+          cart.appendChild(item);
+
+          // clear fields, ready for next input
+          $("#product-name").val("");
+          $("#product-quantity").val("");
+          $("#product-price").val("");
+          $("#product-subtotal").val("");
+
+          // add subtotal to grand total
+        }
+      }
 
       function fetchCustomerInfo(name){
         $.ajax({
@@ -64,7 +185,7 @@ if (!isset($_SESSION['username'])) {
           type: "POST",
           data: {name: name},
           success: function(data){
-            $("#customer-info-div").html(data);
+            $("#customer-profile-info-div").html(data);
           }
         });
       }
@@ -84,6 +205,32 @@ if (!isset($_SESSION['username'])) {
           data: {notes: notes}
         });        
       }
+
+      function fetchProducts(){
+        $.ajax({
+          url: "fetch-products.php",
+          success: function(data){
+            $("#product-list").html(data);
+            prepareGlobalVars();
+          }
+        });
+      }
+
+      function prepareGlobalVars(){
+        let productList = document.getElementById("product-list"); // get datalist element 
+        let productListOptions = productList.getElementsByTagName("option"); // get option elements under datalist element
+        for (let i = 0; i < productListOptions.length; i++){
+          let p = productListOptions[i].textContent;
+          products.push(p);
+        }
+      }
+
+      $(document).ready(function () {
+        let name = $("#customer-profile-info-div").data("name");
+        fetchCustomerInfo(name);
+        fetchNotes();
+        fetchProducts();
+      });
     </script>
   </body>
 </html>

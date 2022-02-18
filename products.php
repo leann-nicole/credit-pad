@@ -73,7 +73,7 @@ if (!isset($_SESSION['username'])) {
                 </div>
                 <div id="cp-price">
                   <p class="field-name">price</p>
-                  <input class="field" type="number" step=".01" id="price" name="price" min="1" title="" value="<?php if (
+                  <input class="field" type="number" id="price" name="price" min="1" title="" value="<?php if (
                       isset($_SESSION['price'])
                   ) {
                       echo $_SESSION['price'];
@@ -142,7 +142,6 @@ if (!isset($_SESSION['username'])) {
       function loadCategories(){
           $.ajax({
             url: "load-categories.php",
-            type: "POST",
             success: function (data) {
               $("#categories").html(data);
             }
@@ -184,8 +183,7 @@ if (!isset($_SESSION['username'])) {
 
       function fetchNotes(){
         $.ajax({
-          url: "update-note.php", 
-          type: "POST"
+          url: "update-note.php"
         });        
       }
 
