@@ -51,16 +51,19 @@ input:autofill {
   height: 50px;
 }
 
+.material-icons {
+  font-size: 18px;
+}
+
 #sitename,
 #sitename-header > a {
   font-size: 22px;
   font-family: 'Righteous', sans-serif;
-  color: white;
+  color: #10854b;
 }
 
 #sitename {
   margin-bottom: 20px;
-  color: #10854B;
 }
 
 #login-signup-form-div {
@@ -112,7 +115,6 @@ input:autofill {
   background-color: #d9d9d9;
   border: none;
   cursor: pointer;
-  outline: none;
   height: 40px;
   min-width: 40px;
   padding: 10px;
@@ -152,17 +154,13 @@ header {
   top: 0px;
   z-index: 1;
   box-shadow: 0px 0px 5px 0px #c9c9c9;
-  background-color: #232629;
+  background-color: #f4f4f4;
+  border-bottom: 1px solid #c9c9c9;
 }
 
 header > a {
   display: flex;
   align-items: center;
-}
-
-#username {
-  font-family: 'Quicksand', sans-serif;
-  color: white;
 }
 
 body {
@@ -236,18 +234,20 @@ main > * {
 
 #notes-header {
   height: 40px;
-  background-color: #e3b7d2;
+  background-color: #7a5a49;
   text-align: center;
   line-height: 40px;
   border-radius: 5px 5px 0px 0px;
+  color: white;
 }
 
 #notes {
   resize: none;
-  height: calc(100vh / 2);
+  height: 250px;
   border-top: 0;
   border-radius: 0px 0px 5px 5px;
   margin: 0;
+  border: none;
 }
 
 #create-form-div-c,
@@ -288,7 +288,7 @@ main > * {
 
 #save {
   margin-bottom: 10px;
-  background-color: #53B050;
+  background-color: #53b050;
   color: white;
 }
 
@@ -343,6 +343,7 @@ main > * {
 #category-price-div {
   display: flex;
   justify-content: space-between;
+  margin-top: 5px;
 }
 
 #cp-category {
@@ -353,18 +354,10 @@ main > * {
   width: 35%;
 }
 
-#add::before {
-  content: '＋';
-  margin-right: 5px;
-}
-
-#add::after {
-  content: 'NEW';
-}
-
 #add {
-  background-color: #F2740D;
+  background-color: #f2740d;
   color: white;
+  width: 75px;
 }
 
 #tools {
@@ -454,7 +447,7 @@ main > * {
 }
 
 .list-table tr {
-  height: 50px;
+  height: 40px;
   border-bottom: 1px solid #d9d9d9;
 }
 
@@ -475,7 +468,7 @@ main > * {
 
 #customer-list-table td:nth-of-type(3) {
   font-size: 18px;
-  line-height: 50px;
+  line-height: 40px;
 }
 
 #col1 {
@@ -508,7 +501,9 @@ footer {
   position: absolute;
   right: 0px;
   top: 0px;
-  margin: 15px 15px 0px 0px;
+  margin: 5px 5px 0px 0px;
+  background-color: white;
+  color: gray;
 }
 
 #customer-img-rate-div {
@@ -621,13 +616,13 @@ footer {
   margin: 0;
 }
 
-#cart-item span:first-of-type,
+.cart-item span:first-of-type,
 #cart-labels-div span:first-of-type,
 #cart-input-div input:first-of-type {
   width: 350px;
 }
 
-#cart-item span,
+.cart-item span,
 #cart-labels-div span,
 #cart-input-div input {
   width: 100px;
@@ -637,8 +632,13 @@ footer {
   height: fit-content;
 }
 
-#cart-item {
+.cart-item {
   border-bottom: none;
+}
+
+#ok-button {
+  color: #53b050;
+  background-color: white;
 }
 
 #dummy-ok-button {
@@ -646,8 +646,9 @@ footer {
   height: 0px;
 }
 
-#del-button::before {
-  content: 'x';
+#remove-button {
+  background-color: white;
+  color:rgb(255, 94, 94);
 }
 
 #save-transaction-div {
@@ -664,10 +665,18 @@ footer {
   line-height: 40px;
   float: right;
   padding-right: 20px;
+  font-weight: bold;
+}
+
+#grand-total::before {
+  content: "TOTAL";
+  margin-right: 5px;
+  font-weight: normal;
 }
 
 #save-transaction-button {
   float: right;
-  background-color:#53B050;
+  background-color: #53b050;
   color: white;
+  width: 75px;
 }

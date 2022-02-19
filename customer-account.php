@@ -12,6 +12,8 @@ if (!isset($_SESSION['username'])) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Listahan</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
     <link rel="stylesheet" href="style.css"/>
   </head>
   <body>
@@ -53,7 +55,7 @@ if (!isset($_SESSION['username'])) {
               <span id="product-quantity-label">QUANTITY</span>
               <span id="product-price-label">PRICE</span>
               <span id="product-subtotal-label">SUBTOTAL</span>
-              <div id="dummy-ok-button" class="button">OK</div>
+              <div id="dummy-ok-button" class="button"></div>
             </div>
             <div id="cart-list-div">
               <div id="cart-list"></div>
@@ -63,13 +65,13 @@ if (!isset($_SESSION['username'])) {
                 <input id="product-quantity"  class="field" type="number" min="0" oninput="calcTotal()"> 
                 <input id="product-price" class="field" type="number" oninput="calcTotal()">
                 <input id="product-subtotal" class="field" type="number" oninput="calcQuantity(this)">
-                <div id="ok-button" class="button" onclick="addCartItem()">OK</div>
+                <div id="ok-button" class="button material-icons" onclick="addCartItem()">add</div>
               </div>
             </div>
             <div id="save-transaction-div">
               <input type="date" id="transaction-date" class="field" value="<?php echo date('Y-m-d'); ?>">
               <div id="save-transaction-button" class="button">SAVE</div>
-              <div id="grand-total">0.00</div>
+              <div id="grand-total"></div>
             </div>
           </div>
         </div>
@@ -138,7 +140,7 @@ if (!isset($_SESSION['username'])) {
         if (productName != "" && productQty != "" && productPrice != "" && productSubTotal != ""){
           // create cart item element
           let item = document.createElement("div");
-          item.id = "cart-item";
+          item.classList.add("cart-item");
           item.classList.add("cart-article");
 
           // create span element for each input value and append to cart item element
@@ -156,14 +158,17 @@ if (!isset($_SESSION['username'])) {
           item.appendChild(pSubT)
 
           // add del button to cart item element
-          let delButton = document.createElement("div");
-          delButton.id = "del-button";
-          delButton.classList.add("button");
-          delButton.onclick = function(){
+          let rmButton = document.createElement("div");
+          rmButton.id = "remove-button";
+          rmButton.classList.add("button");
+          rmButton.classList.add("material-icons");
+          rmButton.textContent = "remove";
+          rmButton.title = "remove"
+          rmButton.onclick = function(){
             let cartItem = this.parentElement; // vs parentNode which returns Document node when no parent is found (ex. parent element of <html>), parentElement returns null in that case
             document.getElementById("cart-list").removeChild(cartItem);
           }
-          item.appendChild(delButton);
+          item.appendChild(rmButton);
 
           // put cart item element in cart list element
           let cart = document.getElementById("cart-list");
@@ -176,6 +181,8 @@ if (!isset($_SESSION['username'])) {
           $("#product-subtotal").val("");
 
           // add subtotal to grand total
+          grandTotal += Number(productSubTotal);
+          document.getElementById("grand-total").textContent = grandTotal;
         }
       }
 
@@ -223,6 +230,7 @@ if (!isset($_SESSION['username'])) {
           let p = productListOptions[i].textContent;
           products.push(p);
         }
+        document.getElementById("grand-total").textContent = grandTotal;
       }
 
       $(document).ready(function () {

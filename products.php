@@ -12,6 +12,8 @@ if (!isset($_SESSION['username'])) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Listahan</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -83,14 +85,14 @@ if (!isset($_SESSION['username'])) {
               
             </div>
             <div id="form-buttons-div">
-              <div id="cancel" class="button" onclick="showHide()">CANCEL</div>
+              <button type="button" id="cancel" class="button" onclick="showHide()">CANCEL</button>
               <button type="submit" form="create-form" id="save" class="button">SAVE</button>
             </div>
 
           </form>
         </div>
         <div id="tools">
-          <div id="add" class="button" onclick="showHide()"><p></p></div>
+          <button type="button" id="add" class="button material-icons" onclick="showHide()">add</button>
           <div id="search-div">
             <input type="text" id="search-field" class="field" placeholder="Search" onkeyup="filterList()">
             <div id="search-icon"></div>

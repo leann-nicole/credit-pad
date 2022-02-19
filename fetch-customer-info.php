@@ -21,7 +21,7 @@ $rating = $rows["rating"];
 
 
 
-<div id="edit-button" class="button">EDIT</div>
+<div id="edit-button" class="material-icons button" title="edit">edit</div>
 <div id="customer-img-rate-div">
     <div id="customer-image"></div>
     <div id="customer-rating" class="star"><?php while($rating){echo "&#128970;"; $rating--;}?></div>
