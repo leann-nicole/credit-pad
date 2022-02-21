@@ -35,7 +35,7 @@ if (!isset($_SESSION['username'])) {
     <div id="content">
       <nav>
         <ul>
-          <li style="background-color: #d9d9d9;"><a href="customers.php">CUSTOMERS</a></li>
+          <li class="selected-navbar-item"><a href="customers.php">CUSTOMERS</a></li>
           <li><a href="products.php">PRODUCTS</a></li>
         </ul>
       </nav>
@@ -99,7 +99,7 @@ if (!isset($_SESSION['username'])) {
             </div>
             <div id="form-buttons-div">
               <button type="button" id="cancel" class="button" onclick="showHide()">CANCEL</button>
-              <button type="submit" form="create-form" id="save" class="button" >SAVE</button>
+              <button type="submit" form="create-form" id="save-form-button" class="button save-button" >SAVE</button>
             </div>
 
           </form>
@@ -146,7 +146,7 @@ if (!isset($_SESSION['username'])) {
           </div>
         </div>
         <div id="tools">
-          <button type="button" id="add" class="button material-icons" onclick="showHide()">person_add</button>
+          <button type="button" id="new-button" class="button create-button material-icons" onclick="showHide()">person_add</button>
           <div id="search-div">
             <input type="text" id="search-field" class="field" placeholder="Search" onkeyup="filterList()">
             <div id="search-icon"></div>

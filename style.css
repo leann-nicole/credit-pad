@@ -55,6 +55,50 @@ input:autofill {
   font-size: 18px;
 }
 
+.button {
+  background-color: #d9d9d9;
+  border: none;
+  cursor: pointer;
+  height: 40px;
+  min-width: 40px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  user-select: none;
+}
+
+.button:hover {
+  background-color: #c9c9c9;
+}
+
+.create-button {
+  background-color: #f2740d;
+  color: white;
+}
+
+.create-button:hover {
+  background-color: #e96f0c;
+}
+
+.save-button {
+  background-color: #53b050;
+  color: white;
+}
+
+.save-button:hover {
+  background-color: #4fa94c;
+}
+
+.selected-navbar-item {
+  background-color: #e6e6e6;
+}
+
+.selected-navbar-item:hover { 
+  background-color: #e6e6e6;
+}
+
 #sitename,
 #sitename-header > a {
   font-size: 22px;
@@ -109,24 +153,6 @@ input:autofill {
 
 #switch-form-link:hover {
   color: rgb(0, 135, 95);
-}
-
-.button {
-  background-color: #d9d9d9;
-  border: none;
-  cursor: pointer;
-  height: 40px;
-  min-width: 40px;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
-  user-select: none;
-}
-
-.button:hover {
-  background-color: #c9c9c9;
 }
 
 #error {
@@ -195,7 +221,7 @@ li {
 }
 
 li:hover {
-  background-color: #e6e6e6;
+  background-color: hsl(0, 0%, 92%);
 }
 
 li > a {
@@ -229,6 +255,7 @@ main > * {
   display: flex;
   flex-direction: column;
   box-shadow: 0px 0px 5px 0px #c9c9c9;
+  border-radius: 5px;
   margin-bottom: 10px;
 }
 
@@ -248,6 +275,7 @@ main > * {
   border-radius: 0px 0px 5px 5px;
   margin: 0;
   border: none;
+  background-color: #fffbec;
 }
 
 #create-form-div-c,
@@ -286,10 +314,8 @@ main > * {
   padding-bottom: 5px;
 }
 
-#save {
+#save-form-button {
   margin-bottom: 10px;
-  background-color: #53b050;
-  color: white;
 }
 
 #rating-div {
@@ -354,9 +380,7 @@ main > * {
   width: 35%;
 }
 
-#add {
-  background-color: #f2740d;
-  color: white;
+#new-button {
   width: 75px;
 }
 
@@ -369,7 +393,7 @@ main > * {
 }
 
 #search-div,
-#add {
+#new-button {
   float: right;
 }
 
@@ -570,16 +594,17 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-#tab-section div:first-of-type {
-  background-color: #d9d9d9;
   border-radius: 20px 20px 0px 0px;
+  cursor: pointer;
+
 }
 
 #tab-section div:hover {
+  background-color: hsl(0, 0%, 92%);
+}
+
+#tab-section div.selected-navbar-item:hover { /* я думаю this is redundant with the rule at line 98 but that rule gets overwritten by the rule at line 601 и я не знаю почему*/
   background-color: #e6e6e6;
-  border-radius: 20px 20px 0px 0px;
 }
 
 #tab-content {
@@ -628,6 +653,12 @@ footer {
   width: 100px;
 }
 
+.cart-item span:first-of-type {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 #cart-list {
   height: fit-content;
 }
@@ -636,19 +667,19 @@ footer {
   border-bottom: none;
 }
 
-#ok-button {
+#add-button {
   color: #53b050;
   background-color: white;
 }
 
-#dummy-ok-button {
+#dummy-add-button {
   visibility: hidden;
   height: 0px;
 }
 
 #remove-button {
   background-color: white;
-  color:rgb(255, 94, 94);
+  color: rgb(255, 94, 94);
 }
 
 #save-transaction-div {
@@ -669,14 +700,11 @@ footer {
 }
 
 #grand-total::before {
-  content: "TOTAL";
-  margin-right: 5px;
-  font-weight: normal;
+  content: '₱';
+  margin-right: 2px;
 }
 
 #save-transaction-button {
   float: right;
-  background-color: #53b050;
-  color: white;
   width: 75px;
 }
