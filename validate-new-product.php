@@ -2,31 +2,29 @@
 session_start();
 include 'connection.php';
 
+$store_owner = $_SESSION['username'];
+
 // transfer data from the submitted form into variables
 $product = $_POST['product'];
 $price = $_POST['price'];
-if (isset($_POST['description'])) {
-    $description = $_POST['description'];
-} else {
-    $description = 'None';
-}
-if (isset($_POST['category'])) {
-    $category = $_POST['category'];
-} else {
-    $category = 'None';
-}
-$store_owner = $_SESSION['username'];
 
 // store data into $_SESSION superglobal to be able to access them across pages
 $_SESSION['product'] = $product;
-$_SESSION['description'] = $description;
-$_SESSION['category'] = $category;
 $_SESSION['price'] = $price;
 
 // escape special characters (remove their special meaning) to avoid errors when doing an SQL query below
 $store_owner = mysqli_real_escape_string($con, $store_owner);
 $product = mysqli_real_escape_string($con, $product);
 $description = mysqli_real_escape_string($con, $description);
+
+if (!empty($_POST['description'])) {
+    $description = $_POST['description'];
+    $_SESSION['description'] = $description;
+}
+if (!empty($_POST['category'])) {
+    $category = $_POST['category'];
+    $_SESSION['category'] = $category;
+}
 
 // these are optional information so there's no need to check if they are missing
 unset($_POST['description']);

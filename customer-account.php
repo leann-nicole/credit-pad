@@ -42,23 +42,22 @@ if (!isset($_SESSION['username'])) {
         </ul>
       </nav>
       <main>
-        <div id="customer-profile-info-div" class="container" data-name="<?php echo $_GET[
-            'customer'
-        ]; ?>">
+        <div id="customer-profile-info-div" class="container" data-name="<?php echo $_GET['customer']; ?>">
           
         </div>
         <div id="tab-section">
-            <div class="selected-navbar-item">CREDIT</div>
-            <div>HISTORY</div>
-            <div>STATISTICS</div>
+            <div class="selected-navbar-item" onclick="switchTab(this)">CREDIT</div>
+            <div onclick="switchTab(this)">PAYMENT</div>
+            <div onclick="switchTab(this)">HISTORY</div>
+            <div onclick="switchTab(this)">STATISTICS</div>
         </div>
         <div id="tab-content" class="container">
           <div id="credit-div">
-            <div id="cart-labels-div" class="cart-article">
-              <span id="product-name-label">PRODUCT</span>
-              <span id="product-quantity-label">QUANTITY</span>
-              <span id="product-price-label">PRICE</span>
-              <span id="product-subtotal-label">SUBTOTAL</span>
+            <div id="cart-labels-div" class="cart-article field-name">
+              <span id="product-name-label">Product</span>
+              <span id="product-quantity-label">Quantity</span>
+              <span id="product-price-label">Price</span>
+              <span id="product-subtotal-label">Subtotal</span>
               <div id="dummy-add-button" class="button"></div>
             </div>
             <div id="cart-list-div">
@@ -72,14 +71,58 @@ if (!isset($_SESSION['username'])) {
                 <button type="button" id="add-button" class="button material-icons" onclick="addCartItem()" title="add">add</button>
               </div>
             </div>
-            <div id="save-transaction-div">
-              <input type="date" id="transaction-date" class="field" value="<?php echo date(
+            <div id="save-credit-div">
+              <textarea id="credit-comment" class="field" placeholder="Write a comment here" maxlength="500"></textarea>
+              <input type="date" id="credit-date" class="field" value="<?php echo date(
                   'Y-m-d'
               ); ?>">
-              <button type="button" id="save-transaction-button" class="button save-button" onclick="saveCredit()">SAVE</button>
+              <button type="button" id="save-credit-button" class="button save-button" onclick="saveCredit()">SAVE</button>
               <div id="grand-total"></div>
             </div>
           </div>
+          <div id="payment-div">
+            <div id="payment-info-div">
+              <p class="field-name">Choose type of payment</p>
+              <div id="payment-types-div">
+                <div id="full-payment" class="payment-type selected-payment-type" onclick="selectPayment(this)">
+                  <div class="selection-indicator"></div>
+                  <p class="payment-type-name">FULL PAYMENT</p>
+                  <div class="payment-calculation-div">
+                    <label for="cash-received1">
+                      <p class="field-name">cash received</p>
+                      <input type="number" min="1" step="0.01" id="cash-received1" class="field">
+                    </label>
+                  </div>
+                  <p id="change1">change:</p>
+                </div>   
+                <div id="partial-payment" class="payment-type" onclick="selectPayment(this)">
+                  <div class="selection-indicator"></div>
+                  <p class="payment-type-name">PARTIAL PAYMENT</p>
+                  <div class="payment-calculation-div">
+                    <label for="cash-received2">
+                      <p class="field-name">cash received</p>
+                      <input type="number" min="1" step="0.01" id="cash-received2" class="field">
+                    </label>
+                    <label for="amount-paid2" class="test">
+                      <p class="field-name">amount paid</p>
+                      <input type="number" min="1" step="0.01" id="amount-paid" class="field">
+                    </label>
+                  </div>
+                  <p id="change2">change:</p>
+                </div>
+              </div>
+            </div>
+            <div id="save-payment-div">
+              <textarea id="payment-comment" class="field" placeholder="Write a comment here"></textarea>
+              <input type="date" id="payment-date" class="field" value="<?php echo date(
+                  'Y-m-d'
+              ); ?>">
+              <button type="button" id="save-payment-button" class="button save-button" onclick="savePayment()">SAVE</button>
+              <div id="grand-total"></div>
+            </div>
+          </div>
+          <div id="history-div"></div>
+          <div id="statistics-div">statistics</div>
         </div>
       </main>
       <div id="extra">
@@ -113,35 +156,66 @@ if (!isset($_SESSION['username'])) {
         // voila! 
       }
 
-      function saveCredit() {
-        let cartItems = document.getElementsByClassName("cart-item");
-        let transactionDate = $("#transaction-date").val();
-
-        // go through cart, individually saving each item to the database
-        Array.from(cartItems).forEach(function(item){
-          // get cart item information
-          let product = item.querySelector("span:nth-of-type(1)").textContent;
-          let quantity = item.querySelector("span:nth-of-type(2)").textContent;
-          let price = item.querySelector("span:nth-of-type(3)").textContent;
-          let subtotal = item.querySelector("span:nth-of-type(4)").textContent;
-
-          // save to database
-          $.ajax({
-            url: "save-credit.php",
-            type: "POST",
-            data: {product: product, quantity: quantity, price: price, transactiondDate: transactionDate}
+      function selectPayment(element){
+        if (!element.classList.contains("selected-payment-type")){
+          $("#payment-types-div input").val("");
+          let paymentTypes = document.getElementsByClassName("payment-type");
+          Array.from(paymentTypes).forEach(function(item){
+            item.classList.remove("selected-payment-type");
           });
-        });
-
-        // empty cart
-        let cart = document.getElementById("cart-list");
-        while (cart.firstChild){
-          cart.removeChild(cart.firstChild);
+          element.classList.add("selected-payment-type");
         }
-        // refresh grand total
-        grandTotal = 0;
-        document.getElementById("grand-total").textContent = grandTotal;
       }
+
+      function saveCredit() {
+        if (grandTotal) {
+          let cartItems = document.getElementsByClassName("cart-item");
+          let creditDate = $("#credit-date").val();
+          let customer = $("#customer-profile-info-div").data("name");
+          let newCustomerCredit = atLeast2Dec(Number(document.getElementById("customer-credit").textContent.substr(2).replace(/,/g, '')) + grandTotal); // replace() because Number() doesn't process commas. and using replace() with a regular expression /,/g ensures all occurences and not just the first is replaced
+          let comment = $("#credit-comment").val();
+          let commentSaved = false;
+
+          // go through cart, individually saving each item to the database
+          Array.from(cartItems).forEach(function(item, index, arr){
+            // get cart item information
+            let product = item.querySelector("span:nth-of-type(1)").textContent;
+            let quantity = Number(item.querySelector("span:nth-of-type(2)").textContent);
+            let price = Number(item.querySelector("span:nth-of-type(3)").textContent);
+            let subTotal = Number(item.querySelector("span:nth-of-type(4)").textContent);
+
+            // save to database
+            if (!commentSaved){
+              $.ajax({
+                url: "save-credit.php",
+                type: "POST",
+                data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, comment: comment}
+              });
+              commentSaved = true;
+            }
+            else {
+              $.ajax({
+                url: "save-credit.php",
+                type: "POST",
+                data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate}
+              });
+            }            
+          });
+
+          // empty cart
+          let cart = document.getElementById("cart-list");
+          while (cart.firstChild){
+            cart.removeChild(cart.firstChild);
+          }
+          // refresh comment, customer credit, and grand total
+          document.getElementById("credit-comment").value = "";
+          document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit;
+          grandTotal = 0;
+          document.getElementById("grand-total").textContent = "₱\ " + grandTotal;
+        }
+      }
+
+      function savePayment(){}
 
       function calcQuantity(element){
         let total = element.value;
@@ -187,11 +261,16 @@ if (!isset($_SESSION['username'])) {
       function addCartItem(){
         // get input values
         let productName = $("#product-name-input").val();
-        let productQty = atLeast2Dec($("#product-quantity-input").val());
-        let productPrice = atLeast2Dec($("#product-price-input").val());
-        let productSubTotal = atLeast2Dec($("#product-subtotal-input").val());
+        let productQty = $("#product-quantity-input").val();
+        let productPrice = $("#product-price-input").val();
+        let productSubTotal = $("#product-subtotal-input").val();
 
         if (productName != "" && productQty != "" && productPrice != "" && productSubTotal != ""){
+          // limit values to 2 decimal places
+          productQty = atLeast2Dec($("#product-quantity-input").val());
+          productPrice = atLeast2Dec($("#product-price-input").val());
+          productSubTotal = atLeast2Dec($("#product-subtotal-input").val());
+
           // create cart item element
           let item = document.createElement("div");
           item.classList.add("cart-item");
@@ -223,7 +302,7 @@ if (!isset($_SESSION['username'])) {
             let cartItem = this.parentElement; // vs parentNode which returns Document node when no parent is found (ex. parent element of <html>), parentElement returns null in that case
             // remove subtotal from grand total
             grandTotal -= Number(cartItem.querySelector("span:nth-of-type(4)").textContent); // 4th span contains subtotal use Number() since textContent is NaN
-            document.getElementById("grand-total").textContent = atLeast2Dec(grandTotal);
+            document.getElementById("grand-total").textContent = "₱\ " + atLeast2Dec(grandTotal);
             // then finally remove cart item
             cartItem.remove();
           }
@@ -241,8 +320,17 @@ if (!isset($_SESSION['username'])) {
 
           // add subtotal to grand total
           grandTotal += Number(productSubTotal); // textContent is NaN
-          document.getElementById("grand-total").textContent = atLeast2Dec(grandTotal);
+          document.getElementById("grand-total").textContent = "₱\ " + atLeast2Dec(grandTotal);
         }
+      }
+
+      function updateNotes(element){
+        let notes = element.value;
+        $.ajax({
+          url: "update-note.php", 
+          type: "POST",
+          data: {notes: notes},
+        });        
       }
 
       function fetchCustomerInfo(name){
@@ -252,6 +340,7 @@ if (!isset($_SESSION['username'])) {
           data: {name: name},
           success: function(data){
             $("#customer-profile-info-div").html(data);
+            document.getElementById("customer-credit").textContent = "₱\ " + document.getElementById("customer-credit").textContent;
           }
         });
       }
@@ -263,33 +352,68 @@ if (!isset($_SESSION['username'])) {
         });        
       }
 
-      function updateNotes(element){
-        let notes = element.value;
-        $.ajax({
-          url: "update-note.php", 
-          type: "POST",
-          data: {notes: notes}
-        });        
-      }
-
       function fetchProducts(){
         $.ajax({
           url: "fetch-products.php",
           success: function(data){
             $("#product-list").html(data);
-            prepareGlobalVars();
+            prepVarsAndDisplay();
           }
         });
       }
 
-      function prepareGlobalVars(){
+      function showTabContent() {
+        let tab = $("#tab-section > .selected-navbar-item").text();
+        if (tab == "CREDIT") {
+          document.querySelector("#tab-content > div:nth-of-type(1)").style.display = "flex";
+          document.querySelector("#tab-content > div:nth-of-type(2)").style.display = "none";
+          document.querySelector("#tab-content > div:nth-of-type(3)").style.display = "none";
+          document.querySelector("#tab-content > div:nth-of-type(4)").style.display = "none";
+        }
+        else if (tab == "PAYMENT"){
+          document.querySelector("#tab-content > div:nth-of-type(1)").style.display = "none";
+          document.querySelector("#tab-content > div:nth-of-type(2)").style.display = "flex";
+          document.querySelector("#tab-content > div:nth-of-type(3)").style.display = "none"; 
+          document.querySelector("#tab-content > div:nth-of-type(4)").style.display = "none";
+        }
+        else if (tab == "HISTORY") {
+          document.querySelector("#tab-content > div:nth-of-type(1)").style.display = "none";
+          document.querySelector("#tab-content > div:nth-of-type(2)").style.display = "none";
+          document.querySelector("#tab-content > div:nth-of-type(3)").style.display = "flex";  
+          document.querySelector("#tab-content > div:nth-of-type(4)").style.display = "none";      
+          let customer = $("#customer-profile-info-div").data("name");
+          $.ajax({
+            url: "fetch-history.php",
+            type: "POST", 
+            data: {customer: customer},
+            success: function(data){
+              document.getElementById("history-div").innerHTML = data;
+            }
+          });
+        }
+        else if (tab == "STATISTICS") {
+          document.querySelector("#tab-content > div:nth-of-type(1)").style.display = "none";
+          document.querySelector("#tab-content > div:nth-of-type(2)").style.display = "none";
+          document.querySelector("#tab-content > div:nth-of-type(3)").style.display = "none";  
+          document.querySelector("#tab-content > div:nth-of-type(4)").style.display = "flex";      
+        }
+      }
+
+      function switchTab(element){
+        document.querySelector("#tab-section > .selected-navbar-item").classList.remove("selected-navbar-item");
+        element.classList.add("selected-navbar-item");
+        showTabContent();
+      }
+
+      function prepVarsAndDisplay(){
         let productList = document.getElementById("product-list"); // get datalist element 
         let productListOptions = productList.getElementsByTagName("option"); // get option elements under datalist element
         for (let i = 0; i < productListOptions.length; i++){
           let p = productListOptions[i].textContent;
           products.push(p);
         }
-        document.getElementById("grand-total").textContent = grandTotal;
+        document.getElementById("grand-total").textContent = "₱\ " + grandTotal;
+        showTabContent();
       }
 
       $(document).ready(function () {

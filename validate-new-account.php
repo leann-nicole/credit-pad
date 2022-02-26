@@ -2,23 +2,21 @@
 session_start();
 include 'connection.php';
 
+$store_owner = $_SESSION['username'];
+
 // transfer values from the submitted form
 $name = $_POST['username'];
 $birthdate = $_POST['birthdate'];
 $sex = $_POST['sex'];
 $mobile_no = $_POST['mobile_no'];
-$email = $_POST['email'];
 $address = $_POST['address'];
 $rating = $_POST['rate'];
-
-$store_owner = $_SESSION['username'];
 
 // store variables in $_SESSION superglobal to be able to access them across pages
 $_SESSION['cusername'] = $name;
 $_SESSION['cbirthdate'] = $birthdate;
 $_SESSION['csex'] = $sex;
 $_SESSION['cmobile_no'] = $mobile_no;
-$_SESSION['cemail'] = $email;
 $_SESSION['caddress'] = $address;
 $_SESSION['crate'] = $rating;
 
@@ -27,9 +25,15 @@ $store_owner = mysqli_real_escape_string($con, $store_owner);
 $name = mysqli_real_escape_string($con, $name);
 $address = mysqli_real_escape_string($con, $address);
 
+if (!empty($_POST['email'])){
+    $email = $_POST['email'];
+    $_SESSION['cemail'] = $email;
+    $address = mysqli_real_escape_string($con, $address);
+}
+
 // these are optional information, no need to check if they are missing
+// no need to unset rate post var since it has a default value of 1 star
 unset($_POST['email']);
-unset($_POST['rate']);
 
 // check for missing information
 function filled($data)
@@ -62,6 +66,12 @@ if (mysqli_num_rows($result)) {
 // check if email is valid
 if (!empty($email) and !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     header('Location: customers.php?error=invalid email address');
+    die();
+}
+
+// check if phone number is valid
+if (!strlen($mobile_no) == 11 or !is_numeric($mobile_no)){
+    header("Location: customers.php?error=invalid phone number");
     die();
 }
 

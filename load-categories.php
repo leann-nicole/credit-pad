@@ -5,7 +5,7 @@ include "connection.php";
 $store_operator = $_SESSION['username'];
 $store_operator = mysqli_real_escape_string($con, $store_operator);
 
-$query = "SELECT DISTINCT category FROM products WHERE store_operator = '$store_operator' AND category <> 'None'";
+$query = "SELECT DISTINCT category FROM products WHERE store_operator = '$store_operator'";
 $result = mysqli_query($con, $query);
 
 if (mysqli_num_rows($result)){

@@ -57,7 +57,7 @@ if (!isset($_SESSION['username'])) {
                   echo $_SESSION['product'];
               } ?>"/>
               <p class="field-name">description</p>
-              <textarea id="product-description" class="field" name="description" maxlength="200" spellcheck="false"><?php if (
+              <textarea id="product-description" class="field" name="description" maxlength="250" spellcheck="false" placeholder="optional"><?php if (
                   isset($_SESSION['description'])
               ) {
                   echo $_SESSION['description'];
@@ -70,7 +70,7 @@ if (!isset($_SESSION['username'])) {
                         isset($_SESSION['category'])
                     ) {
                         echo $_SESSION['category'];
-                    } ?>"/>
+                    } ?>" placeholder="optional"/>
                       <datalist id="categories"></datalist>
                 </div>
                 <div id="cp-price">

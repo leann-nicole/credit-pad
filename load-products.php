@@ -34,7 +34,7 @@ while ($row = mysqli_fetch_assoc($result)) { ?>
     <tr onclick="selectProduct(this)">
         <td><?php echo $row['name']; ?></td>
         <td><?php echo $row['category']; ?></td>
-        <td><?php $floor = floor($row['price']); if ($row['price'] - $floor == 0){ echo $floor;} else { echo ($row['price']); } ?></td>
+        <td><?php if (fmod($row['price'],1)){ echo number_format($row['price'], 2);} else { echo number_format($row['price']); } ?></td>
     </tr>
 <?php }
 echo '</table>';
