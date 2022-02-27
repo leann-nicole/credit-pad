@@ -85,8 +85,8 @@ if (!isset($_SESSION['username'])) {
               
             </div>
             <div id="form-buttons-div">
-              <button type="button" id="cancel" class="button" onclick="showHide()">CANCEL</button>
-              <button type="submit" form="create-form" id="save-form-button" class="button save-button">SAVE</button>
+              <button type="button" id="cancel" class="button" onclick="showHide()">Cancel</button>
+              <button type="submit" form="create-form" id="save-form-button" class="button save-button">Save</button>
             </div>
 
           </form>

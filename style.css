@@ -1,12 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
 
 * {
   margin: 0;
   padding: 0;
   color: black;
-  font-family: 'Quicksand', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 14px;
+  line-height: 14px;
   box-sizing: border-box;
   z-index: 0;
 }
@@ -71,8 +71,12 @@ input:autofill {
   position: relative;
 }
 
+.history-item span {
+  line-height: 20px;
+}
+
 .history-item:hover {
-  box-shadow: 0px 0px 3px 0px #c9c9c9;
+  border: 1px solid #10854b;
 }
 
 .material-icons {
@@ -126,7 +130,7 @@ input:autofill {
 #sitename,
 #sitename-header > a {
   font-size: 22px;
-  font-family: 'Righteous', sans-serif;
+  line-height: 22px;
   color: #10854b;
 }
 
@@ -298,6 +302,7 @@ main > * {
 }
 
 #notes {
+  line-height: 20px;
   resize: none;
   height: 245px;
   border-top: 0;
@@ -390,10 +395,10 @@ main > * {
 }
 
 #product-description {
+  line-height: 20px;
   resize: vertical;
   min-height: 80px;
   max-height: 200px;
-  margin-bottom: 0px;
 }
 
 #category-price-div {
@@ -588,15 +593,17 @@ footer {
 }
 
 #customer-header {
+  width: 500px;
   border-bottom: 1px solid #d9d9d9;
   margin-bottom: 5px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
 }
 
 #customer-name {
-  line-height: 22px;
+  font-size: 16px;
+  line-height: 26px;
 }
 
 #customer-credit {
@@ -664,13 +671,14 @@ footer {
 
 #cart-list-div {
   border-radius: 5px;
-  background-color: #e6e6e6;
+  background-color: #d9d9d9;
   min-height: 160px;
   height: fit-content;
 }
 
 #cart-input-div {
   height: 60px;
+  box-shadow: 0px 2px 2px 0px #c9c9c9;
 }
 
 #cart-input-div input {
@@ -720,13 +728,14 @@ footer {
 
 #credit-comment,
 #payment-comment {
+  line-height: 20px;
   resize: vertical;
-  min-height: 40px;
+  height: 42px;
 }
 
 #save-credit-div,
 #save-payment-div {
-  margin-top: 13px;
+  margin-top: 11px;
   position: relative;
 }
 
@@ -805,7 +814,7 @@ footer {
 }
 
 .selected-payment-type, .payment-type:focus-within {
-  box-shadow: 0px 5px 5px 0px #c9c9c9;
+  border:2px solid #10854b;
 }
 
 #history-div {

@@ -72,11 +72,11 @@ if (!isset($_SESSION['username'])) {
               </div>
             </div>
             <div id="save-credit-div">
-              <textarea id="credit-comment" class="field" placeholder="Write a comment here" maxlength="500"></textarea>
+              <textarea id="credit-comment" class="field" placeholder="Write a comment here" spellcheck="false" maxlength="500"></textarea>
               <input type="date" id="credit-date" class="field" value="<?php echo date(
                   'Y-m-d'
               ); ?>">
-              <button type="button" id="save-credit-button" class="button save-button" onclick="saveCredit()">SAVE</button>
+              <button type="button" id="save-credit-button" class="button save-button" onclick="saveCredit()">Save</button>
               <div id="grand-total"></div>
             </div>
           </div>
@@ -113,11 +113,11 @@ if (!isset($_SESSION['username'])) {
               </div>
             </div>
             <div id="save-payment-div">
-              <textarea id="payment-comment" class="field" placeholder="Write a comment here"></textarea>
+              <textarea id="payment-comment" class="field" placeholder="Write a comment here" spellcheck="false"></textarea>
               <input type="date" id="payment-date" class="field" value="<?php echo date(
                   'Y-m-d'
               ); ?>">
-              <button type="button" id="save-payment-button" class="button save-button" onclick="savePayment()">SAVE</button>
+              <button type="button" id="save-payment-button" class="button save-button" onclick="savePayment()">Save</button>
               <div id="grand-total"></div>
             </div>
           </div>
@@ -142,8 +142,9 @@ if (!isset($_SESSION['username'])) {
       // global variables
       let products = []; // array for storing textcontent of option elements
       let grandTotal = 0;
+      let customer = "";
 
-      function atLeast2Dec(n){
+      function atMost2Dec(n){
         return Number(Math.round(n+ "e"+2)+"e-"+2); 
         // an accurate formula to avoid rounding errors learned from http://thenewcode.com/895/JavaScript-Rounding-Recipes
         // how it works: makes use of exponential numbers
@@ -171,8 +172,7 @@ if (!isset($_SESSION['username'])) {
         if (grandTotal) {
           let cartItems = document.getElementsByClassName("cart-item");
           let creditDate = $("#credit-date").val();
-          let customer = $("#customer-profile-info-div").data("name");
-          let newCustomerCredit = atLeast2Dec(Number(document.getElementById("customer-credit").textContent.substr(2).replace(/,/g, '')) + grandTotal); // replace() because Number() doesn't process commas. and using replace() with a regular expression /,/g ensures all occurences and not just the first is replaced
+          let newCustomerCredit = atMost2Dec(Number(document.getElementById("customer-credit").textContent.substr(2).replace(/,/g, '')) + grandTotal); // replace() because Number() doesn't process commas. and using replace() with a regular expression /,/g ensures all occurences and not just the first is replaced
           let comment = $("#credit-comment").val();
           let commentSaved = false;
 
@@ -215,13 +215,40 @@ if (!isset($_SESSION['username'])) {
         }
       }
 
-      function savePayment(){}
+      function savePayment(){
+        let choice = document.querySelector(".selected-payment-type");
+        let comment = $("#payment-comment").val();
+        console.log(comment);
+        if (choice.id == "full-payment"){
+          let cash = choice.getElementsByTagName("input")[0].value;
+          if (cash != ""){
+            $.ajax({
+              url: "save-payment.php",
+              type: "POST",
+              data: {customer: customer, comment: comment}
+            });
+          }
+        }
+        else if (choice.id == "partial-payment"){
+          let cash = choice.getElementsByTagName("input")[0].value;
+          let amtPaid = choice.getElementsByTagName("input")[1].value;
+          if (cash != "" && amtPaid != ""){
+            amtPaid = atMost2Dec(cash);
+            paid = atMost2Dec(amtPaid);
+            $.ajax({
+              url: "save-payment.php",
+              type: "POST",
+              data: {customer: customer, cash: cash, amtPaid: amtPaid, comment: comment}
+            })
+          }
+        }
+      }
 
       function calcQuantity(element){
         let total = element.value;
         let price = $("#product-price-input").val();
         let quantity = total/price;
-        $("#product-quantity-input").val(atLeast2Dec(quantity));
+        $("#product-quantity-input").val(atMost2Dec(quantity));
       }
 
       function calcTotal(){
@@ -229,7 +256,7 @@ if (!isset($_SESSION['username'])) {
         let price = $("#product-price-input").val();
         if (quantity != "" && price != ""){
           let total = quantity * price;
-          $("#product-subtotal-input").val(atLeast2Dec(total));
+          $("#product-subtotal-input").val(atMost2Dec(total));
         }
       }
 
@@ -267,9 +294,9 @@ if (!isset($_SESSION['username'])) {
 
         if (productName != "" && productQty != "" && productPrice != "" && productSubTotal != ""){
           // limit values to 2 decimal places
-          productQty = atLeast2Dec($("#product-quantity-input").val());
-          productPrice = atLeast2Dec($("#product-price-input").val());
-          productSubTotal = atLeast2Dec($("#product-subtotal-input").val());
+          productQty = atMost2Dec($("#product-quantity-input").val());
+          productPrice = atMost2Dec($("#product-price-input").val());
+          productSubTotal = atMost2Dec($("#product-subtotal-input").val());
 
           // create cart item element
           let item = document.createElement("div");
@@ -302,7 +329,7 @@ if (!isset($_SESSION['username'])) {
             let cartItem = this.parentElement; // vs parentNode which returns Document node when no parent is found (ex. parent element of <html>), parentElement returns null in that case
             // remove subtotal from grand total
             grandTotal -= Number(cartItem.querySelector("span:nth-of-type(4)").textContent); // 4th span contains subtotal use Number() since textContent is NaN
-            document.getElementById("grand-total").textContent = "₱\ " + atLeast2Dec(grandTotal);
+            document.getElementById("grand-total").textContent = "₱\ " + atMost2Dec(grandTotal);
             // then finally remove cart item
             cartItem.remove();
           }
@@ -320,7 +347,7 @@ if (!isset($_SESSION['username'])) {
 
           // add subtotal to grand total
           grandTotal += Number(productSubTotal); // textContent is NaN
-          document.getElementById("grand-total").textContent = "₱\ " + atLeast2Dec(grandTotal);
+          document.getElementById("grand-total").textContent = "₱\ " + atMost2Dec(grandTotal);
         }
       }
 
@@ -406,6 +433,7 @@ if (!isset($_SESSION['username'])) {
       }
 
       function prepVarsAndDisplay(){
+        customer = $("#customer-profile-info-div").data("name");
         let productList = document.getElementById("product-list"); // get datalist element 
         let productListOptions = productList.getElementsByTagName("option"); // get option elements under datalist element
         for (let i = 0; i < productListOptions.length; i++){
