@@ -27,7 +27,7 @@ $rating = $rows["rating"];
     <div id="customer-rating" class="star"><?php while($rating){echo "&#128970;"; $rating--;}?></div>
 </div>
 <div id="customer-details">
-    <div id="customer-header"><span id="customer-name"><?php echo strtoupper($customer);?></span><span id="customer-credit"><?php if (fmod($credit, 1)){ echo number_format($credit, 2); } else { echo number_format($credit); } ?></span></div>
+    <div id="customer-header"><span id="customer-name"><?php echo $customer;?></span><span id="customer-credit"><?php if (fmod($credit, 1)){ echo number_format($credit, 2); } else { echo number_format($credit); } ?></span></div>
 
     <table>
         <tr>

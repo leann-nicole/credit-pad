@@ -65,9 +65,9 @@ if (!isset($_SESSION['username'])) {
               <div id="cart-input-div" class="cart-article">
                 <input id="product-name-input" class="field" list="product-list" oninput="getPrice(this)">
                   <datalist id="product-list"></datalist>
-                <input id="product-quantity-input"  class="field" type="number" min="0" oninput="calcTotal()"> 
-                <input id="product-price-input" class="field" type="number" oninput="calcTotal()">
-                <input id="product-subtotal-input" class="field" type="number" oninput="calcQuantity(this)">
+                <input id="product-quantity-input"  class="field" type="number" min="0" oninput="calcPriceTotal(this)"> 
+                <input id="product-price-input" class="field" type="number" oninput="calcQtyTotal(this)">
+                <input id="product-subtotal-input" class="field" type="number" oninput="calcQtyPrice(this)">
                 <button type="button" id="add-button" class="button material-icons" onclick="addCartItem()" title="add">add</button>
               </div>
             </div>
@@ -90,7 +90,7 @@ if (!isset($_SESSION['username'])) {
                   <div class="payment-calculation-div">
                     <label for="cash-received1">
                       <p class="field-name">cash received</p>
-                      <input type="number" min="1" step="0.01" id="cash-received1" class="field">
+                      <input type="number" min="1" step="0.01" id="cash-received1" class="field" oninput="getChange(this)">
                     </label>
                   </div>
                   <p id="change1">change:</p>
@@ -101,11 +101,11 @@ if (!isset($_SESSION['username'])) {
                   <div class="payment-calculation-div">
                     <label for="cash-received2">
                       <p class="field-name">cash received</p>
-                      <input type="number" min="1" step="0.01" id="cash-received2" class="field">
+                      <input type="number" min="1" step="0.01" id="cash-received2" class="field" oninput="getChange(this)">
                     </label>
                     <label for="amount-paid2" class="test">
                       <p class="field-name">amount paid</p>
-                      <input type="number" min="1" step="0.01" id="amount-paid" class="field">
+                      <input type="number" min="1" step="0.01" id="amount-paid" class="field" oninput="getChange(this)">
                     </label>
                   </div>
                   <p id="change2">change:</p>
@@ -118,7 +118,6 @@ if (!isset($_SESSION['username'])) {
                   'Y-m-d'
               ); ?>">
               <button type="button" id="save-payment-button" class="button save-button" onclick="savePayment()">Save</button>
-              <div id="grand-total"></div>
             </div>
           </div>
           <div id="history-div"></div>
@@ -157,9 +156,47 @@ if (!isset($_SESSION['username'])) {
         // voila! 
       }
 
+      function getChange(element){
+        let currentCredit = Number(document.getElementById("customer-credit").textContent.substr(2).replace(/,/g, ''));
+        if (!currentCredit){ return; }
+        if (element.id == "cash-received1"){
+          let cash = atMost2Dec(element.value);
+          if (cash >= currentCredit){
+            let change = atMost2Dec(cash - currentCredit);
+            $("#change1").text("change: " + change);
+          }
+          else {
+            $("#change1").text("change:");
+          }
+        }
+        else {
+          let cash = atMost2Dec($("#cash-received2").val());
+          let amountPaid = atMost2Dec($("#amount-paid").val());
+          if (cash && amountPaid){
+            if (cash >= amountPaid){
+              if (amountPaid >= currentCredit){
+                $("#change2").text("Please choose full payment instead");
+              }
+              else {
+                let change = atMost2Dec(cash - amountPaid);
+                $("#change2").text("change: " + change);
+              }
+            }
+            else {
+              $("#change2").text("change:");
+            }
+          }
+          else {
+            $("#change2").text("change:");
+          }
+        }
+      }
+
       function selectPayment(element){
         if (!element.classList.contains("selected-payment-type")){
           $("#payment-types-div input").val("");
+          $("#change1").text("change:");
+          $("#change2").text("change:");
           let paymentTypes = document.getElementsByClassName("payment-type");
           Array.from(paymentTypes).forEach(function(item){
             item.classList.remove("selected-payment-type");
@@ -175,6 +212,7 @@ if (!isset($_SESSION['username'])) {
           let newCustomerCredit = atMost2Dec(Number(document.getElementById("customer-credit").textContent.substr(2).replace(/,/g, '')) + grandTotal); // replace() because Number() doesn't process commas. and using replace() with a regular expression /,/g ensures all occurences and not just the first is replaced
           let comment = $("#credit-comment").val();
           let commentSaved = false;
+          let cartSize = cartItems.length;
 
           // go through cart, individually saving each item to the database
           Array.from(cartItems).forEach(function(item, index, arr){
@@ -183,13 +221,13 @@ if (!isset($_SESSION['username'])) {
             let quantity = Number(item.querySelector("span:nth-of-type(2)").textContent);
             let price = Number(item.querySelector("span:nth-of-type(3)").textContent);
             let subTotal = Number(item.querySelector("span:nth-of-type(4)").textContent);
-
+  
             // save to database
             if (!commentSaved){
               $.ajax({
                 url: "save-credit.php",
                 type: "POST",
-                data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, comment: comment}
+                data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, comment: comment, cartSize: cartSize}
               });
               commentSaved = true;
             }
@@ -209,7 +247,7 @@ if (!isset($_SESSION['username'])) {
           }
           // refresh comment, customer credit, and grand total
           document.getElementById("credit-comment").value = "";
-          document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit;
+          document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
           grandTotal = 0;
           document.getElementById("grand-total").textContent = "₱\ " + grandTotal;
         }
@@ -217,46 +255,124 @@ if (!isset($_SESSION['username'])) {
 
       function savePayment(){
         let choice = document.querySelector(".selected-payment-type");
-        let comment = $("#payment-comment").val();
-        console.log(comment);
-        if (choice.id == "full-payment"){
+        let currentCredit = Number(document.getElementById("customer-credit").textContent.substr(2).replace(/,/g, ''));
+        
+        if (currentCredit != 0 && choice.id == "full-payment"){
           let cash = choice.getElementsByTagName("input")[0].value;
+
           if (cash != ""){
+            cash = atMost2Dec(cash)
+            let amountPaid = Number($("#customer-credit").text().substr(2).replace(/,/g, ""));
+            if (cash < amountPaid){ return; }
+            let change = atMost2Dec(cash - amountPaid);
+            let paymentDate = $("#payment-date").val();
+            let comment = $("#payment-comment").val();
+
             $.ajax({
-              url: "save-payment.php",
-              type: "POST",
-              data: {customer: customer, comment: comment}
-            });
+            url: "save-payment.php",
+            type: "POST",
+            data: {paymentType: "full payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment}
+            });         
+
+            // clear inputs and comments & update current credit
+            $("#full-payment input").val("");
+            $("#payment-comment").val("");
+            $("#change1").text("change:");
+            let newCustomerCredit = atMost2Dec(currentCredit - amountPaid); 
+            document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
           }
         }
-        else if (choice.id == "partial-payment"){
+        else if (currentCredit != 0 && choice.id == "partial-payment"){
           let cash = choice.getElementsByTagName("input")[0].value;
-          let amtPaid = choice.getElementsByTagName("input")[1].value;
-          if (cash != "" && amtPaid != ""){
-            amtPaid = atMost2Dec(cash);
-            paid = atMost2Dec(amtPaid);
+          let amountPaid = choice.getElementsByTagName("input")[1].value;
+
+          if (cash != "" && amountPaid != ""){
+            cash = atMost2Dec(cash);
+            amountPaid = atMost2Dec(amountPaid);
+            if (cash < amountPaid || currentCredit <= amountPaid){ return; }
+            let change = atMost2Dec(cash - amountPaid);
+            let paymentDate = $("#payment-date").val();
+            let comment = $("#payment-comment").val();
+
             $.ajax({
-              url: "save-payment.php",
-              type: "POST",
-              data: {customer: customer, cash: cash, amtPaid: amtPaid, comment: comment}
-            })
+            url: "save-payment.php",
+            type: "POST",
+            data: {paymentType: "partial payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment}
+            });
+
+            $("#partial-payment input").val("");
+            $("#payment-comment").val("");
+            $("#change2").text("change:");
+            let newCustomerCredit = atMost2Dec(currentCredit - amountPaid);
+            document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
           }
         }
       }
 
-      function calcQuantity(element){
-        let total = element.value;
+      function calcPriceTotal(element){
+        let quantity = element.value;
+        if (quantity == ""){
+          $("#product-subtotal-input").val("");
+          return;
+        }
         let price = $("#product-price-input").val();
-        let quantity = total/price;
-        $("#product-quantity-input").val(atMost2Dec(quantity));
-      }
+        let total = $("#product-subtotal-input").val();
 
-      function calcTotal(){
-        let quantity = $("#product-quantity-input").val();
-        let price = $("#product-price-input").val();
-        if (quantity != "" && price != ""){
+        if (price == "" && total == "") return;
+        // calculate subtotal (not the price) when both fields are filled
+        if (price != "" && total != "" || price != ""){
           let total = quantity * price;
           $("#product-subtotal-input").val(atMost2Dec(total));
+        }
+        else { // if only subtotal is filled, calculate price
+          let price = total / quantity;
+          $("#product-price-input").val(atMost2Dec(price));
+        }
+      }
+
+      function calcQtyTotal(element){
+        if (element == undefined){
+          $("#product-subtotal-input").val(atMost2Dec($("#product-quantity-input").val() * $("#product-price-input").val()));
+          return;
+        }
+        let price = element.value;
+        if (price == ""){
+          $("#product-subtotal-input").val("");
+          return;
+        }
+        let quantity = $("#product-quantity-input").val();
+        let total = $("#product-subtotal-input").val();
+
+        if (quantity == "" && total == "") return;
+        // calculate subtotal (not the quantity) when both fields are filled
+        if (quantity != "" && total != "" || quantity != ""){
+          let total = quantity * price;
+          $("#product-subtotal-input").val(atMost2Dec(total));
+        }
+        else { // if only total is filled, calculate price
+          let quantity = total / price;
+          $("#product-quantity-input").val(atMost2Dec(quantity));
+        }
+      }
+
+      function calcQtyPrice(element){
+        let total = element.value;
+        if (total == ""){
+          $("#product-quantity-input").val("");
+          return;
+        }
+        let quantity = $("#product-quantity-input").val();
+        let price = $("#product-price-input").val();
+
+        if (quantity == "" && price == "") return;
+        // calculate quantity (not the price) when both fields are filled
+        if (quantity != "" && price != "" || price != ""){
+          let quantity = total / price;
+          $("#product-quantity-input").val(atMost2Dec(quantity));
+        }
+        else { // if only quantity is filled, calculate price
+          let price = total / quantity;
+          $("#product-price-input").val(atMost2Dec(price));
         }
       }
 
@@ -278,7 +394,7 @@ if (!isset($_SESSION['username'])) {
               data: {product: product},
               success: function(data){
               $("#product-price-input").val(data);
-              calcTotal();
+              calcQtyTotal();
               }
             });
           }
@@ -292,7 +408,7 @@ if (!isset($_SESSION['username'])) {
         let productPrice = $("#product-price-input").val();
         let productSubTotal = $("#product-subtotal-input").val();
 
-        if (productName != "" && productQty != "" && productPrice != "" && productSubTotal != ""){
+        if (productName != "" && productQty != "" && productPrice != "" && productSubTotal != "" && productSubTotal != 0){ // productSubTotal != 0, in here both operands are converted to numbers
           // limit values to 2 decimal places
           productQty = atMost2Dec($("#product-quantity-input").val());
           productPrice = atMost2Dec($("#product-price-input").val());
@@ -414,7 +530,7 @@ if (!isset($_SESSION['username'])) {
             type: "POST", 
             data: {customer: customer},
             success: function(data){
-              document.getElementById("history-div").innerHTML = data;
+              $("#history-div").html(data);
             }
           });
         }

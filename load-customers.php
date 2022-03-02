@@ -37,7 +37,7 @@ if (mysqli_num_rows($result) > 0){
 ?>
     <tr onclick="selectCustomer(this)">
         <td><?php echo $row['name']; ?></td>
-        <td><?php if (fmod($row['current_debt'],1)){ echo number_format($row['current_debt'],2);} else { echo number_format($row['current_debt']); } ?></td>
+        <td><?php if (fmod($row['current_debt'],1)){ echo "₱ " . number_format($row['current_debt'],2);} else { echo "₱ " . number_format($row['current_debt']); } ?></td>
         <td class="star"><?php for($i = 1; $i <= $row['rating']; $i++){ echo "&#128970;";} ?></td>
     </tr>
 <?php 
@@ -48,7 +48,7 @@ else {
 ?>
 <table id="no-record-header">
     <tr>
-        <th>NO CUSTOMERS YET</th>
+        <td>NO CUSTOMERS YET</td>
     </tr>
 </table>
 <?php

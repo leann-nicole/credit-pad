@@ -71,6 +71,12 @@ if (!empty($email) and !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     die();
 }
 
+// check if phone number is valid
+if (!strlen($mobile_no) == 11 or !is_numeric($mobile_no)){
+    header("Location: signup.php?error=invalid phone number");
+    die();
+}
+
 // save data to database
 $query = "INSERT INTO store_operators (username, birthdate, sex, mobile_no, email, business_name, business_addr, password) VALUES ('$username', '$birthdate', '$sex', '$mobile_no', '$email', '$business_name', '$business_addr', '$password')";
 

@@ -76,7 +76,7 @@ input:autofill {
 }
 
 .history-item:hover {
-  border: 1px solid #10854b;
+  box-shadow: 0px 0px 5px 0px #c9c9c9;
 }
 
 .material-icons {
@@ -132,6 +132,7 @@ input:autofill {
   font-size: 22px;
   line-height: 22px;
   color: #10854b;
+  font-weight: bold;
 }
 
 #sitename {
@@ -147,6 +148,10 @@ input:autofill {
   width: fit-content;
   padding: 20px;
   box-shadow: 0px 0px 5px 0px #c9c9c9;
+}
+
+#login-signup-form-div input {
+  line-height: 40px;
 }
 
 #login-form {
@@ -467,6 +472,7 @@ main > * {
 
 #list-div {
   height: calc(100vh - 125px);
+  min-height: 512px;
   box-shadow: 0px 0px 5px 0px #c9c9c9;
 }
 
@@ -603,6 +609,7 @@ footer {
 
 #customer-name {
   font-size: 16px;
+  font-weight: bold;
   line-height: 26px;
 }
 
@@ -813,6 +820,14 @@ footer {
   position: relative;
 }
 
+.payment-type:hover {
+  box-shadow: 0px 0px 5px 0px #c9c9c9;
+}
+
+.selected-payment-type:hover {
+  box-shadow: none;
+}
+
 .selected-payment-type, .payment-type:focus-within {
   border:2px solid #10854b;
 }
@@ -827,7 +842,7 @@ footer {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  flex: 1;
+  flex: 2;
 }
 
 .history-item-header {
@@ -835,6 +850,19 @@ footer {
   flex-direction: column;
   align-items: flex-start;
   flex: 1;
+}
+
+.history-item-header span:first-of-type {
+  color: white;
+  padding: 0px 10px;
+}
+
+.history-item-payment {
+  background-color: #53b050;
+}
+
+.history-item-credit {
+  background-color: gray;
 }
 
 .history-item-comment {
