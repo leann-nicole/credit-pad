@@ -838,13 +838,6 @@ footer {
   line-height: 24px;
 }
 
-.history-item-list {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  flex: 2;
-}
-
 .history-item-header {
   display: flex;
   flex-direction: column;
@@ -852,9 +845,54 @@ footer {
   flex: 1;
 }
 
-.history-item-header span:first-of-type {
+.history-item-content {
+  flex: 3;
+}
+
+.history-item table {
+  border-collapse: collapse;
+}
+
+.history-item p {
+  line-height: 20px;
+}
+
+.history-item td {
+  vertical-align: top;
+}
+
+.payment-type-column {
+  width: 30%;
+}
+
+.payment-items-column {
+  width: 15%;
+}
+
+.payment-values-column {
+  width: 15%;
+}
+
+.credit-items-column {
+  width: 45%;
+}
+
+.credit-values-column {
+  width: 15%;
+}
+
+.comment-column {
+  width: 40%;
+}
+
+.comment-column p {
+  color: gray;
+}
+
+.history-item-header p:first-of-type {
   color: white;
   padding: 0px 10px;
+  border-radius: 10px;
 }
 
 .history-item-payment {
@@ -863,8 +901,4 @@ footer {
 
 .history-item-credit {
   background-color: gray;
-}
-
-.history-item-comment {
-  color: gray;
 }

@@ -37,34 +37,42 @@ for($i = 0; $i < sizeof($dates); $i++){
         $itemsLeft = -1;
     ?>
     <div class="history-item">
-        <div class="history-item-list">
+        <table class="history-item-content">
     <?php
         while($transactionInDate = mysqli_fetch_assoc($result3)){
             if ($itemsLeft == -1){
                 $itemsLeft = $transactionInDate["cart_size"];
+    ?>
+            <tr>
+                <td class="credit-details-column">
+    <?php
             }
             $qty = fmod($transactionInDate['quantity'], 1) ? $transactionInDate['quantity'] : floor($transactionInDate['quantity']);
             $grandTotal += $transactionInDate['subtotal'];
             if ($transactionInDate["comment"] != NULL){ $comment = $transactionInDate["comment"]; }
     ?>
-            <span class="history-item-list-item"><?php echo $qty . " " . $transactionInDate['product']; ?></span>
+                    <p title="<?php echo $qty . " " . $transactionInDate['product']; ?>"><?php echo $qty . " " . $transactionInDate['product']; ?></p>
     <?php
             $itemsLeft--;
             if (!$itemsLeft){
                 $itemsLeft = -1;
     ?>
-                <span class="history-item-comment"><?php echo $comment;?></span>
                 <br>
+                </td>
+                <td class="comment-column">
+                    <p><?php echo $comment;?></p>
+                </td>
+            </tr>
     <?php
                 $comment = "";
             }
         }
     ?>   
-        </div>
+        </table>
         <div class="history-item-header">
-            <span class="history-item-credit">CREDIT</span>
-            <span class="history-item-date"><?php echo date("F j, Y", strtotime($dates[$i])); ?></span>
-            <span class="history-item-total"><?php echo "₱ ". number_format(round($grandTotal, 2)); ?></span>
+            <p class="history-item-credit">CREDIT</p>
+            <p class="history-item-date"><?php echo date("F j, Y", strtotime($dates[$i])); ?></p>
+            <p class="history-item-total"><?php echo "₱ ". number_format(round($grandTotal, 2)); ?></p>
         </div>
     </div>
     <?php
@@ -77,26 +85,41 @@ for($i = 0; $i < sizeof($dates); $i++){
         $comment = "";
     ?>
     <div class="history-item">
-        <div class="history-item-list">
+        <table class="history-item-content">
     <?php
         while ($transactionInDate = mysqli_fetch_assoc($result4)){
             $grandTotal += $transactionInDate["amount_paid"];
             if ($transactionInDate["comment"]){ $comment = $transactionInDate["comment"]; }
     ?> 
-            <span class="history-item-list-item"><?php echo "₱ " . number_format(round($transactionInDate["amount_paid"], 2)) . " " . $transactionInDate["payment_type"]; ?></span>
-            <span class="history-item-list-item">cash received: <?php echo "₱ " . number_format(round($transactionInDate["cash"])); ?></span>
-            <span class="history-item-list-item">change: <?php echo "₱ " . number_format(round($transactionInDate["change_amount"])); ?></span>
-            <span class="history-item-comment"><?php echo $comment;?></span>
-            <br>
+            <tr>
+                <td class="payment-type-column">
+                    <p><?php echo $transactionInDate["payment_type"];?></p>
+
+                </td>
+                <td class="payment-details-column">
+                    <p>paid</p>
+                    <p>cash</p>
+                    <p>change</p>
+                </td>
+                <td class="payment-values-column">
+                    <p><?php echo "₱ " . number_format(round($transactionInDate["amount_paid"], 2)); ?></p>
+                    <p><?php echo "₱ " . number_format(round($transactionInDate["cash"])); ?></p>
+                    <p><?php echo "₱ " . number_format(round($transactionInDate["change_amount"])); ?></p>
+                    <br>
+                </td>
+                <td class="comment-column">
+                    <p><?php echo $comment;?></p>
+                </td>
+            </tr>
     <?php
             $comment = "";
         }
     ?>
-        </div>
+        </table>
         <div class="history-item-header">
-            <span class="history-item-payment">PAYMENT</span>
-            <span class="history-item-date"><?php echo date("F j, Y", strtotime($dates[$i])); ?></span>
-            <span class="history-item-total"><?php echo "₱ " . number_format(round($grandTotal, 2)); ?></span>
+            <p class="history-item-payment">PAYMENT</p>
+            <p class="history-item-date"><?php echo date("F j, Y", strtotime($dates[$i])); ?></p>
+            <p class="history-item-total"><?php echo "₱ " . number_format(round($grandTotal, 2)); ?></p>
         </div>
     </div>
     <?php
