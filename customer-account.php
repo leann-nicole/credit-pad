@@ -227,7 +227,7 @@ if (!isset($_SESSION['username'])) {
               $.ajax({
                 url: "save-credit.php",
                 type: "POST",
-                data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, comment: comment, cartSize: cartSize}
+                data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, cartSize: cartSize, comment: comment}
               });
               commentSaved = true;
             }
@@ -235,7 +235,7 @@ if (!isset($_SESSION['username'])) {
               $.ajax({
                 url: "save-credit.php",
                 type: "POST",
-                data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate}
+                data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, cartSize: cartSize}
               });
             }            
           });

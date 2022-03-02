@@ -192,6 +192,7 @@ if (!isset($_SESSION['username'])) {
             data: {ccolname: ccolname},
             success: function (data) {
                 $("#list-inner-div").html(data);
+                filterList();
             }
           });
       }

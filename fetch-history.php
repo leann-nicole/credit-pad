@@ -87,7 +87,7 @@ for($i = 0; $i < sizeof($dates); $i++){
     <?php
     }
     // payments
-    $query = "SELECT payment_type, date, cash, amount_paid, change_amount, comment FROM payment_transactions WHERE store_operator = '$store_operator' AND customer = '$customer' AND date = '$dates[$i]' ORDER BY id DESC";
+    $query = "SELECT payment_type, date, cash, amount_paid, change_amount, comment FROM payment_transactions WHERE store_operator = '$store_operator' AND customer = '$customer' AND date = '$dates[$i]'";
     $result4 = mysqli_query($con, $query); 
     if (mysqli_num_rows($result4)){
         $grandTotal = 0;

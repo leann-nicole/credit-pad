@@ -130,25 +130,26 @@ if (!isset($_SESSION['username'])) {
       }
 
       function sortProducts(element) {
-            let pcolname = element.getAttribute("data-colname");
-            $.ajax({
-              url: "load-products.php",
-              type: "POST",
-              data: {pcolname: pcolname},
-              success: function (data) {
-                  $("#list-inner-div").html(data);
-              }
-            });
+        let pcolname = element.getAttribute("data-colname");
+        $.ajax({
+          url: "load-products.php",
+          type: "POST",
+          data: {pcolname: pcolname},
+          success: function (data) {
+              $("#list-inner-div").html(data);
+              filterList();
+          }
+        });
       }
 
       function loadCategories(){
-          $.ajax({
-            url: "load-categories.php",
-            success: function (data) {
-              $("#categories").html(data);
-            }
-          });
-        }
+        $.ajax({
+          url: "load-categories.php",
+          success: function (data) {
+            $("#categories").html(data);
+          }
+        });
+      }
 
       $(document).ready(function () {
         loadProducts();
