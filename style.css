@@ -849,7 +849,7 @@ footer {
   flex: 3;
 }
 
-.history-item table {
+.history-item-content {
   border-collapse: collapse;
 }
 
@@ -873,12 +873,20 @@ footer {
   width: 15%;
 }
 
+.credit-content-column {
+  width: 60%;
+}
+
+.credit-content-table {
+  width: 100%;
+}
+
 .credit-items-column {
-  width: 45%;
+  width: 75%;
 }
 
 .credit-values-column {
-  width: 15%;
+  width: 25%;
 }
 
 .comment-column {

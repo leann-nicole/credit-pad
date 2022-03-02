@@ -35,7 +35,6 @@ for($i = 0; $i < sizeof($dates); $i++){
         $grandTotal = 0;
         $comment = "";
         $itemsLeft = -1;
-        $values = array();
     ?>
     <div class="history-item">
         <table class="history-item-content">
@@ -43,33 +42,31 @@ for($i = 0; $i < sizeof($dates); $i++){
         while($transactionInDate = mysqli_fetch_assoc($result3)){
             if ($itemsLeft == -1){
                 $itemsLeft = $transactionInDate["cart_size"];
-                $values = array();
     ?>
             <tr>
-                <td class="credit-items-column">
+                <td class="credit-content-column">
+                    <table class="credit-content-table">
     <?php
             }
             $qty = fmod($transactionInDate['quantity'], 1) ? $transactionInDate['quantity'] : floor($transactionInDate['quantity']);
             $grandTotal += $transactionInDate['subtotal'];
-            array_push($values, $transactionInDate['subtotal']);
             if ($transactionInDate["comment"] != NULL){ $comment = $transactionInDate["comment"]; }
     ?>
-                    <div><p title="<?php echo $qty . " " . $transactionInDate['product']; ?>"><?php echo $qty . " " . $transactionInDate['product']; ?></p>
-    <?php
+                        <tr>
+                            <td class="credit-items-column">
+                                <p><?php echo $qty . " " . $transactionInDate['product']; ?></p>
+                            </td>
+                            <td class="credit-values-column">
+                                <p><?php echo "₱ " . number_format(round($transactionInDate['subtotal'])); ?></p>
+                            </td>
+                        </tr>
+   <?php
             $itemsLeft--;
             if (!$itemsLeft){
                 $itemsLeft = -1;
     ?>
-                <br>
-                </td>
-                <td class="credit-values-column">
-    <?php
-                for($j = 0; $j < count($values); $j++){
-    ?>
-                    <P><?php echo "₱ " . number_format(round($values[$j])); ?></P>
-    <?php
-                }
-    ?>
+                    </table>
+                    <br>
                 </td>
                 <td class="comment-column">
                     <p><?php echo $comment;?></p>
@@ -108,7 +105,7 @@ for($i = 0; $i < sizeof($dates); $i++){
                     <p><?php echo $transactionInDate["payment_type"];?></p>
 
                 </td>
-                <td class="payment-items-column">
+                <td class="payment-details-column">
                     <p>paid</p>
                     <p>cash</p>
                     <p>change</p>
