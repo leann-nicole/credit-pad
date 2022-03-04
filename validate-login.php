@@ -55,12 +55,10 @@ if (mysqli_num_rows($result) == 0 or $row['password'] != $password) {
     $query = "SELECT * FROM notes WHERE store_operator = '$username'";
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result)) {
-        $query = "SELECT * FROM notes WHERE store_operator = '$username'";
-        $result = mysqli_query($con, $query);
         $rows = mysqli_fetch_assoc($result);
         $_SESSION["notes"] = $rows["content"];
     } else {
-        $query = "INSERT INTO notes (store_operator, content) VALUES ('$username','$notes')";
+        $query = "INSERT INTO notes (store_operator) VALUES ('$username')";
         mysqli_query($con, $query);
         $_SESSION["notes"] = "";
     }

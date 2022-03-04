@@ -140,9 +140,7 @@ if (!isset($_SESSION['username'])) {
       let products = []; // array for storing textcontent of option elements
       let grandTotal = 0;
       let customer = "";
-      let creditEntryNo = 0;
-      let paymentEntryNo = 0;
-
+      let entryNo = 0;
       function atMost2Dec(n){
         return Number(Math.round(n+ "e"+2)+"e-"+2); 
         // an accurate formula to avoid rounding errors learned from http://thenewcode.com/895/JavaScript-Rounding-Recipes
@@ -213,9 +211,9 @@ if (!isset($_SESSION['username'])) {
         $.ajax({
           url: "fetch-entry-no.php",
           type: "POST",
-          data: {customer: customer, transaction: "credit_transactions", transactionDate: transactionDate},
+          data: {customer: customer, transactionDate: transactionDate},
           success: function(data){
-            creditEntryNo = parseInt(data);
+            entryNo = parseInt(data);
 
             let cartItems = document.getElementsByClassName("cart-item");
             let creditDate = $("#credit-date").val();
@@ -236,7 +234,7 @@ if (!isset($_SESSION['username'])) {
                 $.ajax({
                   url: "save-credit.php",
                   type: "POST",
-                  data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, creditEntryNo: creditEntryNo, comment: comment}
+                  data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, entryNo: entryNo, comment: comment}
                 });
                 commentSaved = true;
               }
@@ -244,7 +242,7 @@ if (!isset($_SESSION['username'])) {
                 $.ajax({
                   url: "save-credit.php",
                   type: "POST",
-                  data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, creditEntryNo: creditEntryNo}
+                  data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, entryNo: entryNo}
                 });
               }            
             });
@@ -269,10 +267,9 @@ if (!isset($_SESSION['username'])) {
         $.ajax({
           url: "fetch-entry-no.php",
           type: "POST",
-          data: {customer: customer, transaction: "payment_transactions", transactionDate: transactionDate},
+          data: {customer: customer, transactionDate: transactionDate},
           success: function(data){
-            paymentEntryNo = parseInt(data);
-            console.log(paymentEntryNo);
+            entryNo = parseInt(data);
 
             let choice = document.querySelector(".selected-payment-type");
             let currentCredit = Number(document.getElementById("customer-credit").textContent.substr(2).replace(/,/g, ''));
@@ -291,7 +288,7 @@ if (!isset($_SESSION['username'])) {
               $.ajax({
               url: "save-payment.php",
               type: "POST",
-              data: {paymentType: "full payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment, paymentEntryNo: paymentEntryNo}
+              data: {paymentType: "full payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment, entryNo: entryNo}
               });         
 
               // clear inputs and comments & update current credit
@@ -316,7 +313,7 @@ if (!isset($_SESSION['username'])) {
               $.ajax({
               url: "save-payment.php",
               type: "POST",
-              data: {paymentType: "partial payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment, paymentEntryNo: paymentEntryNo}
+              data: {paymentType: "partial payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment, entryNo: entryNo}
               });
 
               $("#partial-payment input").val("");
