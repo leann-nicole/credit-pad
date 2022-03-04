@@ -6,16 +6,16 @@ $store_operator = mysqli_real_escape_string($con, $_SESSION["username"]);
 $customer = $_POST["customer"];
 
 $query = "SELECT DISTINCT date FROM credit_transactions WHERE store_operator = '$store_operator' AND customer = '$customer'";
-$result1 = mysqli_query($con, $query);
+$resultCreditDates = mysqli_query($con, $query);
 $creditDates = array(); // convert mysqli_result object  to array of date strings
-while($row = mysqli_fetch_assoc($result1)){
+while($row = mysqli_fetch_assoc($resultCreditDates)){
     array_push($creditDates, $row["date"]);
 }
 
 $query = "SELECT DISTINCT date FROM payment_transactions WHERE store_operator = '$store_operator' AND customer = '$customer'";
-$result2 = mysqli_query($con, $query);
+$resultPaymentDates = mysqli_query($con, $query);
 $paymentDates = array();
-while($row = mysqli_fetch_assoc($result2)){
+while($row = mysqli_fetch_assoc($resultPaymentDates)){
     array_push($paymentDates, $row["date"]);
 }
 
@@ -28,109 +28,101 @@ function sort_date($a, $b){
 usort($dates, "sort_date");
 
 for($i = 0; $i < sizeof($dates); $i++){
-    // credits
-    $query = "SELECT product, quantity, subtotal, comment, cart_size FROM credit_transactions WHERE store_operator = '$store_operator' AND customer = '$customer' AND date = '$dates[$i]'";
-    $result3 = mysqli_query($con, $query);
-    if (mysqli_num_rows($result3)){ // if there are credit transactions in current date
-        $grandTotal = 0;
+    // CREDIT
+    $query = "SELECT * FROM credit_transactions WHERE store_operator = '$store_operator' AND customer = '$customer' AND date = '$dates[$i]'";
+    $resultCreditsInDate = mysqli_query($con, $query);
+    // check if there are credit transactions in the given date
+    // get the number of entries that occured in that date
+    // 1 entry no = 1 history item
+    if (!mysqli_num_rows($resultCreditsInDate)) break;
+    $query = "SELECT MAX(entry_no) as entries FROM credit_transactions WHERE store_operator = '$store_operator' AND customer = '$customer' AND date = '$dates[$i]'";
+    $entries = mysqli_fetch_assoc(mysqli_query($con, $query))["entries"]; 
+    for ($x = $entries; $x >= 1; $x--){ // traverse each entry no
+        $query = "SELECT product, quantity, subtotal, comment FROM credit_transactions WHERE store_operator = '$store_operator' AND customer = '$customer' AND date = '$dates[$i]' AND entry_no = '$x'";
+        $result = mysqli_query($con, $query);
         $comment = "";
-        $itemsLeft = -1;
-    ?>
-    <div class="history-item">
-        <table class="history-item-content">
-    <?php
-        while($transactionInDate = mysqli_fetch_assoc($result3)){
-            if ($itemsLeft == -1){
-                $itemsLeft = $transactionInDate["cart_size"];
-    ?>
-            <tr>
-                <td class="credit-content-column">
-                    <table class="credit-content-table">
-    <?php
-            }
-            $qty = fmod($transactionInDate['quantity'], 1) ? $transactionInDate['quantity'] : floor($transactionInDate['quantity']);
-            $grandTotal += $transactionInDate['subtotal'];
-            if ($transactionInDate["comment"] != NULL){ $comment = $transactionInDate["comment"]; }
-    ?>
-                        <tr>
-                            <td class="credit-items-column">
-                                <p><?php echo $qty . " " . $transactionInDate['product']; ?></p>
-                            </td>
-                            <td class="credit-values-column">
-                                <p><?php echo "₱ " . number_format(round($transactionInDate['subtotal'])); ?></p>
-                            </td>
-                        </tr>
-   <?php
-            $itemsLeft--;
-            if (!$itemsLeft){
-                $itemsLeft = -1;
-    ?>
-                    </table>
-                    <br>
-                </td>
-                <td class="comment-column">
-                    <p><?php echo $comment;?></p>
-                </td>
-            </tr>
-    <?php
-                $comment = "";
-            }
+        $grandTotal = 0;
+        ?>
+        <div class="history-item">
+            <table class="history-item-content"> 
+                <tr>
+                    <td class="credit-content-column">
+                        <table class="credit-content-table"><?php
+        while ($creditTransaction = mysqli_fetch_assoc($result)){
+            $comment .= $creditTransaction["comment"];
+            $grandTotal += $creditTransaction["subtotal"];?>
+                            <tr>
+                                <td class="credit-items-column">
+                                    <p><?php echo number_format(round($creditTransaction["quantity"])) . " " . $creditTransaction["product"]; ?></p>
+                                </td>
+                                <td class="credit-values-column">
+                                    <p><?php echo "₱ " . number_format(round($creditTransaction["subtotal"])); ?></p>
+                                </td>
+                            </tr>
+        <?php
         }
-    ?>   
-        </table>
-        <div class="history-item-header">
-            <p class="history-item-credit">CREDIT</p>
-            <p class="history-item-date"><?php echo date("F j, Y", strtotime($dates[$i])); ?></p>
-            <p class="history-item-total"><?php echo "₱ ". number_format(round($grandTotal, 2)); ?></p>
-        </div>
-    </div>
-    <?php
+        ?>
+                        </table>
+                    </td>
+                    <td class="comment-column">
+                        <p><?php echo $comment; ?></p>
+                    </td>
+                </tr>
+            </table>
+            <div class="history-item-header">
+                <p class="history-item-credit">CREDIT</p>
+                <p class="history-item-date"><?php echo date("F j, Y", strtotime($dates[$i])); ?></p>
+                <p class="history-item-total"><?php echo "₱ ". number_format(round($grandTotal)); ?></p>
+            </div>
+        </div><?php
     }
-    // payments
-    $query = "SELECT payment_type, date, cash, amount_paid, change_amount, comment FROM payment_transactions WHERE store_operator = '$store_operator' AND customer = '$customer' AND date = '$dates[$i]'";
-    $result4 = mysqli_query($con, $query); 
-    if (mysqli_num_rows($result4)){
-        $grandTotal = 0;
+    // PAYMENT
+    $query = "SELECT * FROM payment_transactions WHERE store_operator = '$store_operator' AND customer = '$customer' AND date = '$dates[$i]'";
+    $resultPaymentsInDate = mysqli_query($con, $query);
+    // check if there are payment transactions in the given date
+    // get the number of entries that occured in that date
+    // 1 entry no = 1 history item
+    if (!mysqli_num_rows($resultPaymentsInDate)) break;
+    $query = "SELECT MAX(entry_no) as entries FROM payment_transactions WHERE store_operator = '$store_operator' AND customer = '$customer' AND date = '$dates[$i]'";
+    $entries = mysqli_fetch_assoc(mysqli_query($con, $query))["entries"]; 
+    for ($x = $entries; $x >= 1; $x--){ // traverse each entry no
+        $query = "SELECT payment_type, cash, amount_paid, change_amount, comment FROM payment_transactions WHERE store_operator = '$store_operator' AND customer = '$customer' AND date = '$dates[$i]' AND entry_no = '$x'";
+        $result = mysqli_query($con, $query);
         $comment = "";
-    ?>
-    <div class="history-item">
-        <table class="history-item-content">
-    <?php
-        while ($transactionInDate = mysqli_fetch_assoc($result4)){
-            $grandTotal += $transactionInDate["amount_paid"];
-            if ($transactionInDate["comment"]){ $comment = $transactionInDate["comment"]; }
-    ?> 
-            <tr>
-                <td class="payment-type-column">
-                    <p><?php echo $transactionInDate["payment_type"];?></p>
-
-                </td>
-                <td class="payment-items-column">
-                    <p>paid</p>
-                    <p>cash</p>
-                    <p>change</p>
-                </td>
-                <td class="payment-values-column">
-                    <p><?php echo "₱ " . number_format(round($transactionInDate["amount_paid"], 2)); ?></p>
-                    <p><?php echo "₱ " . number_format(round($transactionInDate["cash"])); ?></p>
-                    <p><?php echo "₱ " . number_format(round($transactionInDate["change_amount"])); ?></p>
-                    <br>
-                </td>
-                <td class="comment-column">
-                    <p><?php echo $comment;?></p>
-                </td>
-            </tr>
-    <?php
-            $comment = "";
+        $paid = 0;
+        ?>
+        <div class="history-item">
+            <table class="history-item-content"> 
+                <tr><?php
+        while ($paymentTransaction = mysqli_fetch_assoc($result)){
+            $comment .= $paymentTransaction["comment"];
+            $paid = $paymentTransaction["cash"];?>
+                    <td class="payment-type-column">
+                        <p><?php echo $paymentTransaction["payment_type"]; ?></p>
+                    </td>
+                    <td class="payment-items-column">
+                        <p><?php echo "cash"; ?></p>
+                        <p><?php echo "paid"; ?></p>
+                        <p><?php echo "change"; ?></p>
+                    </td>
+                    <td class="payment-values-column">
+                        <p><?php echo "₱ " . number_format(round($paymentTransaction["cash"])); ?></p>
+                        <p><?php echo "₱ " . number_format(round($paymentTransaction["amount_paid"])); ?></p>
+                        <p><?php echo "₱ " . number_format(round($paymentTransaction["change_amount"])); ?></p>
+                    </td>
+        <?php
         }
-    ?>
-        </table>
-        <div class="history-item-header">
-            <p class="history-item-payment">PAYMENT</p>
-            <p class="history-item-date"><?php echo date("F j, Y", strtotime($dates[$i])); ?></p>
-            <p class="history-item-total"><?php echo "₱ " . number_format(round($grandTotal, 2)); ?></p>
-        </div>
-    </div>
-    <?php
-    }   
+        ?>
+                    <td class="comment-column">
+                        <p><?php echo $comment; ?></p>
+                    </td>
+                </tr>
+            </table>
+            <div class="history-item-header">
+                <p class="history-item-payment">PAYMENT</p>
+                <p class="history-item-date"><?php echo date("F j, Y", strtotime($dates[$i])); ?></p>
+                <p class="history-item-total"><?php echo "₱ ". number_format(round($paid)); ?></p>
+            </div>
+        </div><?php
+    }
 }

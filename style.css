@@ -857,7 +857,7 @@ footer {
 }
 
 .history-item-content {
-  flex: 3;
+  flex: 2;
   border-collapse: collapse;
 }
 
@@ -870,11 +870,11 @@ footer {
 }
 
 .payment-type-column {
-  width: 30%;
+  width: 35%;
 }
 
 .payment-items-column {
-  width: 15%;
+  width: 20%;
 }
 
 .payment-values-column {
@@ -882,7 +882,7 @@ footer {
 }
 
 .credit-content-column {
-  width: 60%;
+  width: 70%;
 }
 
 .credit-content-table {
@@ -890,15 +890,15 @@ footer {
 }
 
 .credit-items-column {
-  width: 75%;
+  width: 80%;
 }
 
 .credit-values-column {
-  width: 25%;
+  width: 20%;
 }
 
 .comment-column {
-  width: 40%;
+  width: 30%;
 }
 
 .comment-column p {
