@@ -82,10 +82,9 @@ if (!isset($_SESSION['username'])) {
           </div>
           <div id="payment-div">
             <div id="payment-info-div">
-              <p class="field-name">Choose type of payment</p>
+              <p class="field-name">Select type of payment</p>
               <div id="payment-types-div">
                 <div id="full-payment" class="payment-type selected-payment-type" onclick="selectPayment(this)">
-                  <div class="selection-indicator"></div>
                   <p class="payment-type-name">FULL PAYMENT</p>
                   <div class="payment-calculation-div">
                     <label for="cash-received1">
@@ -96,7 +95,6 @@ if (!isset($_SESSION['username'])) {
                   <p id="change1">change:</p>
                 </div>   
                 <div id="partial-payment" class="payment-type" onclick="selectPayment(this)">
-                  <div class="selection-indicator"></div>
                   <p class="payment-type-name">PARTIAL PAYMENT</p>
                   <div class="payment-calculation-div">
                     <label for="cash-received2">
@@ -142,6 +140,8 @@ if (!isset($_SESSION['username'])) {
       let products = []; // array for storing textcontent of option elements
       let grandTotal = 0;
       let customer = "";
+      let creditEntryNo = 0;
+      let paymentEntryNo = 0;
 
       function atMost2Dec(n){
         return Number(Math.round(n+ "e"+2)+"e-"+2); 
@@ -206,107 +206,127 @@ if (!isset($_SESSION['username'])) {
       }
 
       function saveCredit() {
-        if (grandTotal) {
-          let cartItems = document.getElementsByClassName("cart-item");
-          let creditDate = $("#credit-date").val();
-          let newCustomerCredit = atMost2Dec(Number(document.getElementById("customer-credit").textContent.substr(2).replace(/,/g, '')) + grandTotal); // replace() because Number() doesn't process commas. and using replace() with a regular expression /,/g ensures all occurences and not just the first is replaced
-          let comment = $("#credit-comment").val();
-          let commentSaved = false;
-          let cartSize = cartItems.length;
+        let transactionDate = $("#credit-date").val();
+        if (!grandTotal || transactionDate == "") { return; }
+      
+        // get entry number for transaction
+        $.ajax({
+          url: "fetch-entry-no.php",
+          type: "POST",
+          data: {customer: customer, transaction: "credit_transactions", transactionDate: transactionDate},
+          success: function(data){
+            creditEntryNo = parseInt(data);
 
-          // go through cart, individually saving each item to the database
-          Array.from(cartItems).forEach(function(item, index, arr){
-            // get cart item information
-            let product = item.querySelector("span:nth-of-type(1)").textContent;
-            let quantity = Number(item.querySelector("span:nth-of-type(2)").textContent);
-            let price = Number(item.querySelector("span:nth-of-type(3)").textContent);
-            let subTotal = Number(item.querySelector("span:nth-of-type(4)").textContent);
-  
-            // save to database
-            if (!commentSaved){
-              $.ajax({
-                url: "save-credit.php",
-                type: "POST",
-                data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, cartSize: cartSize, comment: comment}
-              });
-              commentSaved = true;
+            let cartItems = document.getElementsByClassName("cart-item");
+            let creditDate = $("#credit-date").val();
+            let newCustomerCredit = atMost2Dec(Number(document.getElementById("customer-credit").textContent.substr(2).replace(/,/g, '')) + grandTotal); // replace() because Number() doesn't process commas. and using replace() with a regular expression /,/g ensures all occurences and not just the first is replaced
+            let comment = $("#credit-comment").val();
+            let commentSaved = false;
+
+            // go through cart, individually saving each item to the database
+            Array.from(cartItems).forEach(function(item, index, arr){
+              // get cart item information
+              let product = item.querySelector("span:nth-of-type(1)").textContent;
+              let quantity = Number(item.querySelector("span:nth-of-type(2)").textContent);
+              let price = Number(item.querySelector("span:nth-of-type(3)").textContent);
+              let subTotal = Number(item.querySelector("span:nth-of-type(4)").textContent);
+    
+              // save to database
+              if (!commentSaved){
+                $.ajax({
+                  url: "save-credit.php",
+                  type: "POST",
+                  data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, creditEntryNo: creditEntryNo, comment: comment}
+                });
+                commentSaved = true;
+              }
+              else {
+                $.ajax({
+                  url: "save-credit.php",
+                  type: "POST",
+                  data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, creditEntryNo: creditEntryNo}
+                });
+              }            
+            });
+
+            // empty cart
+            let cart = document.getElementById("cart-list");
+            while (cart.firstChild){
+              cart.removeChild(cart.firstChild);
             }
-            else {
-              $.ajax({
-                url: "save-credit.php",
-                type: "POST",
-                data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, cartSize: cartSize}
-              });
-            }            
-          });
-
-          // empty cart
-          let cart = document.getElementById("cart-list");
-          while (cart.firstChild){
-            cart.removeChild(cart.firstChild);
+            // refresh comment, customer credit, and grand total
+            document.getElementById("credit-comment").value = "";
+            document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
+            grandTotal = 0;
+            document.getElementById("grand-total").textContent = "₱\ " + grandTotal;
           }
-          // refresh comment, customer credit, and grand total
-          document.getElementById("credit-comment").value = "";
-          document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
-          grandTotal = 0;
-          document.getElementById("grand-total").textContent = "₱\ " + grandTotal;
-        }
+        });              
       }
 
       function savePayment(){
-        let choice = document.querySelector(".selected-payment-type");
-        let currentCredit = Number(document.getElementById("customer-credit").textContent.substr(2).replace(/,/g, ''));
-        
-        if (currentCredit != 0 && choice.id == "full-payment"){
-          let cash = choice.getElementsByTagName("input")[0].value;
+        let transactionDate = $("#payment-date").val();
+        if (transactionDate == "") return;
+        $.ajax({
+          url: "fetch-entry-no.php",
+          type: "POST",
+          data: {customer: customer, transaction: "payment_transactions", transactionDate: transactionDate},
+          success: function(data){
+            paymentEntryNo = parseInt(data);
+            console.log(paymentEntryNo);
 
-          if (cash != ""){
-            cash = atMost2Dec(cash)
-            let amountPaid = Number($("#customer-credit").text().substr(2).replace(/,/g, ""));
-            if (cash < amountPaid){ return; }
-            let change = atMost2Dec(cash - amountPaid);
-            let paymentDate = $("#payment-date").val();
-            let comment = $("#payment-comment").val();
+            let choice = document.querySelector(".selected-payment-type");
+            let currentCredit = Number(document.getElementById("customer-credit").textContent.substr(2).replace(/,/g, ''));
 
-            $.ajax({
-            url: "save-payment.php",
-            type: "POST",
-            data: {paymentType: "full payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment}
-            });         
+            if (currentCredit != 0 && choice.id == "full-payment"){
+              let cash = choice.getElementsByTagName("input")[0].value;
 
-            // clear inputs and comments & update current credit
-            $("#full-payment input").val("");
-            $("#payment-comment").val("");
-            $("#change1").text("change:");
-            let newCustomerCredit = atMost2Dec(currentCredit - amountPaid); 
-            document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
+              if (cash == "") return;
+              cash = atMost2Dec(cash)
+              let amountPaid = Number($("#customer-credit").text().substr(2).replace(/,/g, ""));
+              if (cash < amountPaid){ return; }
+              let change = atMost2Dec(cash - amountPaid);
+              let paymentDate = $("#payment-date").val();
+              let comment = $("#payment-comment").val();
+
+              $.ajax({
+              url: "save-payment.php",
+              type: "POST",
+              data: {paymentType: "full payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment, paymentEntryNo: paymentEntryNo}
+              });         
+
+              // clear inputs and comments & update current credit
+              $("#full-payment input").val("");
+              $("#payment-comment").val("");
+              $("#change1").text("change:");
+              let newCustomerCredit = atMost2Dec(currentCredit - amountPaid); 
+              document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
+            }
+            else if (currentCredit != 0 && choice.id == "partial-payment"){
+              let cash = choice.getElementsByTagName("input")[0].value;
+              let amountPaid = choice.getElementsByTagName("input")[1].value;
+
+              if (cash == "" || amountPaid == "") return;
+              cash = atMost2Dec(cash);
+              amountPaid = atMost2Dec(amountPaid);
+              if (cash < amountPaid || currentCredit <= amountPaid){ return; }
+              let change = atMost2Dec(cash - amountPaid);
+              let paymentDate = $("#payment-date").val();
+              let comment = $("#payment-comment").val();
+
+              $.ajax({
+              url: "save-payment.php",
+              type: "POST",
+              data: {paymentType: "partial payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment, paymentEntryNo: paymentEntryNo}
+              });
+
+              $("#partial-payment input").val("");
+              $("#payment-comment").val("");
+              $("#change2").text("change:");
+              let newCustomerCredit = atMost2Dec(currentCredit - amountPaid);
+              document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
+            }
           }
-        }
-        else if (currentCredit != 0 && choice.id == "partial-payment"){
-          let cash = choice.getElementsByTagName("input")[0].value;
-          let amountPaid = choice.getElementsByTagName("input")[1].value;
-
-          if (cash != "" && amountPaid != ""){
-            cash = atMost2Dec(cash);
-            amountPaid = atMost2Dec(amountPaid);
-            if (cash < amountPaid || currentCredit <= amountPaid){ return; }
-            let change = atMost2Dec(cash - amountPaid);
-            let paymentDate = $("#payment-date").val();
-            let comment = $("#payment-comment").val();
-
-            $.ajax({
-            url: "save-payment.php",
-            type: "POST",
-            data: {paymentType: "partial payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment}
-            });
-
-            $("#partial-payment input").val("");
-            $("#payment-comment").val("");
-            $("#change2").text("change:");
-            let newCustomerCredit = atMost2Dec(currentCredit - amountPaid);
-            document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
-          }
-        }
+        });
       }
 
       function calcPriceTotal(element){

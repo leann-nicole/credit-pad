@@ -105,7 +105,7 @@ for($i = 0; $i < sizeof($dates); $i++){
                     <p><?php echo $transactionInDate["payment_type"];?></p>
 
                 </td>
-                <td class="payment-details-column">
+                <td class="payment-items-column">
                     <p>paid</p>
                     <p>cash</p>
                     <p>change</p>

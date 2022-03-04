@@ -48,7 +48,7 @@ $rating = $rows["rating"];
         </tr>
         <tr>
             <td><p><?php echo "email"?></p></td>
-            <td><p><?php echo $email;?></p></td>
+            <td><p><?php if ($email == NULL) { echo "no email address"; } else { echo $email; } ?></p></td>
         </tr>
     </table>
 </div>

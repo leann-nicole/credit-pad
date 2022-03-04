@@ -10,14 +10,14 @@ $quantity = $_POST["quantity"];
 $price = $_POST["price"];
 $subtotal = $_POST["subTotal"];
 $grandTotal = $_POST["grandTotal"];
-$cartSize = $_POST["cartSize"];
+$creditEntryNo = $_POST["creditEntryNo"];
 
 if (!empty($_POST["comment"])){
-        $comment = mysqli_real_escape_string($con, $_POST["comment"]);
-        $query = "INSERT INTO credit_transactions (date, store_operator, customer, product, quantity, price, subtotal, cart_size, comment) VALUES ('$date', '$store_operator', '$customer', '$product', '$quantity', '$price', '$subtotal', '$cartSize', '$comment')";
+    $comment = mysqli_real_escape_string($con, $_POST["comment"]);
+    $query = "INSERT INTO credit_transactions (date, store_operator, customer, product, quantity, price, subtotal, entry_no, comment) VALUES ('$date', '$store_operator', '$customer', '$product', '$quantity', '$price', '$subtotal', '$creditEntryNo', '$comment')";
 }
 else {
-    $query = "INSERT INTO credit_transactions (date, store_operator, customer, product, quantity, price, subtotal, cart_size) VALUES ('$date', '$store_operator', '$customer', '$product', '$quantity', '$price', '$subtotal', '$cartSize')";
+    $query = "INSERT INTO credit_transactions (date, store_operator, customer, product, quantity, price, subtotal, entry_no) VALUES ('$date', '$store_operator', '$customer', '$product', '$quantity', '$price', '$subtotal', '$creditEntryNo')";
 }
 
 
