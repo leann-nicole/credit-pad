@@ -35,7 +35,7 @@ input:autofill {
 }
 
 .field:focus {
-  border-color: #10854b;
+  border-color: #108531;
 }
 
 .container {
@@ -63,7 +63,7 @@ input:autofill {
   border: 1px solid #c9c9c9;
   background-color: white;
   border-radius: 10px;
-  margin-bottom: 10px;
+  margin: 10px 0px;
   padding: 20px;
   min-height: 50px;
   display: flex;
@@ -120,18 +120,18 @@ input:autofill {
 }
 
 .selected-navbar-item {
-  background-color: #e6e6e6;
+  background-color: #d9d9d9;
 }
 
 .selected-navbar-item:hover {
-  background-color: #e6e6e6;
+  background-color: #d9d9d9;
 }
 
 #sitename,
 #sitename-header > a {
   font-size: 22px;
   line-height: 22px;
-  color: #10854b;
+  color: #108531;
   font-weight: bold;
 }
 
@@ -185,7 +185,7 @@ input:autofill {
 }
 
 #switch-form-link:hover {
-  color: #10854b;
+  color: #108531;
 }
 
 #error {
@@ -255,7 +255,7 @@ li {
 }
 
 li:hover {
-  background-color: hsl(0, 0%, 92%);
+  background-color: #e6e6e6;
 }
 
 li > a {
@@ -294,7 +294,7 @@ main > * {
   border-radius: 5px;
   margin-bottom: 10px;
   padding-bottom: 10px;
-  background-color: #fffbec;
+  background-color: white;
 }
 
 #notes-header {
@@ -314,7 +314,6 @@ main > * {
   border-radius: 0px 0px 5px 5px;
   margin: 0;
   border: none;
-  background-color: #fffbec;
 }
 
 #create-form-div-c,
@@ -327,7 +326,7 @@ main > * {
 #form-name {
   width: 100%;
   margin-bottom: 10px;
-  background-color: #e6e6e6;
+  background-color: #d9d9d9;
   line-height: 40px;
   padding-left: 20px;
 }
@@ -378,7 +377,7 @@ main > * {
   line-height: 24px;
   margin: 0px 2px;
   transition: color 0.2s;
-  color: #c9c9c9;
+  color: #d9d9d9;
 }
 
 #rating > label:last-of-type {
@@ -649,12 +648,12 @@ footer {
 }
 
 #tab-section div:hover {
-  background-color: hsl(0, 0%, 92%);
+  background-color: #e6e6e6;
 }
 
 #tab-section div.selected-navbar-item:hover {
   /* я думаю this is redundant with the rule at line 98 but that rule gets overwritten by the rule at line 601 и я не знаю почему*/
-  background-color: #e6e6e6;
+  background-color: #d9d9d9;
 }
 
 #tab-content {
@@ -662,7 +661,7 @@ footer {
   position: relative;
   box-shadow: 0px 0px 5px 0px #c9c9c9;
   height: fit-content;
-  min-height: 313px;
+  min-height: 315px;
   padding-top: 20px;
 }
 
@@ -741,11 +740,12 @@ footer {
   line-height: 20px;
   resize: vertical;
   min-height: 42px;
+  margin-bottom: 8px;
 }
 
 #save-credit-div,
 #save-payment-div {
-  margin-top: 11px;
+  margin-top: 12px;
   position: relative;
 }
 
@@ -768,18 +768,8 @@ footer {
   width: 75px;
 }
 
-#payment-info-div {
-  height: 180px;
-  display: flex;
-  flex-direction: column;
-}
-
-#payment-info-div > p {
-  text-align: center;
-}
-
 #payment-types-div {
-  height: 160px;
+  height: 180px;
   display: flex;
   justify-content: space-between;
 }
@@ -814,7 +804,7 @@ footer {
 }
 
 #payment-types-div input:focus {
-  border: 1px solid #10854b;
+  border: 1px solid #108531;
 }
 
 .payment-type {
@@ -825,24 +815,69 @@ footer {
   justify-content: center;
   align-items: center;
   position: relative;
+  cursor: pointer;
 }
 
-.payment-type:hover {
-  box-shadow: 0px 0px 5px 0px #c9c9c9;
+.payment-check-mark {
+  display: none;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 24px;
 }
 
-.selected-payment-type:hover {
-  box-shadow: none;
+.payment-type:first-of-type:hover > .payment-check-mark {
+  display: block;
+  color: orange;
 }
 
-.selected-payment-type, .payment-type:focus-within {
-  border:2px solid #10854b;
+.payment-type:nth-of-type(2):hover > .payment-check-mark {
+  display: block;
+  color: gray;
 }
 
-#history-div {
-  padding-left: 40px;
-  padding-right: 40px;
-  line-height: 24px;
+.selected-payment-type > .payment-check-mark {
+  display: block;
+  color: #108531;
+}
+
+.payment-type.selected-payment-type:hover > .payment-check-mark {
+  display: block;
+  color: #108531;
+}
+
+#history-tools {
+  height: 40px;
+  margin-bottom: 10px;
+}
+
+#history-tools div {
+  display: inline-flex;
+  height: 30px;
+  padding: 0px 10px;
+  border-radius: 5px;
+  background-color: #e6e6e6;
+}
+
+#history-tools .selected-history-type {
+  color: white;
+  background-color: #108531;
+}
+
+#clear-filters-button {
+  display: inline-block;
+  float: right;
+  margin-left: 10px;
+}
+
+#startDate, #history-tools p, #endDate {
+  float: right;
+  width: fit-content;
+}
+
+#history-tools p {
+  margin: 0px 5px;
+  line-height: 40px;
 }
 
 .history-item-header {
@@ -911,10 +946,10 @@ footer {
   border-radius: 10px;
 }
 
-.history-item-payment {
+.payment-history-item .history-item-type {
   background-color: #53b050;
 }
 
-.history-item-credit {
+.credit-history-item .history-item-type {
   background-color: gray;
 }

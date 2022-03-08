@@ -81,10 +81,9 @@ if (!isset($_SESSION['username'])) {
             </div>
           </div>
           <div id="payment-div">
-            <div id="payment-info-div">
-              <p class="field-name">Select type of payment</p>
               <div id="payment-types-div">
                 <div id="full-payment" class="payment-type selected-payment-type" onclick="selectPayment(this)">
+                  <span class="material-icons payment-check-mark">check_circle</span>
                   <p class="payment-type-name">FULL PAYMENT</p>
                   <div class="payment-calculation-div">
                     <label for="cash-received1">
@@ -95,6 +94,7 @@ if (!isset($_SESSION['username'])) {
                   <p id="change1">change:</p>
                 </div>   
                 <div id="partial-payment" class="payment-type" onclick="selectPayment(this)">
+                  <span class="material-icons payment-check-mark">check_circle</span>
                   <p class="payment-type-name">PARTIAL PAYMENT</p>
                   <div class="payment-calculation-div">
                     <label for="cash-received2">
@@ -109,7 +109,6 @@ if (!isset($_SESSION['username'])) {
                   <p id="change2">change:</p>
                 </div>
               </div>
-            </div>
             <div id="save-payment-div">
               <textarea id="payment-comment" class="field" placeholder="Write a comment here" spellcheck="false"></textarea>
               <input type="date" id="payment-date" class="field" value="<?php echo date(
@@ -118,7 +117,17 @@ if (!isset($_SESSION['username'])) {
               <button type="button" id="save-payment-button" class="button save-button" onclick="savePayment()">Save</button>
             </div>
           </div>
-          <div id="history-div"></div>
+          <div id="history-div">
+            <div id="history-tools">
+              <div id="payments" class="button selected-history-type" onclick="filterHistory(this)">Payments</div>
+              <div id="credits" class="button selected-history-type" onclick="filterHistory(this)">Credits</div>
+              <button type="button" id="clear-filters-button" class="button" onclick="clearFilters()">Clear filters</button>
+              <input type="date" id="endDate" class="field" onchange="filterHistory(this)">
+              <p>-</p>
+              <input type="date" id="startDate" class="field" onchange="filterHistory(this)">
+            </div>
+            <div id="history-list"></div>
+          </div>
           <div id="statistics-div">statistics</div>
         </div>
       </main>
@@ -152,6 +161,104 @@ if (!isset($_SESSION['username'])) {
         // Math.round(215.50) = 216
         // 216e-2 = 2.16
         // voila! 
+      }
+
+      function clearFilters(){
+        document.getElementById("payments").classList.add("selected-history-type");
+        document.getElementById("credits").classList.add("selected-history-type");
+        document.getElementById("startDate").value = "";
+        document.getElementById("endDate").value = "";
+        filterHistory();
+      }
+
+      function filterHistory(element){
+        let historyItems = document.querySelectorAll(".history-item");
+        let toFilterByType = [];
+        for (let i = 0; i < historyItems.length; i++) toFilterByType.push(i);
+
+        // to step process
+        // filter by date first
+        // this stage also resets previous filters by setting the display of any date matched item to flex
+        // filter by type will take place right after
+        let startDate = $("#startDate").val();
+        let endDate = $("#endDate").val();
+        
+        if (startDate == "" && endDate == ""){ // default, show all
+          historyItems.forEach(function (item) {
+            item.style.display = "flex";
+          })
+        }
+        else if (startDate != "" && endDate == ""){ // one date provided, exact match needed
+          let dateToMatch = startDate;
+          historyItems.forEach(function (item, index) {
+            let itemDate = item.querySelector(".history-item-date").getAttribute("data-date");
+            if (itemDate == dateToMatch) item.style.display = "flex";
+            else{
+              item.style.display = "none";
+              toFilterByType = toFilterByType.filter(e => e != index);
+            }
+          })
+        }
+        else if (startDate == "" && endDate != ""){ // one date provided, exact match needed
+          let dateToMatch = endDate;
+          historyItems.forEach(function (item, index) {
+            let itemDate = item.querySelector(".history-item-date").getAttribute("data-date");
+            if (itemDate == dateToMatch) item.style.display = "flex";
+            else{
+              item.style.display = "none";
+              toFilterByType = toFilterByType.filter(e => e != index);
+            }
+          })
+        }
+        else if (startDate == endDate ) { // one date provided, exact match needed
+          let dateToMatch = startDate;
+          historyItems.forEach(function (item, index) {
+            let itemDate = item.querySelector(".history-item-date").getAttribute("data-date");
+            if (itemDate == dateToMatch) item.style.display = "flex";
+            else{
+              item.style.display = "none";
+              toFilterByType = toFilterByType.filter(e => e != index);
+            }
+          })
+        }
+        else if (startDate != endDate) { // two dates provided, match within range
+          let lowerDate = new Date(startDate);
+          let higherDate = new Date(endDate);
+          historyItems.forEach(function (item, index){
+            let itemDate = new Date(item.querySelector(".history-item-date").getAttribute("data-date"));
+            if (itemDate >= lowerDate && itemDate <= higherDate || itemDate <= lowerDate && itemDate >= higherDate) item.style.display = "flex";
+            else {
+              item.style.display = "none";
+              toFilterByType = toFilterByType.filter(e => e != index);
+            }
+          })
+        }
+
+        // then filter remaining by type
+        if (element.tagName == "DIV") element.classList.toggle("selected-history-type");
+        
+        let paymentsSelected = document.getElementById("payments").classList.contains("selected-history-type");
+        let creditsSelected = document.getElementById("credits").classList.contains("selected-history-type");
+
+        if (!paymentsSelected || !creditsSelected){
+          if (paymentsSelected){
+            toFilterByType.forEach(index => {
+              let item = historyItems.item(index);
+              if (item.getAttribute("data-type") != "payment-history-item") item.style.display = "none";
+            })
+          }
+          else if (creditsSelected){
+            toFilterByType.forEach(index => {
+              let item = historyItems.item(index);
+              if (item.getAttribute("data-type") != "credit-history-item") item.style.display = "none";
+            })
+          }
+          else {
+            toFilterByType.forEach(index => {
+              historyItems.item(index).style.display = "none";
+            })
+          }
+        }        
       }
 
       function getChange(element){
@@ -547,7 +654,7 @@ if (!isset($_SESSION['username'])) {
             type: "POST", 
             data: {customer: customer},
             success: function(data){
-              $("#history-div").html(data);
+              $("#history-list").html(data);
             }
           });
         }

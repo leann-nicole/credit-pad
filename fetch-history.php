@@ -44,7 +44,7 @@ for($i = 0; $i < sizeof($dates); $i++){
             $comment = "";
             $grandTotal = 0;
             ?>
-            <div class="history-item">
+            <div class="history-item credit-history-item" data-type="credit-history-item">
                 <table class="history-item-content"> 
                     <tr>
                         <td class="credit-content-column">
@@ -71,8 +71,8 @@ for($i = 0; $i < sizeof($dates); $i++){
                     </tr>
                 </table>
                 <div class="history-item-header">
-                    <p class="history-item-credit">CREDIT</p>
-                    <p class="history-item-date"><?php echo date("F j, Y", strtotime($dates[$i])); ?></p>
+                    <p class="history-item-type">CREDIT</p>
+                    <p class="history-item-date" data-date="<?php echo date("Y-m-d", strtotime($dates[$i])); ?>"><?php echo date("F j, Y", strtotime($dates[$i])); ?></p>
                     <p class="history-item-total"><?php echo "₱ ". number_format(round($grandTotal)); ?></p>
                 </div>
             </div><?php
@@ -83,7 +83,7 @@ for($i = 0; $i < sizeof($dates); $i++){
             $comment = "";
             $paid = 0;
             ?>
-            <div class="history-item">
+            <div class="history-item payment-history-item"  data-type="payment-history-item">
                 <table class="history-item-content"> 
                     <tr><?php
             while ($paymentTransaction = mysqli_fetch_assoc($resultPayment)){
@@ -111,8 +111,8 @@ for($i = 0; $i < sizeof($dates); $i++){
                     </tr>
                 </table>
                 <div class="history-item-header">
-                    <p class="history-item-payment">PAYMENT</p>
-                    <p class="history-item-date"><?php echo date("F j, Y", strtotime($dates[$i])); ?></p>
+                    <p class="history-item-type">PAYMENT</p>
+                    <p class="history-item-date" data-date="<?php echo date("Y-m-d", strtotime($dates[$i])); ?>"><?php echo date("F j, Y", strtotime($dates[$i])); ?></p>
                     <p class="history-item-total"><?php echo "₱ ". number_format(round($paid)); ?></p>
                 </div>
             </div><?php
