@@ -15,6 +15,11 @@ a {
   text-decoration: none;
 }
 
+label {
+  display: inline-block;
+  margin: 5px 0px;
+}
+
 input:autofill {
   background: white;
 }
@@ -137,6 +142,7 @@ input:autofill {
 
 #sitename {
   margin-bottom: 20px;
+  cursor: default;
 }
 
 #login-signup-form-div {
@@ -304,6 +310,7 @@ main > * {
   line-height: 40px;
   border-radius: 5px 5px 0px 0px;
   color: white;
+  cursor: default;
 }
 
 #notes {
@@ -859,15 +866,20 @@ footer {
   background-color: #e6e6e6;
 }
 
-#history-tools .selected-history-type {
+#history-tools .button:first-of-type.selected-history-type {
   color: white;
-  background-color: #108531;
+  background-color: #53b050;
 }
 
-#clear-filters-button {
-  display: inline-block;
+#history-tools .button:nth-of-type(2).selected-history-type {
+  color: white;
+  background-color: gray;
+}
+
+#sort-history-button {
   float: right;
   margin-left: 10px;
+  width: 150px;
 }
 
 #startDate, #history-tools p, #endDate {
@@ -878,6 +890,10 @@ footer {
 #history-tools p {
   margin: 0px 5px;
   line-height: 40px;
+}
+
+#history-list {
+  padding: 0px 30px;
 }
 
 .history-item-header {

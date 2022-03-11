@@ -3,7 +3,7 @@ session_start();
 include "connection.php";
 
 // fetch customer information
-$customer = $_POST["name"];
+$customer = $_POST["customer"];
 $query = "SELECT * FROM customers WHERE name = '$customer'";
 $result = mysqli_query($con, $query);
 $rows = mysqli_fetch_assoc($result);

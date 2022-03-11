@@ -21,20 +21,20 @@ session_start(); // if you want to use the $_SESSION superglobal, for accessing 
       <form id="signup-form" action="validate-signup.php" autocomplete="off" method="post">
 
         <div class="form-column">
-            <p class="field-name">name</p>
-            <input type="text" class="field" name="username" maxlength="50" value="<?php if (
+            <label for="uname" class="field-name">name</label>
+            <input id="uname" type="text" class="field" name="username" maxlength="50" value="<?php if (
                 isset($_SESSION['username'])
             ) {
                 echo $_SESSION['username'];
             } ?>"/>
-            <p class="field-name">birthdate</p>
-            <input type="date" class="field" name="birthdate" value="<?php if (
+            <label for="bday" class="field-name">birthdate</label>
+            <input id="bday" type="date" class="field" name="birthdate" value="<?php if (
                 isset($_SESSION['birthdate'])
             ) {
                 echo $_SESSION['birthdate'];
             } ?>"/>
-            <p class="field-name">sex</p>
-            <select name="sex" class="field">
+            <label for="gender" class="field-name">sex</label>
+            <select id="gender" name="sex" class="field">
             <option value="m" <?php if (
                 isset($_SESSION['sex']) and
                 $_SESSION['sex'] == 'm'
@@ -48,8 +48,8 @@ session_start(); // if you want to use the $_SESSION superglobal, for accessing 
                 echo 'selected';
             } ?>>female</option>
             </select>
-            <p class="field-name">mobile number</p>
-            <input type="text" class="field" name="mobile_no" maxlength="11" value="<?php if (
+            <label for="phone" class="field-name">mobile number</label>
+            <input id="phone" type="text" class="field" name="mobile_no" maxlength="11" value="<?php if (
                 isset($_SESSION['mobile_no'])
             ) {
                 echo $_SESSION['mobile_no'];
@@ -57,26 +57,26 @@ session_start(); // if you want to use the $_SESSION superglobal, for accessing 
         </div>
 
         <div class="form-column">
-            <p class="field-name">email address</p>
-            <input type="text" class="field" name="email" maxlength="100" value="<?php if (
+            <label for="mail" class="field-name">email address</label>
+            <input id="mail" type="text" class="field" name="email" maxlength="100" value="<?php if (
                 isset($_SESSION['email'])
             ) {
                 echo $_SESSION['email'];
             } ?>"/>
-            <p class="field-name">business name</p>
-            <input type="text" class="field" name="business_name" maxlength="50" value="<?php if (
+            <label for="business" class="field-name">business name</label>
+            <input id="business" type="text" class="field" name="business_name" maxlength="50" value="<?php if (
                 isset($_SESSION['business_name'])
             ) {
                 echo $_SESSION['business_name'];
             } ?>"/>
-            <p class="field-name">business address</p>
-            <input type="text" class="field" name="business_addr" maxlength="100" value="<?php if (
+            <label for="baddress" class="field-name">business address</label>
+            <input id="baddress" type="text" class="field" name="business_addr" maxlength="100" value="<?php if (
                 isset($_SESSION['business_addr'])
             ) {
                 echo $_SESSION['business_addr'];
             } ?>"/>
-            <p class="field-name">password</p>
-            <input type="password" class="field" name="password" maxlength="15" value="<?php if (
+            <label for="pass" class="field-name">password</label>
+            <input id="pass" type="password" class="field" name="password" maxlength="15" value="<?php if (
                 isset($_SESSION['password'])
             ) {
                 echo $_SESSION['password'];

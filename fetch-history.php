@@ -22,7 +22,12 @@ while($row = mysqli_fetch_assoc($resultPaymentDates)){
 $dates = array_unique(array_merge($creditDates, $paymentDates));
 
 function sort_date($a, $b){
-    return strtotime($b) - strtotime($a);
+    if ($_POST["historyOrder"] == "Most Recent First"){
+        return strtotime($b) - strtotime($a);
+    }
+    else {
+        return strtotime($a) - strtotime($b);
+    }
 }
 
 usort($dates, "sort_date");

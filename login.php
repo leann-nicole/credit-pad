@@ -19,14 +19,14 @@ session_start();
     <div id="login-signup-form-div" class="container">
       <p id="sitename">CREDIT PAD</p>
       <form id="login-form" action="validate-login.php" autocomplete="off" method="post"> <!-- method=post for sensitive information we don't want displayed in the URL -->
-        <p class="field-name">name</p>
-        <input type="text" class="field" name="username" value="<?php if (
+        <label for="uname" class="field-name">name</label>
+        <input id="uname" type="text" class="field" name="username" value="<?php if (
             isset($_SESSION['username'])
         ) {
             echo $_SESSION['username'];
         } ?>"/>
-        <p class="field-name">password</p>
-        <input type="password" class="field" name="password" value="<?php if (
+        <label for="pass" class="field-name">password</label>
+        <input id="pass" type="password" class="field" name="password" value="<?php if (
             isset($_SESSION['password'])
         ) {
             echo $_SESSION['password'];

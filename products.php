@@ -50,13 +50,13 @@ if (!isset($_SESSION['username'])) {
           <div id="form-name">ADD NEW PRODUCT</div>
           <form id="create-form" autocomplete="off" action="validate-new-product.php" method="post">
             <div class="form-column">
-              <p class="field-name">name</p>
-              <input class="field" type="text" name="product" maxlength="50" value="<?php if (
+              <label for="product-name" class="field-name">name</label>
+              <input id="product-name" class="field" type="text" name="product" maxlength="50" value="<?php if (
                   isset($_SESSION['product'])
               ) {
                   echo $_SESSION['product'];
               } ?>"/>
-              <p class="field-name">description</p>
+              <label for="product-description" class="field-name">description</label>
               <textarea id="product-description" class="field" name="description" maxlength="250" spellcheck="false" placeholder="optional"><?php if (
                   isset($_SESSION['description'])
               ) {
@@ -65,8 +65,8 @@ if (!isset($_SESSION['username'])) {
 
               <div id="category-price-div">
                 <div id="cp-category">
-                  <p class="field-name">category</p>
-                    <input type="text" class="field" id="category" list="categories" maxlength="30" name="category" value="<?php if (
+                  <label for="category" class="field-name">category</label>
+                    <input id="category" type="text" class="field" id="category" list="categories" maxlength="30" name="category" value="<?php if (
                         isset($_SESSION['category'])
                     ) {
                         echo $_SESSION['category'];
@@ -74,7 +74,7 @@ if (!isset($_SESSION['username'])) {
                       <datalist id="categories"></datalist>
                 </div>
                 <div id="cp-price">
-                  <p class="field-name">price</p>
+                  <label for="price"class="field-name">price</label>
                   <input class="field" type="number" id="price" name="price" min="1" title="" value="<?php if (
                       isset($_SESSION['price'])
                   ) {
@@ -95,7 +95,7 @@ if (!isset($_SESSION['username'])) {
           <button type="button" id="new-button" class="button create-button material-icons" onclick="showHide()">add</button>
           <div id="search-div">
             <input type="text" id="search-field" class="field" placeholder="Search" onkeyup="filterList()">
-            <div id="search-icon"></div>
+            <div id="search-icon" onclick="focusSearchBar()"></div>
           </div>
         </div>
         <div id="list-div" class="container">
@@ -118,7 +118,11 @@ if (!isset($_SESSION['username'])) {
     <footer></footer>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
-      // show list of customers under user
+      function focusSearchBar(){
+        $("#search-field").focus();
+      }
+
+      // show list of products under user
       function loadProducts() { 
             $.ajax({
             url: "load-products.php",

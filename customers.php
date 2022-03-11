@@ -48,20 +48,20 @@ if (!isset($_SESSION['username'])) {
           <div id="form-name">CREATE CUSTOMER ACCOUNT</div>
           <form id="create-form" autocomplete="off" action="validate-new-account.php" method="post">
             <div class="form-column">
-              <p class="field-name">name</p>
-              <input class="field" type="text" name="username" maxlength="50" value="<?php if (
+              <label for="cname" class="field-name">name</label>
+              <input id="cname" class="field" type="text" name="username" maxlength="50" value="<?php if (
                   isset($_SESSION['cusername'])
               ) {
                   echo $_SESSION['cusername'];
               } ?>"/>
-              <p class="field-name">birthdate</p>
-              <input class="field" type="date" name="birthdate" value="<?php if (
+              <label for="cbday" class="field-name">birthdate</label>
+              <input id="cbday" class="field" type="date" name="birthdate" value="<?php if (
                   isset($_SESSION['cbirthdate'])
               ) {
                   echo $_SESSION['cbirthdate'];
               } ?>"/>
-              <p class="field-name">sex</p>
-              <select name="sex" class="field">
+              <label for="cgender" class="field-name">sex</label>
+              <select id="cgender" name="sex" class="field">
                 <option value="m" <?php if (
                     isset($_SESSION['csex']) and
                     $_SESSION['csex'] == 'm'
@@ -78,20 +78,20 @@ if (!isset($_SESSION['username'])) {
             </div>
             
             <div class="form-column">
-              <p class="field-name">mobile number</p>
-              <input class="field" type="text" name="mobile_no" maxlength="11" value="<?php if (
+              <label for="cphone" class="field-name">mobile number</label>
+              <input id="cphone" class="field" type="text" name="mobile_no" maxlength="11" value="<?php if (
                   isset($_SESSION['cmobile_no'])
               ) {
                   echo $_SESSION['cmobile_no'];
               } ?>"/>
-              <p class="field-name">email address</p>
-              <input class="field" type="text" name="email" maxlength="100" value="<?php if (
+              <label for="cmail" class="field-name">email address</label>
+              <input id="cmail" class="field" type="text" name="email" maxlength="100" value="<?php if (
                   isset($_SESSION['cemail'])
               ) {
                   echo $_SESSION['cemail'];
               } ?>" placeholder="optional"/>
-              <p class="field-name">home address</p>
-              <input class="field" type="text" name="address" maxlength="100" value="<?php if (
+              <label for="chome" class="field-name">home address</label>
+              <input id="chome" class="field" type="text" name="address" maxlength="100" value="<?php if (
                   isset($_SESSION['caddress'])
               ) {
                   echo $_SESSION['caddress'];
@@ -105,7 +105,7 @@ if (!isset($_SESSION['username'])) {
           </form>
 
           <div id="rating-div">
-            <p class="field-name" id="rating-field-name">rating</p>           
+            <label for="rating" class="field-name" id="rating-field-name">rating</label>           
             <div id="rating">
               <input form="create-form" type="radio" id="star5" class="star" name="rate" value="5" <?php if (
                   isset($_SESSION['crate']) and
@@ -149,7 +149,7 @@ if (!isset($_SESSION['username'])) {
           <button type="button" id="new-button" class="button create-button material-icons" onclick="showHide()">add</button>
           <div id="search-div">
             <input type="text" id="search-field" class="field" placeholder="Search" onkeyup="filterList()">
-            <div id="search-icon"></div>
+            <div id="search-icon" onclick="focusSearchBar()"></div>
           </div>
         </div>
         <div id="list-div" class="container">
@@ -168,6 +168,10 @@ if (!isset($_SESSION['username'])) {
     <footer></footer>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
+      function focusSearchBar(){
+        $("#search-field").focus();
+      }
+
       // show list of customers belonging to the current store owner
       function loadCustomers() {
             // will be using ajax here, ajax allows you to connect to a server in the background, that is without reloading the page

@@ -121,10 +121,10 @@ if (!isset($_SESSION['username'])) {
             <div id="history-tools">
               <div id="payments" class="button selected-history-type" onclick="filterHistory(this)">Payments</div>
               <div id="credits" class="button selected-history-type" onclick="filterHistory(this)">Credits</div>
-              <button type="button" id="clear-filters-button" class="button" onclick="clearFilters()">Clear filters</button>
-              <input type="date" id="endDate" class="field" onchange="filterHistory(this)">
-              <p>-</p>
-              <input type="date" id="startDate" class="field" onchange="filterHistory(this)">
+              <button type="button" id="sort-history-button" class="button" onclick="fetchHistory(this)">Most Recent First</button>
+              <input type="date" id="endDate" class="field" title="end date" onchange="filterHistory(this)">
+              <p>~</p>
+              <input type="date" id="startDate" class="field" title="start date" onchange="filterHistory(this)">
             </div>
             <div id="history-list"></div>
           </div>
@@ -150,6 +150,8 @@ if (!isset($_SESSION['username'])) {
       let grandTotal = 0;
       let customer = "";
       let entryNo = 0;
+      let historyOrder = "Most Recent First";
+
       function atMost2Dec(n){
         return Number(Math.round(n+ "e"+2)+"e-"+2); 
         // an accurate formula to avoid rounding errors learned from http://thenewcode.com/895/JavaScript-Rounding-Recipes
@@ -161,14 +163,6 @@ if (!isset($_SESSION['username'])) {
         // Math.round(215.50) = 216
         // 216e-2 = 2.16
         // voila! 
-      }
-
-      function clearFilters(){
-        document.getElementById("payments").classList.add("selected-history-type");
-        document.getElementById("credits").classList.add("selected-history-type");
-        document.getElementById("startDate").value = "";
-        document.getElementById("endDate").value = "";
-        filterHistory();
       }
 
       function filterHistory(element){
@@ -235,7 +229,7 @@ if (!isset($_SESSION['username'])) {
         }
 
         // then filter remaining by type
-        if (element.tagName == "DIV") element.classList.toggle("selected-history-type");
+        if (element != undefined && element.tagName == "DIV") element.classList.toggle("selected-history-type");
         
         let paymentsSelected = document.getElementById("payments").classList.contains("selected-history-type");
         let creditsSelected = document.getElementById("credits").classList.contains("selected-history-type");
@@ -600,11 +594,11 @@ if (!isset($_SESSION['username'])) {
         });        
       }
 
-      function fetchCustomerInfo(name){
+      function fetchCustomerInfo(){
         $.ajax({
           url: "fetch-customer-info.php",
           type: "POST",
-          data: {name: name},
+          data: {customer: customer},
           success: function(data){
             $("#customer-profile-info-div").html(data);
             document.getElementById("customer-credit").textContent = "₱\ " + document.getElementById("customer-credit").textContent;
@@ -647,16 +641,8 @@ if (!isset($_SESSION['username'])) {
           document.querySelector("#tab-content > div:nth-of-type(1)").style.display = "none";
           document.querySelector("#tab-content > div:nth-of-type(2)").style.display = "none";
           document.querySelector("#tab-content > div:nth-of-type(3)").style.display = "flex";  
-          document.querySelector("#tab-content > div:nth-of-type(4)").style.display = "none";      
-          let customer = $("#customer-profile-info-div").data("name");
-          $.ajax({
-            url: "fetch-history.php",
-            type: "POST", 
-            data: {customer: customer},
-            success: function(data){
-              $("#history-list").html(data);
-            }
-          });
+          document.querySelector("#tab-content > div:nth-of-type(4)").style.display = "none";   
+          fetchHistory();   
         }
         else if (tab == "STATISTICS") {
           document.querySelector("#tab-content > div:nth-of-type(1)").style.display = "none";
@@ -672,8 +658,30 @@ if (!isset($_SESSION['username'])) {
         showTabContent();
       }
 
+      function fetchHistory(element){
+        if (element != undefined){ // if button was clicked (not switch tab)
+          if (historyOrder == "Most Recent First"){
+            historyOrder = "Least Recent First";
+            $("#sort-history-button").text("Least Recent First");
+          }
+          else {
+            historyOrder = "Most Recent First";
+            $("#sort-history-button").text("Most Recent First");
+          }
+        }
+        
+        $.ajax({
+          url: "fetch-history.php",
+          type: "POST", 
+          data: {customer: customer, historyOrder: historyOrder},
+          success: function(data){
+            $("#history-list").html(data);
+            filterHistory();
+          }
+        });
+      }
+
       function prepVarsAndDisplay(){
-        customer = $("#customer-profile-info-div").data("name");
         let productList = document.getElementById("product-list"); // get datalist element 
         let productListOptions = productList.getElementsByTagName("option"); // get option elements under datalist element
         for (let i = 0; i < productListOptions.length; i++){
@@ -682,11 +690,12 @@ if (!isset($_SESSION['username'])) {
         }
         document.getElementById("grand-total").textContent = "₱\ " + grandTotal;
         showTabContent();
+        fetchHistory();
       }
 
       $(document).ready(function () {
-        let name = $("#customer-profile-info-div").data("name");
-        fetchCustomerInfo(name);
+        customer = $("#customer-profile-info-div").data("name");
+        fetchCustomerInfo();
         fetchNotes();
         fetchProducts();
       });
