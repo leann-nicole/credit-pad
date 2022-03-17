@@ -56,7 +56,7 @@ foreach ($_POST as $post_var) {
 }
 
 // check if username is taken
-$query = "SELECT * FROM customers WHERE name = '$name' limit 1";
+$query = "SELECT * FROM customers WHERE name = '$name' AND store_operator = '$store_owner' limit 1";
 $result = mysqli_query($con, $query);
 if (mysqli_num_rows($result)) {
     header('Location: customers.php?error=username is already taken');

@@ -52,7 +52,7 @@ foreach ($_POST as $post_var) {
 }
 
 // check if product name is taken
-$query = "SELECT * FROM products WHERE name = '$product' limit 1";
+$query = "SELECT * FROM products WHERE name = '$product' AND store_operator = '$store_owner' limit 1";
 $result = mysqli_query($con, $query);
 if (mysqli_num_rows($result)) {
     header('Location: products.php?error=product name already exists');
