@@ -37,6 +37,7 @@ if (!isset($_SESSION['username'])) {
         <ul>
           <li class="selected-navbar-item"><a href="customers.php">CUSTOMERS</a></li>
           <li><a href="products.php">PRODUCTS</a></li>
+          <li><a href="reports.php">REPORTS</a></li>
         </ul>
       </nav>
       <main>

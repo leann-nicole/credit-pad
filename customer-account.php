@@ -39,6 +39,7 @@ if (!isset($_SESSION['username'])) {
         <ul>
           <li class="selected-navbar-item"><a href="customers.php">CUSTOMERS</a></li>
           <li><a href="products.php">PRODUCTS</a></li>
+          <li><a href="reports.php">REPORTS</a></li>
         </ul>
       </nav>
       <main>
@@ -49,7 +50,7 @@ if (!isset($_SESSION['username'])) {
             <div class="selected-navbar-item" onclick="switchTab(this)">CREDIT</div>
             <div onclick="switchTab(this)">PAYMENT</div>
             <div onclick="switchTab(this)">HISTORY</div>
-            <div onclick="switchTab(this)">STATISTICS</div>
+            <div onclick="switchTab(this)">REPORTS</div>
         </div>
         <div id="tab-content" class="container">
           <div id="credit-div">
@@ -128,7 +129,7 @@ if (!isset($_SESSION['username'])) {
             </div>
             <div id="history-list"></div>
           </div>
-          <div id="statistics-div">statistics</div>
+          <div id="reports-div">reports</div>
         </div>
       </main>
       <div id="extra">
@@ -644,7 +645,7 @@ if (!isset($_SESSION['username'])) {
           document.querySelector("#tab-content > div:nth-of-type(4)").style.display = "none";   
           fetchHistory();   
         }
-        else if (tab == "STATISTICS") {
+        else if (tab == "REPORTS") {
           document.querySelector("#tab-content > div:nth-of-type(1)").style.display = "none";
           document.querySelector("#tab-content > div:nth-of-type(2)").style.display = "none";
           document.querySelector("#tab-content > div:nth-of-type(3)").style.display = "none";  

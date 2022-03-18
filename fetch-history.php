@@ -59,10 +59,10 @@ for($i = 0; $i < sizeof($dates); $i++){
                 $grandTotal += $creditTransaction["subtotal"];?>
                                 <tr>
                                     <td class="credit-items-column">
-                                        <p><?php echo number_format(round($creditTransaction["quantity"])) . " " . $creditTransaction["product"]; ?></p>
+                                        <p><?php if (fmod($creditTransaction["quantity"], 1)){ echo number_format($creditTransaction["quantity"], 2); } else { echo number_format($creditTransaction["quantity"]); } echo " " . $creditTransaction["product"];?></p>
                                     </td>
                                     <td class="credit-values-column">
-                                        <p><?php echo "₱ " . number_format(round($creditTransaction["subtotal"])); ?></p>
+                                        <p><?php echo "₱ "; if (fmod($creditTransaction["subtotal"], 1)){ echo number_format($creditTransaction["subtotal"], 2); } else { echo number_format($creditTransaction["subtotal"]); }?></p>
                                     </td>
                                 </tr>
             <?php
@@ -78,7 +78,7 @@ for($i = 0; $i < sizeof($dates); $i++){
                 <div class="history-item-header">
                     <p class="history-item-type">CREDIT</p>
                     <p class="history-item-date" data-date="<?php echo date("Y-m-d", strtotime($dates[$i])); ?>"><?php echo date("F j, Y", strtotime($dates[$i])); ?></p>
-                    <p class="history-item-total"><?php echo "₱ ". number_format(round($grandTotal)); ?></p>
+                    <p class="history-item-total"><?php echo "₱ "; if (fmod($grandTotal, 1)){ echo number_format($grandTotal, 2); } else { echo number_format($grandTotal); }?></p>
                 </div>
             </div><?php
         }
@@ -93,7 +93,7 @@ for($i = 0; $i < sizeof($dates); $i++){
                     <tr><?php
             while ($paymentTransaction = mysqli_fetch_assoc($resultPayment)){
                 $comment .= $paymentTransaction["comment"];
-                $paid = $paymentTransaction["cash"];?>
+                $paid = $paymentTransaction["amount_paid"];?>
                         <td class="payment-type-column">
                             <p><?php echo $paymentTransaction["payment_type"]; ?></p>
                         </td>
@@ -103,10 +103,9 @@ for($i = 0; $i < sizeof($dates); $i++){
                             <p><?php echo "change"; ?></p>
                         </td>
                         <td class="payment-values-column">
-                            <p><?php echo "₱ " . number_format(round($paymentTransaction["cash"])); ?></p>
-                            <p><?php echo "₱ " . number_format(round($paymentTransaction["amount_paid"])); ?></p>
-                            <p><?php echo "₱ " . number_format(round($paymentTransaction["change_amount"])); ?></p>
-                        </td>
+                            <p><?php echo "₱ "; if (fmod($paymentTransaction["cash"], 1)){ echo number_format($paymentTransaction["cash"], 2); } else { echo number_format($paymentTransaction["cash"]); }?></p>
+                            <p><?php echo "₱ "; if (fmod($paymentTransaction["amount_paid"], 1)){ echo number_format($paymentTransaction["amount_paid"], 2); } else { echo number_format($paymentTransaction["amount_paid"]); }?></p>
+                            <p><?php echo "₱ "; if (fmod($paymentTransaction["change_amount"], 1)){ echo number_format($paymentTransaction["change_amount"], 2); } else { echo number_format($paymentTransaction["change_amount"]); }?></p>                        </td>
             <?php
             }
             ?>
@@ -118,7 +117,7 @@ for($i = 0; $i < sizeof($dates); $i++){
                 <div class="history-item-header">
                     <p class="history-item-type">PAYMENT</p>
                     <p class="history-item-date" data-date="<?php echo date("Y-m-d", strtotime($dates[$i])); ?>"><?php echo date("F j, Y", strtotime($dates[$i])); ?></p>
-                    <p class="history-item-total"><?php echo "₱ ". number_format(round($paid)); ?></p>
+                    <p class="history-item-total"><?php echo "₱ "; if (fmod($paid, 1)){ echo number_format($paid, 2); } else { echo number_format($paid); }?></p>
                 </div>
             </div><?php
         }

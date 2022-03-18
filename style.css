@@ -659,7 +659,6 @@ footer {
 }
 
 #tab-section div.selected-navbar-item:hover {
-  /* я думаю this is redundant with the rule at line 98 but that rule gets overwritten by the rule at line 601 и я не знаю почему*/
   background-color: #d9d9d9;
 }
 

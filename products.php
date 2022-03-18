@@ -39,6 +39,7 @@ if (!isset($_SESSION['username'])) {
         <ul>
           <li><a href="customers.php">CUSTOMERS</a></li>
           <li class="selected-navbar-item"><a href="products.php">PRODUCTS</a></li>
+          <li><a href="reports.php">REPORTS</a></li>
         </ul>
       </nav>
       <main>
