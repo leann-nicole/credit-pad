@@ -196,17 +196,18 @@ input:autofill {
 
 #error {
   color: white;
-  background-color: rgb(255, 94, 94);
-  height: 60px;
-  line-height: 60px;
-  width: 235px;
+  background-color: #C43031;
+  height: 50px;
+  line-height: 50px;
+  width: 265px;
   text-align: center;
   position: fixed;
   z-index: 2;
   bottom: 0;
   right: 0;
+  margin-right: 40px;
+  margin-bottom: 20px;
   border-radius: 5px;
-  margin: 10px;
 }
 
 body {
@@ -580,6 +581,11 @@ footer {
   margin: 5px 5px 0px 0px;
   background-color: white;
   color: gray;
+  border-radius: 20px;
+}
+
+#edit-button:hover {
+  background-color: #e6e6e6;
 }
 
 #customer-img-rate-div {

@@ -43,6 +43,111 @@ if (!isset($_SESSION['username'])) {
         </ul>
       </nav>
       <main>
+        <div id="create-form-div-c" class="<?php if (
+            !isset($_GET['error'])) {
+            echo 'hidden-item';
+        } ?> container">
+          <div id="form-name">EDIT CUSTOMER ACCOUNT</div>
+          <form id="create-form" autocomplete="off" action="validate-edit-account.php" method="post">
+            <div class="form-column">
+              <label for="cname" class="field-name">name</label>
+              <input id="cname" class="field" type="text" name="username" maxlength="50" value="<?php if (
+                  isset($_SESSION['cusername-edit'])
+              ) {
+                  echo $_SESSION['cusername-edit'];
+              } ?>"/>
+              <label for="cbday" class="field-name">birthdate</label>
+              <input id="cbday" class="field" type="date" name="birthdate" value="<?php if (
+                  isset($_SESSION['cbirthdate-edit'])
+              ) {
+                  echo $_SESSION['cbirthdate-edit'];
+              } ?>"/>
+              <label for="cgender" class="field-name">sex</label>
+              <select id="cgender" name="sex" class="field">
+                <option value="m" <?php if (
+                    isset($_SESSION['csex-edit']) and
+                    $_SESSION['csex-edit'] == 'm'
+                ) {
+                    echo 'selected';
+                } ?>>male</option>
+                <option value="f" <?php if (
+                    isset($_SESSION['csex-edit']) and
+                    $_SESSION['csex-edit'] == 'f'
+                ) {
+                    echo 'selected';
+                } ?>>female</option>
+              </select>
+            </div>
+            
+            <div class="form-column">
+              <label for="cphone" class="field-name">mobile number</label>
+              <input id="cphone" class="field" type="text" name="mobile_no" maxlength="11" value="<?php if (
+                  isset($_SESSION['cmobile_no-edit'])
+              ) {
+                  echo $_SESSION['cmobile_no-edit'];
+              } ?>"/>
+              <label for="cmail" class="field-name">email address</label>
+              <input id="cmail" class="field" type="text" name="email" maxlength="100" value="<?php if (
+                  isset($_SESSION['cemail-edit'])
+              ) {
+                  echo $_SESSION['cemail-edit'];
+              } ?>" placeholder="optional"/>
+              <label for="chome" class="field-name">home address</label>
+              <input id="chome" class="field" type="text" name="address" maxlength="100" value="<?php if (
+                  isset($_SESSION['caddress-edit'])
+              ) {
+                  echo $_SESSION['caddress-edit'];
+              } ?>"/>
+            </div>
+            <div id="form-buttons-div">
+              <button type="button" id="cancel" class="button" onclick="toggleEditForm()">Cancel</button>
+              <button type="submit" form="create-form" id="save-form-button" class="button save-button" >Save</button>
+            </div>
+
+          </form>
+
+          <div id="rating-div">
+            <label for="rating" class="field-name" id="rating-field-name">rating</label>           
+            <div id="rating">
+              <input form="create-form" type="radio" id="star5" class="star" name="rate" value="5" <?php if (
+                  isset($_SESSION['crate-edit']) and
+                  $_SESSION['crate-edit'] == 5
+              ) {
+                  echo 'checked';
+              } ?>/>
+              <label for="star5">&#128970;</label>
+              <input form="create-form" type="radio" id="star4" class="star" name="rate" value="4" <?php if (
+                  isset($_SESSION['crate-edit']) and
+                  $_SESSION['crate-edit'] == 4
+              ) {
+                  echo 'checked';
+              } ?>/>
+              <label for="star4">&#128970;</label>
+              <input form="create-form" type="radio" id="star3" class="star" name="rate" value="3" <?php if (
+                  isset($_SESSION['crate-edit']) and
+                  $_SESSION['crate-edit'] == 3
+              ) {
+                  echo 'checked';
+              } ?>/>
+              <label for="star3">&#128970;</label>
+              <input form="create-form" type="radio" id="star2" class="star" name="rate" value="2" <?php if (
+                  isset($_SESSION['crate-edit']) and
+                  $_SESSION['crate-edit'] == 2
+              ) {
+                  echo 'checked';
+              } ?>/>
+              <label for="star2">&#128970;</label>
+              <input form="create-form" type="radio" id="star1" class="star" name="rate" value="1" <?php if (
+                  isset($_SESSION['crate-edit']) and
+                  $_SESSION['crate-edit'] == 1 or !isset($_SESSION['crate-edit'])
+              ) {
+                  echo 'checked';
+              } ?>/>
+              <label for="star1">&#128970;</label> 
+            </div>
+          </div>
+          <input id="customer-name-copy" class="field hidden-item" type="text" form="create-form" name="current_customer_name" value="<?php echo $_GET['customer']; ?>">
+        </div>
         <div id="customer-profile-info-div" class="container" data-name="<?php echo $_GET['customer']; ?>">
           
         </div>
@@ -164,6 +269,46 @@ if (!isset($_SESSION['username'])) {
         // Math.round(215.50) = 216
         // 216e-2 = 2.16
         // voila! 
+      }
+
+      function toggleEditForm(){
+        document.getElementById("create-form-div-c").classList.toggle("hidden-item");
+        document.getElementById("error").style.visibility = "hidden"; // can also do document.getElementById("error").setAttribute("style","visibility: hidden;"); but is considered bad practice since it will overwrite properties which may already be specified in the style attribute
+            // current name
+            $("#cname").val($("#customer-name").text());
+            // current birthday 
+            let current_birthday = new Date($("#customer-birthday").text()); // returns a date object that represent the datetime in a timezone based on current locale
+            let current_birthday_string = new Date(current_birthday.getTime() - (current_birthday.getTimezoneOffset() * 60000)).toISOString().split("T")[0]; // makes date object correspond with UTC (standard time) by subtracting the time offset
+            $("#cbday").val(current_birthday_string);
+            // current gender
+            let current_gender = $("#customer-gender").text();
+            $("#cgender option").prop("selected", false);
+            if (current_gender == "male"){
+              $("#cgender option:first-of-type").prop("selected", true)
+            }
+            else {
+              $("#cgender option:nth-of-type(2)").prop("selected", true)
+            }
+            // current mobile no
+            $("#cphone").val($("#customer-mobile").text());
+            // current email
+            let current_email = $("#customer-email").text();
+            if (current_email == "no email address"){
+              $("#cmail").val("");
+            }
+            else {
+              $("#cmail").val($("#customer-email").text());
+            }
+            // current address
+            $("#chome").val($("#customer-address").text());
+            // current rating
+            $("#input[name='rate']:radio").prop("checked", false);
+            let current_rating = $("#customer-rating").data("rating");
+            if (current_rating == 1) $("#rating input[type='radio']:nth-of-type(5)").prop("checked", true);
+            if (current_rating == 2) $("#rating input[type='radio']:nth-of-type(4)").prop("checked", true);
+            if (current_rating == 3) $("#rating input[type='radio']:nth-of-type(3)").prop("checked", true);
+            if (current_rating == 4) $("#rating input[type='radio']:nth-of-type(2)").prop("checked", true);
+            if (current_rating == 5) $("#rating input[type='radio']:nth-of-type(1)").prop("checked", true);
       }
 
       function filterHistory(element){
