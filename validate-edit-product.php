@@ -2,7 +2,8 @@
 session_start();
 include 'connection.php';
 
-$store_owner = $_SESSION['username'];
+$store_operator = mysqli_real_escape_string($con, $_SESSION['username']);
+$current_product_name = mysqli_real_escape_string($con, $_POST['current_product_name']);
 
 // transfer data from the submitted form into variables
 $product = $_POST['product'];
@@ -10,16 +11,13 @@ $price = $_POST['price'];
 $description = $_POST['description'];
 $category = $_POST['category'];
 
-
-
 // store data into $_SESSION superglobal to be able to access them across pages
-$_SESSION['product'] = $product;
-$_SESSION['price'] = $price;
-$_SESSION['category'] = $category;
-$_SESSION['description'] = $description;
+$_SESSION['product-edit'] = $product;
+$_SESSION['price-edit'] = $price;
+$_SESSION['description-edit'] = $description;
+$_SESSION['category-edit'] = $category;
 
 // escape special characters (remove their special meaning) to avoid errors when doing an SQL query below
-$store_owner = mysqli_real_escape_string($con, $store_owner);
 $product = mysqli_real_escape_string($con, $product);
 $description = mysqli_real_escape_string($con, $description);
 $category = mysqli_real_escape_string($con, $category);
@@ -44,32 +42,35 @@ function filled($data)
 foreach ($_POST as $post_var) {
     // each item in the $_POST superglobal will be given the alias of $post_var, this is pass by value (origina values in the superglobal are not altered)
     if (!filled($post_var)) {
-        header('Location: products.php?error=information missing');
+        header('Location: products.php?error-edit=information missing');
         die();
     }
 }
 
 // check if product name is taken
-$query = "SELECT * FROM products WHERE name = '$product' AND store_operator = '$store_owner' limit 1";
-$result = mysqli_query($con, $query);
-if (mysqli_num_rows($result)) {
-    header('Location: products.php?error=product name already exists');
-    die();
+if ($product != $current_product_name){
+    $query1 = "SELECT * FROM products WHERE name = '$product' AND store_operator = '$store_operator' limit 1";
+    $result = mysqli_query($con, $query1);
+    if (mysqli_num_rows($result)) {
+        header('Location: products.php?error-edit=product name already exists');
+        die();
+    }    
 }
 
 // save data to database
-$query = "INSERT INTO products (name, description, category, price, store_operator) VALUES ('$product', '$description', '$category', '$price', '$store_owner')";
+$query2 = "UPDATE products SET description = '$description', category = '$category', price = '$price' WHERE name = '$current_product_name' AND store_operator = '$store_operator'";
+$query3 = "UPDATE products SET name = '$product' WHERE name = '$current_product_name' AND store_operator = '$store_operator'";
 
-if (mysqli_query($con, $query)) {
+if (mysqli_query($con, $query2) && mysqli_query($con, $query3)) {
     // upon successfully saving the new product information to the database, unset the following variables to clear the form
-    unset($_SESSION['product']);
-    unset($_SESSION['description']);
-    unset($_SESSION['category']);
-    unset($_SESSION['price']);
-    header('Location: products.php?success=product successfully registered');
+    unset($_SESSION['product-edit']);
+    unset($_SESSION['description-edit']);
+    unset($_SESSION['category-edit']);
+    unset($_SESSION['price-edit']);
+    header('Location: products.php?success-edit=product successfully registered');
     die();
 } else {
-    header('Location: products.php?error=something went wrong');
+    header('Location: products.php?error-edit=something went wrong');
     die();
     //echo mysqli_error($con);
 }

@@ -70,7 +70,7 @@ if (!empty($email) and !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 // check if phone number is valid
-if (!strlen($mobile_no) == 11 or !is_numeric($mobile_no)){
+if (strlen($mobile_no) != 11 or !is_numeric($mobile_no)){
     header("Location: customers.php?error=invalid phone number");
     die();
 }

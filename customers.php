@@ -46,7 +46,7 @@ if (!isset($_SESSION['username'])) {
         ) {
             echo 'hidden-item';
         } ?> container">
-          <div id="form-name">CREATE CUSTOMER ACCOUNT</div>
+          <div class="form-name">CREATE CUSTOMER ACCOUNT</div>
           <form id="create-form" autocomplete="off" action="validate-new-account.php" method="post">
             <div class="form-column">
               <label for="cname" class="field-name">name</label>

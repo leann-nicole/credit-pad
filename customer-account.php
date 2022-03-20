@@ -47,7 +47,7 @@ if (!isset($_SESSION['username'])) {
             !isset($_GET['error'])) {
             echo 'hidden-item';
         } ?> container">
-          <div id="form-name">EDIT CUSTOMER ACCOUNT</div>
+          <div class="form-name">EDIT CUSTOMER ACCOUNT</div>
           <form id="create-form" autocomplete="off" action="validate-edit-account.php" method="post">
             <div class="form-column">
               <label for="cname" class="field-name">name</label>

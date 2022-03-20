@@ -18,14 +18,21 @@ if (!isset($_SESSION['username'])) {
   </head>
   <body>
     <p id="error" style="<?php if (isset($_GET['error'])) {
-        echo 'visibility:visible';
-    } else {
+        echo 'visibility: visible';
+    } 
+    else if (isset($_GET['error-edit'])){
+      echo 'visibility: visible;';
+    }
+    else {
         echo 'visibility:hidden';
     } ?>">
         <?php if (isset($_GET['error'])) {
-            echo $_GET['error'];
+          echo $_GET['error'];
+        }
+        else if (isset($_GET['error-edit'])){
+          echo $_GET['error-edit'];
         } else {
-            echo 'product registered successfully';
+          echo 'product registered successfully';
         } ?>
     </p>        
     <header>
@@ -48,7 +55,7 @@ if (!isset($_SESSION['username'])) {
         ) {
             echo 'hidden-item';
         } ?> container">
-          <div id="form-name">ADD NEW PRODUCT</div>
+          <div class="form-name">ADD NEW PRODUCT</div>
           <form id="create-form" autocomplete="off" action="validate-new-product.php" method="post">
             <div class="form-column">
               <label for="product-name" class="field-name">name</label>
@@ -67,7 +74,7 @@ if (!isset($_SESSION['username'])) {
               <div id="category-price-div">
                 <div id="cp-category">
                   <label for="category" class="field-name">category</label>
-                    <input id="category" type="text" class="field" id="category" list="categories" maxlength="30" name="category" value="<?php if (
+                    <input id="category" type="text" class="field" list="categories" maxlength="30" name="category" value="<?php if (
                         isset($_SESSION['category'])
                     ) {
                         echo $_SESSION['category'];
@@ -76,7 +83,7 @@ if (!isset($_SESSION['username'])) {
                 </div>
                 <div id="cp-price">
                   <label for="price"class="field-name">price</label>
-                  <input class="field" type="number" id="price" name="price" min="1" title="" value="<?php if (
+                  <input class="field" type="number" id="price" name="price" min="1" step="0.01" value="<?php if (
                       isset($_SESSION['price'])
                   ) {
                       echo $_SESSION['price'];
@@ -86,14 +93,65 @@ if (!isset($_SESSION['username'])) {
               
             </div>
             <div id="form-buttons-div">
-              <button type="button" id="cancel" class="button" onclick="showHide()">Cancel</button>
+              <button type="button" id="cancel" class="button" onclick="toggleCreateForm()">Cancel</button>
               <button type="submit" form="create-form" id="save-form-button" class="button save-button">Save</button>
             </div>
 
           </form>
         </div>
+<!-- edit form -->
+        <div id="edit-form-div-p" class="<?php if (
+            !isset($_GET['error-edit'])) {
+            echo 'hidden-item';
+        } ?> container">
+          <div class="form-name">EDIT PRODUCT</div>
+          <form id="edit-form" autocomplete="off" action="validate-edit-product.php" method="post">
+            <input id="product-name-copy" class="field hidden-item" type="text" form="edit-form" name="current_product_name">
+            <div class="form-column">
+              <label for="product-name-edit" class="field-name">name</label>
+              <input id="product-name-edit" class="field" type="text" name="product" maxlength="50" value="<?php if (
+                  isset($_SESSION['product-edit'])
+              ) {
+                  echo $_SESSION['product-edit'];
+              } ?>"/>
+              <label for="product-description-edit" class="field-name">description</label>
+              <textarea id="product-description-edit" class="field" name="description" maxlength="250" spellcheck="false" placeholder="optional"><?php if (
+                  isset($_SESSION['description-edit'])
+              ) {
+                  echo $_SESSION['description-edit'];
+              } ?></textarea>
+
+              <div id="category-price-div-edit">
+                <div id="cp-category-edit">
+                  <label for="category-edit" class="field-name">category</label>
+                    <input id="category-edit" type="text" class="field" list="categories-edit" maxlength="30" name="category" value="<?php if (
+                        isset($_SESSION['category-edit'])
+                    ) {
+                        echo $_SESSION['category-edit'];
+                    } ?>" placeholder="optional"/>
+                      <datalist id="categories-edit"></datalist>
+                </div>
+                <div id="cp-price-edit">
+                  <label for="price-edit"class="field-name">price</label>
+                  <input class="field" type="number" id="price-edit" name="price" min="1" step="0.01" value="<?php if (
+                      isset($_SESSION['price-edit'])
+                  ) {
+                      echo $_SESSION['price-edit'];
+                  } ?>"/>
+                </div>                
+              </div>
+              
+            </div>
+            <div id="form-buttons-div-edit">
+              <button type="button" id="cancel-edit" class="button" onclick="toggleEditForm()">Cancel</button>
+              <button type="submit" form="edit-form" id="save-form-button-edit" class="button save-button">Save</button>
+            </div>
+
+          </form>
+        </div>
+
         <div id="tools">
-          <button type="button" id="new-button" class="button create-button material-icons" onclick="showHide()">add</button>
+          <button type="button" id="new-button" class="button create-button material-icons" onclick="toggleCreateForm()">add</button>
           <div id="search-div">
             <input type="text" id="search-field" class="field" placeholder="Search" onkeyup="filterList()">
             <div id="search-icon" onclick="focusSearchBar()"></div>
@@ -103,7 +161,9 @@ if (!isset($_SESSION['username'])) {
           <div id="list-inner-div">
           
           </div>
+          <div id="product-information-popup-div" class="container hidden-item"></div>
         </div>
+        
       </main>
       <div id="extra">
         <div id="notes-div">
@@ -119,6 +179,45 @@ if (!isset($_SESSION['username'])) {
     <footer></footer>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
+      // hide product info popup when user clicks anywhere outside it
+      $(document).click(function(){
+        if (!document.getElementById("product-information-popup-div").classList.contains("hidden-item"))
+          document.getElementById("product-information-popup-div").classList.add("hidden-item");
+      });
+
+      $("#product-information-popup-div").click(function(e){
+        e.stopPropagation(); 
+      });
+
+      function toggleCreateForm(){
+        document.getElementById("product-information-popup-div").classList.add("hidden-item");
+        document.getElementById("edit-form-div-p").classList.add("hidden-item"); // hide other form first
+        document.getElementById("create-form-div-p").classList.toggle("hidden-item");
+        document.getElementById("error").style.visibility = "hidden";
+        $("#create-form input").val("");
+        $("textarea[id='product-description']").val("");
+      }
+
+      function toggleEditForm(){
+        document.getElementById("product-information-popup-div").classList.add("hidden-item");
+        document.getElementById("create-form-div-p").classList.add("hidden-item");
+        document.getElementById("edit-form-div-p").classList.toggle("hidden-item");
+        document.getElementById("error").style.visibility = "hidden";
+        // current product name
+        let currentProductName = $("#product-name-info").text();
+        $("#product-name-edit").val(currentProductName);
+        $("#product-name-copy").val(currentProductName);
+        // current product description
+        let currentProductDesc = $("#product-description-info").text().substr(11);
+        $("#product-description-edit").val(currentProductDesc);
+        // current product category
+        let currentProductCategory = $("#product-category-info").text().substr(8);
+        $("#category-edit").val(currentProductCategory);
+        // current product price
+        let currentProductPrice = $("#product-price-info").text().substr(7).replace(/,/g,'');
+        $("#price-edit").val(currentProductPrice);
+      }
+
       function focusSearchBar(){
         $("#search-field").focus();
       }
@@ -152,6 +251,7 @@ if (!isset($_SESSION['username'])) {
           url: "load-categories.php",
           success: function (data) {
             $("#categories").html(data);
+            $("#categories-edit").html(data);
           }
         });
       }
@@ -161,14 +261,6 @@ if (!isset($_SESSION['username'])) {
         fetchNotes();
         loadCategories();
       });
-
-      // show or hide form
-      function showHide(){
-            document.getElementById("create-form-div-p").classList.toggle("hidden-item");
-            document.getElementById("error").style.visibility = "hidden";
-            $("input").val("");
-            $("textarea[id='product-description']").val("");
-      }
 
       function filterList(){
         let searchInput = document.getElementById("search-field").value.toLowerCase(); // get search bar and value in it
@@ -206,6 +298,16 @@ if (!isset($_SESSION['username'])) {
 
       function selectProduct(element){
         // show pop-up dialog for editing product details
+        let productName = element.getElementsByTagName("td")[0].innerText;
+        $.ajax({
+          url: "fetch-product-details.php",
+          type: "POST",
+          data: {productName: productName},
+          success: function (data){
+            $("#product-information-popup-div").html(data);
+            document.getElementById("product-information-popup-div").classList.toggle("hidden-item");
+          }
+        });
       }
     </script>
   </body>
