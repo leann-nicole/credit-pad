@@ -106,7 +106,7 @@ if (!isset($_SESSION['username'])) {
         } ?> container">
           <div class="form-name">EDIT PRODUCT</div>
           <form id="edit-form" autocomplete="off" action="validate-edit-product.php" method="post">
-            <input id="product-name-copy" class="field hidden-item" type="text" form="edit-form" name="current_product_name">
+            <input id="product-name-copy" class="field hidden-item" type="text" form="edit-form" name="current_product_name" value="<?php if (isset($_GET['product'])) echo $_GET['product'];?>">
             <div class="form-column">
               <label for="product-name-edit" class="field-name">name</label>
               <input id="product-name-edit" class="field" type="text" name="product" maxlength="50" value="<?php if (

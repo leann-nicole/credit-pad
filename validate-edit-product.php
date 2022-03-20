@@ -42,7 +42,7 @@ function filled($data)
 foreach ($_POST as $post_var) {
     // each item in the $_POST superglobal will be given the alias of $post_var, this is pass by value (origina values in the superglobal are not altered)
     if (!filled($post_var)) {
-        header('Location: products.php?error-edit=information missing');
+        header("Location: products.php?error-edit=information missing&product=$current_product_name");
         die();
     }
 }
