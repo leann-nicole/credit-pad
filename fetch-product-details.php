@@ -2,10 +2,11 @@
 session_start();
 include 'connection.php';
 
-$store_operator = mysqli_real_escape_string($con, $_SESSION['username']);
+$store = mysqli_real_escape_string($con, $_SESSION["business_name"]);
+
 $product_name = mysqli_real_escape_string($con, $_POST['productName']);
 
-$query = "SELECT * FROM products WHERE name = '$product_name'";
+$query = "SELECT * FROM products WHERE name = '$product_name' AND business_name = '$store'";
 $result = mysqli_query($con, $query);
 $row = mysqli_fetch_assoc($result);
 ?>

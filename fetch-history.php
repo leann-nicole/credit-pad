@@ -2,17 +2,18 @@
 session_start();
 include "connection.php";
 
-$store_operator = mysqli_real_escape_string($con, $_SESSION["username"]);
+$store = mysqli_real_escape_string($con, $_SESSION["business_name"]);
+
 $customer = $_POST["customer"];
 
-$query = "SELECT DISTINCT date FROM credit_transactions WHERE store_operator = '$store_operator' AND customer = '$customer'";
+$query = "SELECT DISTINCT date FROM credit_transactions WHERE business_name = '$store' AND customer = '$customer'";
 $resultCreditDates = mysqli_query($con, $query);
 $creditDates = array(); // convert mysqli_result object  to array of date strings
 while($row = mysqli_fetch_assoc($resultCreditDates)){
     array_push($creditDates, $row["date"]);
 }
 
-$query = "SELECT DISTINCT date FROM payment_transactions WHERE store_operator = '$store_operator' AND customer = '$customer'";
+$query = "SELECT DISTINCT date FROM payment_transactions WHERE business_name = '$store' AND customer = '$customer'";
 $resultPaymentDates = mysqli_query($con, $query);
 $paymentDates = array();
 while($row = mysqli_fetch_assoc($resultPaymentDates)){
@@ -33,17 +34,17 @@ function sort_date($a, $b){
 usort($dates, "sort_date");
 
 for($i = 0; $i < sizeof($dates); $i++){
-    $query = "SELECT MAX(entry_no) FROM credit_transactions WHERE store_operator = '$store_operator' AND customer = '$customer' AND date = '$dates[$i]'";
+    $query = "SELECT MAX(entry_no) FROM credit_transactions WHERE business_name = '$store' AND customer = '$customer' AND date = '$dates[$i]'";
     $latestCreditEntryNo = mysqli_fetch_row(mysqli_query($con, $query))[0];
 
-    $query = "SELECT MAX(entry_no) FROM payment_transactions WHERE store_operator = '$store_operator' AND customer = '$customer' AND date = '$dates[$i]'";
+    $query = "SELECT MAX(entry_no) FROM payment_transactions WHERE business_name = '$store' AND customer = '$customer' AND date = '$dates[$i]'";
     $latestPaymentEntryNo = mysqli_fetch_row(mysqli_query($con, $query))[0];
 
     // get the number of entries for current date
     $entries = max($latestCreditEntryNo, $latestPaymentEntryNo);
 
     for ($entryNo = $entries; $entryNo >= 1; $entryNo--){
-        $query = "SELECT product, quantity, subtotal, comment FROM credit_transactions WHERE store_operator = '$store_operator' AND customer = '$customer' AND date = '$dates[$i]' AND entry_no = '$entryNo'";
+        $query = "SELECT product, quantity, subtotal, comment FROM credit_transactions WHERE business_name = '$store' AND customer = '$customer' AND date = '$dates[$i]' AND entry_no = '$entryNo'";
         $resultCredit = mysqli_query($con, $query);
         if (mysqli_num_rows($resultCredit)){ // if there are records with the date and the entry no exist in the CREDITS table
             $comment = "";
@@ -83,7 +84,7 @@ for($i = 0; $i < sizeof($dates); $i++){
             </div><?php
         }
         else { // else they exist in the PAYMENTS table
-            $query = "SELECT payment_type, cash, amount_paid, change_amount, comment FROM payment_transactions WHERE store_operator = '$store_operator' AND customer = '$customer' AND date = '$dates[$i]' AND entry_no = '$entryNo'";
+            $query = "SELECT payment_type, cash, amount_paid, change_amount, comment FROM payment_transactions WHERE business_name = '$store' AND customer = '$customer' AND date = '$dates[$i]' AND entry_no = '$entryNo'";
             $resultPayment = mysqli_query($con, $query);
             $comment = "";
             $paid = 0;

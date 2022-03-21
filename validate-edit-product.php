@@ -2,7 +2,8 @@
 session_start();
 include 'connection.php';
 
-$store_operator = mysqli_real_escape_string($con, $_SESSION['username']);
+$store = mysqli_real_escape_string($con, $_SESSION["business_name"]);
+
 $current_product_name = mysqli_real_escape_string($con, $_POST['current_product_name']);
 
 // transfer data from the submitted form into variables
@@ -49,7 +50,7 @@ foreach ($_POST as $post_var) {
 
 // check if product name is taken
 if ($product != $current_product_name){
-    $query1 = "SELECT * FROM products WHERE name = '$product' AND store_operator = '$store_operator' limit 1";
+    $query1 = "SELECT * FROM products WHERE name = '$product' AND business_name = '$store' limit 1";
     $result = mysqli_query($con, $query1);
     if (mysqli_num_rows($result)) {
         header('Location: products.php?error-edit=product name already exists');
@@ -58,8 +59,8 @@ if ($product != $current_product_name){
 }
 
 // save data to database
-$query2 = "UPDATE products SET description = '$description', category = '$category', price = '$price' WHERE name = '$current_product_name' AND store_operator = '$store_operator'";
-$query3 = "UPDATE products SET name = '$product' WHERE name = '$current_product_name' AND store_operator = '$store_operator'";
+$query2 = "UPDATE products SET description = '$description', category = '$category', price = '$price' WHERE name = '$current_product_name' AND business_name = '$store'";
+$query3 = "UPDATE products SET name = '$product' WHERE name = '$current_product_name' AND business_name = '$store'";
 
 if (mysqli_query($con, $query2) && mysqli_query($con, $query3)) {
     // upon successfully saving the new product information to the database, unset the following variables to clear the form

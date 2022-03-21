@@ -82,6 +82,7 @@ $query = "INSERT INTO store_operators (username, birthdate, sex, mobile_no, emai
 
 if (mysqli_query($con, $query)) {
     // mysqli_query() returns true or false for INSERT query
+    unset($_SESSION['password']);
     header('Location: login.php?success=account successfully created');
     die();
 } else {

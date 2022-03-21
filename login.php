@@ -25,12 +25,14 @@ session_start();
         ) {
             echo $_SESSION['username'];
         } ?>"/>
-        <label for="pass" class="field-name">password</label>
-        <input id="pass" type="password" class="field" name="password" value="<?php if (
-            isset($_SESSION['password'])
+        <label for="bname" class="field-name">business name</label>
+        <input id="bname" type="text" class="field" name="business_name" value="<?php if (
+            isset($_SESSION['business_name'])
         ) {
-            echo $_SESSION['password'];
-        } ?>"/>
+            echo $_SESSION['business_name'];
+        } ?>"/>        
+        <label for="pass" class="field-name">password</label>
+        <input id="pass" type="password" class="field" name="password" value="<?php if (isset($_SESSION['password'])){ echo $_SESSION['password'];}?>"/>
       </form>
       <div id="login-signup-buttons">
         <a href="signup.php"><p id="switch-form-link">SIGN UP</p></a>

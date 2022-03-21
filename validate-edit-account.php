@@ -2,7 +2,8 @@
 session_start();
 include 'connection.php';
 
-$store_operator = mysqli_real_escape_string($con, $_SESSION["username"]);
+$store = mysqli_real_escape_string($con, $_SESSION["business_name"]);
+
 $current_customer_name = mysqli_real_escape_string($con, $_POST["current_customer_name"]);
 
 // transfer values from the submitted form
@@ -69,7 +70,7 @@ if (strlen($mobile_no) != 11 or !is_numeric($mobile_no)){
 
 // check if username is taken
 if ($name != $current_customer_name){
-    $query1 = "SELECT * FROM customers WHERE name = '$name' AND store_operator = '$store_operator' limit 1";
+    $query1 = "SELECT * FROM customers WHERE name = '$name' AND business_name = '$store' limit 1";
     $result = mysqli_query($con, $query1);
     if (mysqli_num_rows($result)) {
         header("Location: customer-account.php?customer=$current_customer_name&error=username is already taken");
@@ -78,12 +79,12 @@ if ($name != $current_customer_name){
 }
 
 // update customer information
-$query2 = "UPDATE customers SET birthdate = '$birthdate', sex = '$sex', mobile_no = '$mobile_no', email = '$email', address = '$address', rating = '$rating' WHERE name = '$current_customer_name' AND store_operator = '$store_operator'";
-$query3 = "UPDATE customers SET name = '$name' WHERE name = '$current_customer_name' AND store_operator = '$store_operator'";
+$query2 = "UPDATE customers SET birthdate = '$birthdate', sex = '$sex', mobile_no = '$mobile_no', email = '$email', address = '$address', rating = '$rating' WHERE name = '$current_customer_name' AND business_name = '$store'";
+$query3 = "UPDATE customers SET name = '$name' WHERE name = '$current_customer_name' AND business_name = '$store'";
 
 // update information from previous payment and credit transactions
-$query4 = "UPDATE payment_transactions SET customer = '$name' WHERE customer = '$current_customer_name' AND store_operator = '$store_operator'";
-$query5 = "UPDATE credit_transactions SET customer = '$name' WHERE customer = '$current_customer_name' AND store_operator = '$store_operator'";
+$query4 = "UPDATE payment_transactions SET customer = '$name' WHERE customer = '$current_customer_name' AND business_name = '$store'";
+$query5 = "UPDATE credit_transactions SET customer = '$name' WHERE customer = '$current_customer_name' AND business_name = '$store'";
 
 if (mysqli_query($con, $query2) && mysqli_query($con, $query3) && mysqli_query($con, $query4) && mysqli_query($con, $query5)) {
     // if new account information is successfully saved to database, we can clear the form for new input

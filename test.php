@@ -1,7 +1,3 @@
 <?php
 // write code you want to test here
 // open in browser: http://localhost/creditpad/test.php
-session_start();
-echo "<pre>";
-var_dump($_SESSION);
-echo "</pre>";

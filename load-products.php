@@ -2,8 +2,7 @@
 session_start();
 include 'connection.php';
 
-$store_operator = $_SESSION['username'];
-$store_operator = mysqli_real_escape_string($con, $store_operator);
+$store = mysqli_real_escape_string($con, $_SESSION["business_name"]);
 
 if (isset($_POST['pcolname'])) {
     if (!isset($_SESSION[$_POST['pcolname']])) {
@@ -12,13 +11,13 @@ if (isset($_POST['pcolname'])) {
     
     if ($_SESSION[$_POST['pcolname']] == 'ASC') {
         $_SESSION[$_POST['pcolname']] = 'DESC';
-        $query = "SELECT * FROM products WHERE store_operator = '$store_operator' ORDER BY {$_POST['pcolname']} DESC, name ASC";
+        $query = "SELECT * FROM products WHERE business_name = '$store' ORDER BY {$_POST['pcolname']} DESC, name ASC";
     } else {
         $_SESSION[$_POST['pcolname']] = 'ASC';
-        $query = "SELECT * FROM products WHERE store_operator = '$store_operator' ORDER BY {$_POST['pcolname']} ASC, name ASC";
+        $query = "SELECT * FROM products WHERE business_name = '$store' ORDER BY {$_POST['pcolname']} ASC, name ASC";
     }
 } else {
-    $query = "SELECT * FROM products WHERE store_operator = '$store_operator' ORDER BY id DESC";
+    $query = "SELECT * FROM products WHERE business_name = '$store' ORDER BY id DESC";
 }
 $result = mysqli_query($con, $query);
 

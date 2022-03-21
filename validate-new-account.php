@@ -2,7 +2,7 @@
 session_start();
 include 'connection.php';
 
-$store_owner = $_SESSION['username'];
+$store = mysqli_real_escape_string($con, $_SESSION["business_name"]);
 
 // transfer values from the submitted form
 $name = $_POST['username'];
@@ -21,7 +21,6 @@ $_SESSION['caddress'] = $address;
 $_SESSION['crate'] = $rating;
 
 // escape special characters (ex. Leann's Store ==> Leann\'s Store) to avoid errors in the SQL query below
-$store_owner = mysqli_real_escape_string($con, $store_owner);
 $name = mysqli_real_escape_string($con, $name);
 $address = mysqli_real_escape_string($con, $address);
 
@@ -56,7 +55,7 @@ foreach ($_POST as $post_var) {
 }
 
 // check if username is taken
-$query = "SELECT * FROM customers WHERE name = '$name' AND store_operator = '$store_owner' limit 1";
+$query = "SELECT * FROM customers WHERE name = '$name' AND business_name = '$store' limit 1";
 $result = mysqli_query($con, $query);
 if (mysqli_num_rows($result)) {
     header('Location: customers.php?error=username is already taken');
@@ -76,7 +75,7 @@ if (strlen($mobile_no) != 11 or !is_numeric($mobile_no)){
 }
 
 // save data to database
-$query = "INSERT INTO customers (name, birthdate, sex, mobile_no, email, address, store_operator, rating) VALUES ('$name', '$birthdate', '$sex', '$mobile_no', '$email', '$address', '$store_owner', '$rating')";
+$query = "INSERT INTO customers (name, birthdate, sex, mobile_no, email, address, business_name, rating) VALUES ('$name', '$birthdate', '$sex', '$mobile_no', '$email', '$address', '$store', '$rating')";
 
 if (mysqli_query($con, $query)) {
     // if new account information is successfully saved to database, we can clear the form for new input

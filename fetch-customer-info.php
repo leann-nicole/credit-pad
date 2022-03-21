@@ -2,11 +2,11 @@
 session_start();
 include "connection.php";
 
-$store_operator = mysqli_real_escape_string($con, $_SESSION["username"]);
+$store = mysqli_real_escape_string($con, $_SESSION["business_name"]);
 
 // fetch customer information
 $customer = $_POST["customer"];
-$query = "SELECT * FROM customers WHERE name = '$customer' AND store_operator = '$store_operator'";
+$query = "SELECT * FROM customers WHERE name = '$customer' AND business_name = '$store'";
 $result = mysqli_query($con, $query);
 $rows = mysqli_fetch_assoc($result);
 
