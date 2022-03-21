@@ -439,9 +439,11 @@ main > * {
   border-bottom: 1px solid #d9d9d9;
 }
 
-#product-category-info,
-#product-description-info,
-#product-price-info {
+#product-category-info {
+  height: 50px;
+}
+
+#product-description-info {
   height: 60px;
 }
 

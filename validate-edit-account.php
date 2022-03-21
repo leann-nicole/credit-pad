@@ -77,10 +77,15 @@ if ($name != $current_customer_name){
     }
 }
 
+// update customer information
 $query2 = "UPDATE customers SET birthdate = '$birthdate', sex = '$sex', mobile_no = '$mobile_no', email = '$email', address = '$address', rating = '$rating' WHERE name = '$current_customer_name' AND store_operator = '$store_operator'";
 $query3 = "UPDATE customers SET name = '$name' WHERE name = '$current_customer_name' AND store_operator = '$store_operator'";
 
-if (mysqli_query($con, $query2) && mysqli_query($con, $query3)) {
+// update information from previous payment and credit transactions
+$query4 = "UPDATE payment_transactions SET customer = '$name' WHERE customer = '$current_customer_name' AND store_operator = '$store_operator'";
+$query5 = "UPDATE credit_transactions SET customer = '$name' WHERE customer = '$current_customer_name' AND store_operator = '$store_operator'";
+
+if (mysqli_query($con, $query2) && mysqli_query($con, $query3) && mysqli_query($con, $query4) && mysqli_query($con, $query5)) {
     // if new account information is successfully saved to database, we can clear the form for new input
     unset($_SESSION['cusername-edit']);
     unset($_SESSION['cbirthdate-edit']);

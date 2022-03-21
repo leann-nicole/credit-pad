@@ -143,7 +143,7 @@ if (!isset($_SESSION['username'])) {
               
             </div>
             <div id="form-buttons-div-edit">
-              <button type="button" id="cancel-edit" class="button" onclick="toggleEditForm()">Cancel</button>
+              <button type="button" id="cancel-edit" class="button" onclick="toggleEditForm(this)">Cancel</button>
               <button type="submit" form="edit-form" id="save-form-button-edit" class="button save-button">Save</button>
             </div>
 
@@ -198,10 +198,14 @@ if (!isset($_SESSION['username'])) {
         $("textarea[id='product-description']").val("");
       }
 
-      function toggleEditForm(){
+      function toggleEditForm(element){
         document.getElementById("product-information-popup-div").classList.add("hidden-item");
         document.getElementById("create-form-div-p").classList.add("hidden-item");
-        document.getElementById("edit-form-div-p").classList.toggle("hidden-item");
+
+        if (element.textContent == "Cancel")
+          document.getElementById("edit-form-div-p").classList.add("hidden-item");
+        else if (element.textContent == "edit")
+          document.getElementById("edit-form-div-p").classList.remove("hidden-item");
         document.getElementById("error").style.visibility = "hidden";
         // current product name
         let currentProductName = $("#product-name-info").text();

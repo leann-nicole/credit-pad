@@ -15,4 +15,4 @@ $row = mysqli_fetch_assoc($result);
 <div id="product-description-info"><?php echo "Description<br>" . $row['description']; ?></div>
 <div id="product-price-info"><?php echo "Price<br>";if (fmod($row['price'], 1)) echo "₱ " . number_format($row['price'], 2); else echo "₱ " . number_format($row['price']); ?></div>
 
-<button id="edit-button" class="material-icons button" onclick="toggleEditForm()" title="edit">edit</button>
+<button id="edit-button" class="material-icons button" onclick="toggleEditForm(this)" title="edit">edit</button>
