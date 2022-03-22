@@ -43,8 +43,7 @@ if (!isset($_SESSION['username'])) {
         </ul>
       </nav>
       <main>
-        <div id="create-form-div-c" class="<?php if (
-            !isset($_GET['error'])) {
+        <div id="create-form-div-c" class="<?php if (!isset($_GET['error'])) {
             echo 'hidden-item';
         } ?> container">
           <div class="form-name">EDIT CUSTOMER ACCOUNT</div>
@@ -139,16 +138,21 @@ if (!isset($_SESSION['username'])) {
               <label for="star2">&#128970;</label>
               <input form="create-form" type="radio" id="star1" class="star" name="rate" value="1" <?php if (
                   isset($_SESSION['crate-edit']) and
-                  $_SESSION['crate-edit'] == 1 or !isset($_SESSION['crate-edit'])
+                      $_SESSION['crate-edit'] == 1 or
+                  !isset($_SESSION['crate-edit'])
               ) {
                   echo 'checked';
               } ?>/>
               <label for="star1">&#128970;</label> 
             </div>
           </div>
-          <input id="customer-name-copy" class="field hidden-item" type="text" form="create-form" name="current_customer_name" value="<?php echo $_GET['customer']; ?>">
+          <input id="customer-name-copy" class="field hidden-item" type="text" form="create-form" name="current_customer_name" value="<?php echo $_GET[
+              'customer'
+          ]; ?>">
         </div>
-        <div id="customer-profile-info-div" class="container" data-name="<?php echo $_GET['customer']; ?>">
+        <div id="customer-profile-info-div" class="container" data-name="<?php echo $_GET[
+            'customer'
+        ]; ?>">
           
         </div>
         <div id="tab-section">
@@ -305,10 +309,10 @@ if (!isset($_SESSION['username'])) {
             $("#input[name='rate']:radio").prop("checked", false);
             let current_rating = $("#customer-rating").data("rating");
             if (current_rating == 1) $("#rating input[type='radio']:nth-of-type(5)").prop("checked", true);
-            if (current_rating == 2) $("#rating input[type='radio']:nth-of-type(4)").prop("checked", true);
-            if (current_rating == 3) $("#rating input[type='radio']:nth-of-type(3)").prop("checked", true);
-            if (current_rating == 4) $("#rating input[type='radio']:nth-of-type(2)").prop("checked", true);
-            if (current_rating == 5) $("#rating input[type='radio']:nth-of-type(1)").prop("checked", true);
+            else if (current_rating == 2) $("#rating input[type='radio']:nth-of-type(4)").prop("checked", true);
+            else if (current_rating == 3) $("#rating input[type='radio']:nth-of-type(3)").prop("checked", true);
+            else if (current_rating == 4) $("#rating input[type='radio']:nth-of-type(2)").prop("checked", true);
+            else if (current_rating == 5) $("#rating input[type='radio']:nth-of-type(1)").prop("checked", true);
       }
 
       function filterHistory(element){

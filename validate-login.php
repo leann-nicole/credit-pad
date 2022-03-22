@@ -46,7 +46,7 @@ foreach ($_POST as $post_var) {
 }
 
 // check if username, business name, and password are correct
-$query = "SELECT * FROM store_operators WHERE username = '$username' AND business_name = '$store' limit 1";
+$query = "SELECT * FROM stores WHERE store_operator = '$username' AND business_name = '$store' limit 1";
 $result = mysqli_query($con, $query); // mysqli_query() returns a mysqli_result object when successful, false if failed
 $row = mysqli_fetch_assoc($result); // mysqli_fetch_assoc() returns an associative array corresponding to the fetched row. ex. $row = array("name"=>"Leann", "age"=>"42");
 if (mysqli_num_rows($result) == 0 or $row['password'] != $password) {

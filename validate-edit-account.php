@@ -29,7 +29,6 @@ $name = mysqli_real_escape_string($con, $name);
 if (!empty($_POST['email'])){
     $email = $_POST['email'];
     $_SESSION['cemail-edit'] = $email;
-    $address = mysqli_real_escape_string($con, $address);
 }
 
 // these are optional information, no need to check if they are missing

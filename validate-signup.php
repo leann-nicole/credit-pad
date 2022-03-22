@@ -56,12 +56,12 @@ foreach ($_POST as $post_var) {
     }
 }
 
-// check if username is taken
-$query = "SELECT * FROM store_operators WHERE username = '$username' limit 1"; // if the given username matches at least 1 username already in the database, ask user to provide another username
+// check if business is already registered by someone
+$query = "SELECT * FROM stores WHERE business_name = '$business_name' limit 1"; // if the given username matches at least 1 username already in the database, ask user to provide another username
 $result = mysqli_query($con, $query); // mysqli_query() returns a mysqli_result object for successful SELECT query, false on failure
 if (mysqli_num_rows($result)) {
     // if row == 1, username is already taken
-    header('Location: signup.php?error=username is already taken');
+    header('Location: signup.php?error=business is already registered');
     die();
 }
 
@@ -78,9 +78,10 @@ if (strlen($mobile_no) != 11 or !is_numeric($mobile_no)){
 }
 
 // save data to database
-$query = "INSERT INTO store_operators (username, birthdate, sex, mobile_no, email, business_name, business_addr, password) VALUES ('$username', '$birthdate', '$sex', '$mobile_no', '$email', '$business_name', '$business_addr', '$password')";
+$query1 = "INSERT INTO store_operators (username, birthdate, sex, mobile_no, email) VALUES ('$username', '$birthdate', '$sex', '$mobile_no', '$email')";
+$query2 = "INSERT INTO stores (business_name, store_operator, business_addr, password) VALUES ('$business_name', '$username', '$business_addr', '$password')";
 
-if (mysqli_query($con, $query)) {
+if (mysqli_query($con, $query1) && mysqli_query($con, $query2)) {
     // mysqli_query() returns true or false for INSERT query
     unset($_SESSION['password']);
     header('Location: login.php?success=account successfully created');
