@@ -11,27 +11,22 @@ if (!isset($_SESSION['username'])) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Listahan</title>
+    <title>Credit Pad</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
     <link rel="stylesheet" href="style.css"/>
   </head>
   <body>
-    <p id="error" style="<?php if (isset($_GET['error'])) {
-        echo 'visibility:visible';
-    } else {
-        echo 'visibility:hidden';
-    } ?>">
-        <?php if (isset($_GET['error'])) {
-            echo $_GET['error'];
-        } else {
-            echo 'account created successfully';
-        } ?>
+    <p id="error" class="<?php if (!isset($_GET['error']) && !isset($_GET['response'])) { echo 'hidden-item'; }?>">
+        <?php 
+          if (isset($_GET['error'])) { echo $_GET['error']; }
+          else if (isset($_GET['response'])) { echo $_GET['response']; }
+        ?>
     </p>        
     <header>
       <p id="sitename-header"><a href="customers.php">CREDIT PAD</a></p>
-      <a href="logout.php"><span id="username"><?php echo $_SESSION[
-          'username'
+      <a href="logout.php"><span id="store-name"><?php echo $_SESSION[
+          'business_name'
       ]; ?></span></a>
     </header>
     <div id="content">
@@ -43,24 +38,24 @@ if (!isset($_SESSION['username'])) {
         </ul>
       </nav>
       <main>
-        <div id="create-form-div-c" class="<?php if (!isset($_GET['error'])) {
+        <div id="edit-form-div-c" class="<?php if (!isset($_GET['error'])) {
             echo 'hidden-item';
         } ?> container">
           <div class="form-name">EDIT CUSTOMER ACCOUNT</div>
-          <form id="create-form" autocomplete="off" action="validate-edit-account.php" method="post">
+          <form id="edit-form" autocomplete="off" action="validate-edit-account.php" method="post">
             <div class="form-column">
               <label for="cname" class="field-name">name</label>
               <input id="cname" class="field" type="text" name="username" maxlength="50" value="<?php if (
                   isset($_SESSION['cusername-edit'])
               ) {
                   echo $_SESSION['cusername-edit'];
-              } ?>"/>
+              } ?>" required/>
               <label for="cbday" class="field-name">birthdate</label>
               <input id="cbday" class="field" type="date" name="birthdate" value="<?php if (
                   isset($_SESSION['cbirthdate-edit'])
               ) {
                   echo $_SESSION['cbirthdate-edit'];
-              } ?>"/>
+              } ?>" required/>
               <label for="cgender" class="field-name">sex</label>
               <select id="cgender" name="sex" class="field">
                 <option value="m" <?php if (
@@ -84,9 +79,9 @@ if (!isset($_SESSION['username'])) {
                   isset($_SESSION['cmobile_no-edit'])
               ) {
                   echo $_SESSION['cmobile_no-edit'];
-              } ?>"/>
+              } ?>" required/>
               <label for="cmail" class="field-name">email address</label>
-              <input id="cmail" class="field" type="text" name="email" maxlength="100" value="<?php if (
+              <input id="cmail" class="field" type="email" name="email" maxlength="100" value="<?php if (
                   isset($_SESSION['cemail-edit'])
               ) {
                   echo $_SESSION['cemail-edit'];
@@ -96,11 +91,11 @@ if (!isset($_SESSION['username'])) {
                   isset($_SESSION['caddress-edit'])
               ) {
                   echo $_SESSION['caddress-edit'];
-              } ?>"/>
+              } ?>" required/>
             </div>
             <div id="form-buttons-div">
               <button type="button" id="cancel" class="button" onclick="toggleEditForm()">Cancel</button>
-              <button type="submit" form="create-form" id="save-form-button" class="button save-button" >Save</button>
+              <button type="submit" form="edit-form" id="save-form-button" class="button save-button" >Save</button>
             </div>
 
           </form>
@@ -108,35 +103,35 @@ if (!isset($_SESSION['username'])) {
           <div id="rating-div">
             <label for="rating" class="field-name" id="rating-field-name">rating</label>           
             <div id="rating">
-              <input form="create-form" type="radio" id="star5" class="star" name="rate" value="5" <?php if (
+              <input form="edit-form" type="radio" id="star5" class="star" name="rate" value="5" <?php if (
                   isset($_SESSION['crate-edit']) and
                   $_SESSION['crate-edit'] == 5
               ) {
                   echo 'checked';
               } ?>/>
               <label for="star5">&#128970;</label>
-              <input form="create-form" type="radio" id="star4" class="star" name="rate" value="4" <?php if (
+              <input form="edit-form" type="radio" id="star4" class="star" name="rate" value="4" <?php if (
                   isset($_SESSION['crate-edit']) and
                   $_SESSION['crate-edit'] == 4
               ) {
                   echo 'checked';
               } ?>/>
               <label for="star4">&#128970;</label>
-              <input form="create-form" type="radio" id="star3" class="star" name="rate" value="3" <?php if (
+              <input form="edit-form" type="radio" id="star3" class="star" name="rate" value="3" <?php if (
                   isset($_SESSION['crate-edit']) and
                   $_SESSION['crate-edit'] == 3
               ) {
                   echo 'checked';
               } ?>/>
               <label for="star3">&#128970;</label>
-              <input form="create-form" type="radio" id="star2" class="star" name="rate" value="2" <?php if (
+              <input form="edit-form" type="radio" id="star2" class="star" name="rate" value="2" <?php if (
                   isset($_SESSION['crate-edit']) and
                   $_SESSION['crate-edit'] == 2
               ) {
                   echo 'checked';
               } ?>/>
               <label for="star2">&#128970;</label>
-              <input form="create-form" type="radio" id="star1" class="star" name="rate" value="1" <?php if (
+              <input form="edit-form" type="radio" id="star1" class="star" name="rate" value="1" <?php if (
                   isset($_SESSION['crate-edit']) and
                       $_SESSION['crate-edit'] == 1 or
                   !isset($_SESSION['crate-edit'])
@@ -146,9 +141,19 @@ if (!isset($_SESSION['username'])) {
               <label for="star1">&#128970;</label> 
             </div>
           </div>
-          <input id="customer-name-copy" class="field hidden-item" type="text" form="create-form" name="current_customer_name" value="<?php echo $_GET[
+          <input id="customer-name-copy" class="field hidden-item" type="text" form="edit-form" name="current_customer_name" value="<?php echo $_GET[
               'customer'
           ]; ?>">
+          <span id="delete-item-clickable-text" onclick="toggleDeleteItem()">Delete this account</span>
+          <div id="deletion-confirmation-popup" class="container hidden-item">
+            <span>Are you sure you want to delete this account?</span>
+            <span id="account-to-delete"></span>
+            <span id="deletion-reminder">This will erase all payment and credit transactions made by this account.</span>
+            <div id="popup-yes-no-div">
+              <button id="no-button" class="button" onclick="toggleDeleteItem()">Cancel</button>
+              <button id="yes-button" class="button" onclick="deleteItem()">Delete</button>
+            </div>
+          </div>
         </div>
         <div id="customer-profile-info-div" class="container" data-name="<?php echo $_GET[
             'customer'
@@ -275,9 +280,40 @@ if (!isset($_SESSION['username'])) {
         // voila! 
       }
 
+      $(document).click(function(){
+        document.getElementById("deletion-confirmation-popup").classList.add("hidden-item");
+      });
+
+      $("#delete-item-clickable-text").click(function(e){
+        e.stopPropagation();
+      });
+
+      $("#deletion-confirmation-popup").click(function(e){
+        e.stopPropagation();
+      });
+
+      function deleteItem(){
+        let item = $("#account-to-delete").text();
+        $.ajax({
+          url: "delete-item.php",
+          type: "POST", 
+          data: {type: "customer", item: item},
+          success: function(data){
+            window.location.replace(data);
+          }
+        });
+      }
+
+      function toggleDeleteItem(){
+        document.getElementById("account-to-delete").textContent = document.getElementById("customer-name-copy").value;
+        document.getElementById("deletion-confirmation-popup").classList.toggle("hidden-item");
+        document.getElementById("error").classList.add("hidden-item");
+      }
+
       function toggleEditForm(){
-        document.getElementById("create-form-div-c").classList.toggle("hidden-item");
-        document.getElementById("error").style.visibility = "hidden"; // can also do document.getElementById("error").setAttribute("style","visibility: hidden;"); but is considered bad practice since it will overwrite properties which may already be specified in the style attribute
+        document.getElementById("edit-form-div-c").classList.toggle("hidden-item");
+        document.getElementById("deletion-confirmation-popup").classList.add("hidden-item");
+        document.getElementById("error").classList.add("hidden-item"); 
             // current name
             $("#cname").val($("#customer-name").text());
             // current birthday 

@@ -11,34 +11,28 @@ if (!isset($_SESSION['username'])) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Listahan</title>
+    <title>Credit Pad</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <p id="error" style="<?php if (isset($_GET['error'])) {
-        echo 'visibility: visible';
-    } 
-    else if (isset($_GET['error-edit'])){
-      echo 'visibility: visible;';
-    }
-    else {
-        echo 'visibility:hidden';
+    <p id="error" class="<?php if (
+        !isset($_GET['error']) &&
+        !isset($_GET['error-edit'])
+    ) {
+        echo 'hidden-item';
     } ?>">
         <?php if (isset($_GET['error'])) {
-          echo $_GET['error'];
-        }
-        else if (isset($_GET['error-edit'])){
-          echo $_GET['error-edit'];
-        } else {
-          echo 'product registered successfully';
+            echo $_GET['error'];
+        } elseif (isset($_GET['error-edit'])) {
+            echo $_GET['error-edit'];
         } ?>
     </p>        
     <header>
       <p id="sitename-header"><a href="customers.php">CREDIT PAD</a></p>
-      <a href="logout.php"><span id="username"><?php echo $_SESSION[
-          'username'
+      <a href="logout.php"><span id="store-name"><?php echo $_SESSION[
+          'business_name'
       ]; ?></span></a>
     </header>
     <div id="content">
@@ -63,7 +57,7 @@ if (!isset($_SESSION['username'])) {
                   isset($_SESSION['product'])
               ) {
                   echo $_SESSION['product'];
-              } ?>"/>
+              } ?>" required/>
               <label for="product-description" class="field-name">description</label>
               <textarea id="product-description" class="field" name="description" maxlength="250" spellcheck="false" placeholder="optional"><?php if (
                   isset($_SESSION['description'])
@@ -87,7 +81,7 @@ if (!isset($_SESSION['username'])) {
                       isset($_SESSION['price'])
                   ) {
                       echo $_SESSION['price'];
-                  } ?>"/>
+                  } ?>" required/>
                 </div>                
               </div>
               
@@ -101,19 +95,24 @@ if (!isset($_SESSION['username'])) {
         </div>
 <!-- edit form -->
         <div id="edit-form-div-p" class="<?php if (
-            !isset($_GET['error-edit'])) {
+            !isset($_GET['error-edit'])
+        ) {
             echo 'hidden-item';
         } ?> container">
           <div class="form-name">EDIT PRODUCT</div>
           <form id="edit-form" autocomplete="off" action="validate-edit-product.php" method="post">
-            <input id="product-name-copy" class="field hidden-item" type="text" form="edit-form" name="current_product_name" value="<?php if (isset($_GET['product'])) echo $_GET['product'];?>">
+            <input id="product-name-copy" class="field hidden-item" type="text" form="edit-form" name="current_product_name" value="<?php if (
+                isset($_GET['product'])
+            ) {
+                echo $_GET['product'];
+            } ?>">
             <div class="form-column">
               <label for="product-name-edit" class="field-name">name</label>
               <input id="product-name-edit" class="field" type="text" name="product" maxlength="50" value="<?php if (
                   isset($_SESSION['product-edit'])
               ) {
                   echo $_SESSION['product-edit'];
-              } ?>"/>
+              } ?>" required/>
               <label for="product-description-edit" class="field-name">description</label>
               <textarea id="product-description-edit" class="field" name="description" maxlength="250" spellcheck="false" placeholder="optional"><?php if (
                   isset($_SESSION['description-edit'])
@@ -137,7 +136,7 @@ if (!isset($_SESSION['username'])) {
                       isset($_SESSION['price-edit'])
                   ) {
                       echo $_SESSION['price-edit'];
-                  } ?>"/>
+                  } ?>" required/>
                 </div>                
               </div>
               
@@ -148,6 +147,15 @@ if (!isset($_SESSION['username'])) {
             </div>
 
           </form>
+          <span id="delete-item-clickable-text" onclick="toggleDeleteItem()">Delete this product</span>
+          <div id="deletion-confirmation-popup" class="container hidden-item">
+            <span>Are you sure you want to delete this product?</span>
+            <span id="product-to-delete"></span>
+            <div id="popup-yes-no-div">
+              <button id="no-button" class="button" onclick="toggleDeleteItem()">Cancel</button>
+              <button id="yes-button" class="button" onclick="deleteItem()">Delete</button>
+            </div>
+          </div>
         </div>
 
         <div id="tools">
@@ -163,7 +171,6 @@ if (!isset($_SESSION['username'])) {
           </div>
           <div id="product-information-popup-div" class="container hidden-item"></div>
         </div>
-        
       </main>
       <div id="extra">
         <div id="notes-div">
@@ -181,19 +188,55 @@ if (!isset($_SESSION['username'])) {
     <script>
       // hide product info popup when user clicks anywhere outside it
       $(document).click(function(){
-        if (!document.getElementById("product-information-popup-div").classList.contains("hidden-item"))
-          document.getElementById("product-information-popup-div").classList.add("hidden-item");
+        document.getElementById("product-information-popup-div").classList.add("hidden-item");
+        document.getElementById("deletion-confirmation-popup").classList.add("hidden-item");
       });
 
-      $("#product-information-popup-div").click(function(e){
+      $("#product-information-popup-div").click(function(e){ // ignore clicks inside product info popup
         e.stopPropagation(); 
       });
 
+      $("#deletion-confirmation-popup").click(function(e){ // ignore clicks inside delete item popup
+        e.stopPropagation();
+      });
+
+      $("#delete-item-clickable-text").click(function(e){ // ignore clicks on delete product text
+        e.stopPropagation();
+      });
+
+      function deleteItem(){
+        let item = $("#product-to-delete").text();
+        $.ajax({
+          url: "delete-item.php",
+          type: "POST", 
+          data: {type: "product", item: item},
+          success: function(data){
+            if (data == "success"){
+              toggleDeleteItem();
+              toggleEditForm();
+              loadProducts();
+            }
+            else {
+              toggleDeleteItem();
+              $("#error").text("failed to delete product");
+              document.getElementById("error").classList.remove("hidden-item");
+            }
+          }
+        });
+      }
+
+      function toggleDeleteItem(){
+        document.getElementById("product-information-popup-div").classList.add("hidden-item"); // open only one popup at a time
+        document.getElementById("product-to-delete").textContent = document.getElementById("product-name-copy").value;
+        document.getElementById("deletion-confirmation-popup").classList.toggle("hidden-item");
+      }
+
       function toggleCreateForm(){
+        document.getElementById("deletion-confirmation-popup").classList.add("hidden-item"); // hide other forms and popups first
         document.getElementById("product-information-popup-div").classList.add("hidden-item");
-        document.getElementById("edit-form-div-p").classList.add("hidden-item"); // hide other form first
+        document.getElementById("edit-form-div-p").classList.add("hidden-item"); 
         document.getElementById("create-form-div-p").classList.toggle("hidden-item");
-        document.getElementById("error").style.visibility = "hidden";
+        document.getElementById("error").classList.add("hidden-item");
         $("#create-form input").val("");
         $("textarea[id='product-description']").val("");
       }
@@ -202,11 +245,11 @@ if (!isset($_SESSION['username'])) {
         document.getElementById("product-information-popup-div").classList.add("hidden-item");
         document.getElementById("create-form-div-p").classList.add("hidden-item");
 
-        if (element.textContent == "Cancel")
+        if (element == undefined || element.textContent == "Cancel")
           document.getElementById("edit-form-div-p").classList.add("hidden-item");
         else if (element.textContent == "edit")
           document.getElementById("edit-form-div-p").classList.remove("hidden-item");
-        document.getElementById("error").style.visibility = "hidden";
+        document.getElementById("error").classList.add("hidden-item");
         // current product name
         let currentProductName = $("#product-name-info").text();
         $("#product-name-edit").val(currentProductName);
@@ -228,13 +271,14 @@ if (!isset($_SESSION['username'])) {
 
       // show list of products under user
       function loadProducts() { 
-            $.ajax({
-            url: "load-products.php",
-            type: "POST",
-            success: function (data) {
-                $("#list-inner-div").html(data);
-            }
-            });
+        $.ajax({
+          url: "load-products.php",
+          type: "POST",
+          success: function (data) {
+              $("#list-inner-div").html(data);
+              filterList();
+          }
+        });
       }
 
       function sortProducts(element) {
@@ -310,6 +354,7 @@ if (!isset($_SESSION['username'])) {
           success: function (data){
             $("#product-information-popup-div").html(data);
             document.getElementById("product-information-popup-div").classList.toggle("hidden-item");
+            document.getElementById("deletion-confirmation-popup").classList.add("hidden-item");
           }
         });
       }

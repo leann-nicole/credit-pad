@@ -107,7 +107,7 @@ input:autofill {
 }
 
 .create-button {
-  background-color: #f2740d;
+  background-color: hsl(27, 90%, 50%);
   color: white;
 }
 
@@ -196,7 +196,7 @@ input:autofill {
 
 #error {
   color: white;
-  background-color: #C43031;
+  background-color: #dc2e3a;
   height: 50px;
   line-height: 50px;
   width: 265px;
@@ -227,7 +227,7 @@ header {
   z-index: 1;
   box-shadow: 0px 0px 5px 0px #c9c9c9;
   background-color: #f4f4f4;
-  border-bottom: 1px solid #c9c9c9;
+  border-top: 5px solid #108531;
 }
 
 header > a {
@@ -307,7 +307,7 @@ main > * {
 
 #notes-header {
   height: 40px;
-  background-color: #7a5a49;
+  background-color: #85573e;
   text-align: center;
   line-height: 40px;
   border-radius: 5px 5px 0px 0px;
@@ -409,8 +409,55 @@ main > * {
   color: rgb(255, 200, 20);
 }
 
+#delete-item-clickable-text {
+  position: absolute;
+  bottom: 0px;
+  margin-bottom: 10px;
+  color: gray;;
+  cursor: pointer;
+}
+
+#delete-item-clickable-text:hover {
+  color: #f54753;
+}
+
 .hidden-item {
   display: none;
+}
+
+#deletion-confirmation-popup {
+  height: 200px;
+  width: 400px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0px 0px 15px 2px #c9c9c9;
+  padding: 20px;
+  justify-content: flex-start;
+  border-left: solid 5px #f54753;;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+#deletion-reminder {
+  font-size: 12px;
+}
+
+#popup-yes-no-div {
+  width: 100%;
+  display: flex;
+  justify-content:space-evenly;
+}
+
+#yes-button, #no-button {
+  width: 100px;
+}
+
+#yes-button {
+  background-color: #f54753;
+  color: white;
 }
 
 #product-information-popup-div {
@@ -423,7 +470,7 @@ main > * {
   box-shadow: 0px 0px 15px 2px #c9c9c9;
   padding: 20px;
   justify-content: flex-start;
-  border-left: solid 5px #D5C9B9;
+  border-left: solid 5px #108531;
 }
 
 #product-information-popup-div div{
@@ -615,7 +662,7 @@ main > * {
 
 footer {
   height: 150px;
-  background-color: #434041;
+  background-color: #383435;
 }
 
 #customer-profile-info-div {

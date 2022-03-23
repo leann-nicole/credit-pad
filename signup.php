@@ -7,7 +7,7 @@ session_start(); // if you want to use the $_SESSION superglobal, for accessing 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Listahan</title>
+    <title>Credit Pad</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -26,13 +26,13 @@ session_start(); // if you want to use the $_SESSION superglobal, for accessing 
                 isset($_SESSION['username'])
             ) {
                 echo $_SESSION['username'];
-            } ?>"/>
+            } ?>" required/>
             <label for="bday" class="field-name">birthdate</label>
             <input id="bday" type="date" class="field" name="birthdate" value="<?php if (
                 isset($_SESSION['birthdate'])
             ) {
                 echo $_SESSION['birthdate'];
-            } ?>"/>
+            } ?>" required/>
             <label for="gender" class="field-name">sex</label>
             <select id="gender" name="sex" class="field">
             <option value="m" <?php if (
@@ -53,34 +53,34 @@ session_start(); // if you want to use the $_SESSION superglobal, for accessing 
                 isset($_SESSION['mobile_no'])
             ) {
                 echo $_SESSION['mobile_no'];
-            } ?>"/>
+            } ?>" required/>
         </div>
 
         <div class="form-column">
             <label for="mail" class="field-name">email address</label>
-            <input id="mail" type="text" class="field" name="email" maxlength="100" value="<?php if (
+            <input id="mail" type="email" class="field" name="email" maxlength="100" value="<?php if (
                 isset($_SESSION['email'])
             ) {
                 echo $_SESSION['email'];
-            } ?>"/>
+            } ?>" required/>
             <label for="business" class="field-name">business name</label>
             <input id="business" type="text" class="field" name="business_name" maxlength="50" value="<?php if (
                 isset($_SESSION['business_name'])
             ) {
                 echo $_SESSION['business_name'];
-            } ?>"/>
+            } ?>" required/>
             <label for="baddress" class="field-name">business address</label>
             <input id="baddress" type="text" class="field" name="business_addr" maxlength="100" value="<?php if (
                 isset($_SESSION['business_addr'])
             ) {
                 echo $_SESSION['business_addr'];
-            } ?>"/>
+            } ?>" required/>
             <label for="pass" class="field-name">password</label>
             <input id="pass" type="password" class="field" name="password" maxlength="15" value="<?php if (
                 isset($_SESSION['password'])
             ) {
                 echo $_SESSION['password'];
-            } ?>"/>
+            } ?>" required/>
         </div>
         
       </form>

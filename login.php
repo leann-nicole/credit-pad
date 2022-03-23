@@ -7,7 +7,7 @@ session_start();
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Listahan</title>
+    <title>Credit Pad</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -24,15 +24,15 @@ session_start();
             isset($_SESSION['username'])
         ) {
             echo $_SESSION['username'];
-        } ?>"/>
+        } ?>" required/>
         <label for="bname" class="field-name">business name</label>
         <input id="bname" type="text" class="field" name="business_name" value="<?php if (
             isset($_SESSION['business_name'])
         ) {
             echo $_SESSION['business_name'];
-        } ?>"/>        
+        } ?>" required/>        
         <label for="pass" class="field-name">password</label>
-        <input id="pass" type="password" class="field" name="password" value="<?php if (isset($_SESSION['password'])){ echo $_SESSION['password'];}?>"/>
+        <input id="pass" type="password" class="field" name="password" value="<?php if (isset($_SESSION['password'])){ echo $_SESSION['password'];}?>" required/>
       </form>
       <div id="login-signup-buttons">
         <a href="signup.php"><p id="switch-form-link">SIGN UP</p></a>

@@ -11,26 +11,22 @@ if (!isset($_SESSION['username'])) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Listahan</title>
+    <title>Credit Pad</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
     <link rel="stylesheet" href="style.css"/>
   </head>
   <body>
-    <p id="error" style="<?php if (isset($_GET['error'])) {
-          echo 'visibility:visible';
-      } else {
-          echo 'visibility:hidden';
-      } ?>">
+    <p id="error" class="<?php if (!isset($_GET['error'])) {
+          echo 'hidden-item';
+      }?>">
         <?php if (isset($_GET['error'])) {
             echo $_GET['error'];
-        } else {
-            echo 'account created successfully';
-        } ?>
+        }?>
     </p>        
     <header>
       <p id="sitename-header"><a href="customers.php">CREDIT PAD</a></p>
-      <a href="logout.php"><span id="username"><?php echo $_SESSION["username"]; ?></span></a>
+      <a href="logout.php"><span id="store-name"><?php echo $_SESSION["business_name"]; ?></span></a>
     </header>
     <div id="content">
       <nav>
@@ -54,13 +50,13 @@ if (!isset($_SESSION['username'])) {
                   isset($_SESSION['cusername'])
               ) {
                   echo $_SESSION['cusername'];
-              } ?>"/>
+              } ?>" required/>
               <label for="cbday" class="field-name">birthdate</label>
               <input id="cbday" class="field" type="date" name="birthdate" value="<?php if (
                   isset($_SESSION['cbirthdate'])
               ) {
                   echo $_SESSION['cbirthdate'];
-              } ?>"/>
+              } ?>" required/>
               <label for="cgender" class="field-name">sex</label>
               <select id="cgender" name="sex" class="field">
                 <option value="m" <?php if (
@@ -84,9 +80,9 @@ if (!isset($_SESSION['username'])) {
                   isset($_SESSION['cmobile_no'])
               ) {
                   echo $_SESSION['cmobile_no'];
-              } ?>"/>
+              } ?>" required/>
               <label for="cmail" class="field-name">email address</label>
-              <input id="cmail" class="field" type="text" name="email" maxlength="100" value="<?php if (
+              <input id="cmail" class="field" type="email" name="email" maxlength="100" value="<?php if (
                   isset($_SESSION['cemail'])
               ) {
                   echo $_SESSION['cemail'];
@@ -96,7 +92,7 @@ if (!isset($_SESSION['username'])) {
                   isset($_SESSION['caddress'])
               ) {
                   echo $_SESSION['caddress'];
-              } ?>"/>
+              } ?>" required/>
             </div>
             <div id="form-buttons-div">
               <button type="button" id="cancel" class="button" onclick="showHide()">Cancel</button>
@@ -185,6 +181,7 @@ if (!isset($_SESSION['username'])) {
             type: "POST",
             success: function (data) {
                 $("#list-inner-div").html(data);
+                filterList();
             }
             });
       }
@@ -213,8 +210,8 @@ if (!isset($_SESSION['username'])) {
       // show or hide form
       function showHide(){
             document.getElementById("create-form-div-c").classList.toggle("hidden-item");
-            document.getElementById("error").style.visibility = "hidden"; // can also do document.getElementById("error").setAttribute("style","visibility: hidden;"); but is considered bad practice since it will overwrite properties which may already be specified in the style attribute
-            $("input[type='text']").val("");
+            document.getElementById("error").classList.add("hidden-item"); // can also do document.getElementById("error").setAttribute("style","visibility: hidden;"); but is considered bad practice since it will overwrite properties which may already be specified in the style attribute
+            $("#create-form input[type='text']").val("");
             $("input[type='date']").val("");
             $("select[name='sex'] option").prop("selected", false);
             $("input[name='rate']:radio").prop("checked", false);
