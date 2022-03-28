@@ -109,10 +109,11 @@ input:autofill {
 .create-button {
   background-color: hsl(27, 90%, 50%);
   color: white;
+  font-size: 20px;
 }
 
 .create-button:hover {
-  background-color: #e96f0c;
+  background-color: hsl(27, 90%, 48%);
 }
 
 .save-button {
@@ -138,6 +139,12 @@ input:autofill {
   line-height: 22px;
   color: #108531;
   font-weight: bold;
+}
+
+#store-name {
+  font-size: 22px;
+  line-height: 22px;
+  color: #108531;
 }
 
 #sitename {
@@ -299,30 +306,28 @@ main > * {
   display: flex;
   flex-direction: column;
   box-shadow: 0px 0px 5px 0px #c9c9c9;
-  border-radius: 5px;
   margin-bottom: 10px;
   padding-bottom: 10px;
   background-color: white;
+  border-radius: 5px;
 }
 
 #notes-header {
-  height: 40px;
-  background-color: #85573e;
+  background-color: #F2F281;
+  height: 50px;
   text-align: center;
-  line-height: 40px;
-  border-radius: 5px 5px 0px 0px;
-  color: white;
+  line-height: 50px;
   cursor: default;
+  border-radius: 5px 5px 0px 0px;
 }
 
 #notes {
   line-height: 20px;
   resize: none;
   height: 245px;
-  border-top: 0;
-  border-radius: 0px 0px 5px 5px;
   margin: 0;
   border: none;
+  border-radius: 0px 0px 5px 5px;
 }
 
 #edit-form-div-c,
@@ -458,6 +463,10 @@ main > * {
 #yes-button {
   background-color: #f54753;
   color: white;
+}
+
+#yes-button:hover {
+  background-color: hsl(356, 90%, 57%);
 }
 
 #product-information-popup-div {
@@ -662,7 +671,7 @@ main > * {
 
 footer {
   height: 150px;
-  background-color: #383435;
+  background-color: #2c292a;
 }
 
 #customer-profile-info-div {

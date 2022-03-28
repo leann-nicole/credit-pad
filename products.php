@@ -31,9 +31,7 @@ if (!isset($_SESSION['username'])) {
     </p>        
     <header>
       <p id="sitename-header"><a href="customers.php">CREDIT PAD</a></p>
-      <a href="logout.php"><span id="store-name"><?php echo $_SESSION[
-          'business_name'
-      ]; ?></span></a>
+      <a href="logout.php"><span id="store-name" class="material-icons">storefront</span></a>
     </header>
     <div id="content">
       <nav>
