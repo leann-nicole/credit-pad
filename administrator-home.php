@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['adminLoggedIn'])) {
     header('Location: login.php');
     die();
 }
@@ -25,15 +25,14 @@ if (!isset($_SESSION['username'])) {
         }?>
     </p>      
     <header>
-      <p id="sitename-header"><a href="customers.php">CREDIT PAD</a></p>
+      <p id="sitename-header"><a href="administrator-home.php">CREDIT PAD</a></p>
       <a href="logout.php"><span id="store-name" class="material-icons">storefront</span></a>
     </header>
     <div id="content">
       <nav>
         <ul>
-          <li><a href="customers.php">CUSTOMERS</a></li>
-          <li><a href="products.php">PRODUCTS</a></li>
-          <li class="selected-navbar-item"><a href="reports.php">REPORTS</a></li>
+          <li class="selected-navbar-item"><a href="administrator-home.php">APPLICATIONS</a></li>
+          <li><a href="#">STORES</a></li>
         </ul>
       </nav>
       <main>

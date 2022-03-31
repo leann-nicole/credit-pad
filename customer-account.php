@@ -196,7 +196,6 @@ if (!isset($_SESSION['username'])) {
           <div id="payment-div">
               <div id="payment-types-div">
                 <div id="full-payment" class="payment-type selected-payment-type" onclick="selectPayment(this)">
-                  <span class="material-icons payment-check-mark">check_circle</span>
                   <p class="payment-type-name">FULL PAYMENT</p>
                   <div class="payment-calculation-div">
                     <label for="cash-received1">
@@ -207,7 +206,6 @@ if (!isset($_SESSION['username'])) {
                   <p id="change1">change:</p>
                 </div>   
                 <div id="partial-payment" class="payment-type" onclick="selectPayment(this)">
-                  <span class="material-icons payment-check-mark">check_circle</span>
                   <p class="payment-type-name">PARTIAL PAYMENT</p>
                   <div class="payment-calculation-div">
                     <label for="cash-received2">

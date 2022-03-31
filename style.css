@@ -17,6 +17,7 @@ a {
 
 label {
   display: inline-block;
+  height: fit-content;
   margin: 5px 0px;
 }
 
@@ -40,7 +41,7 @@ input:autofill {
 }
 
 .field:focus {
-  border-color: #108531;
+  border: 2px solid #2196f3;
 }
 
 .container {
@@ -100,6 +101,7 @@ input:autofill {
   justify-content: center;
   border-radius: 5px;
   user-select: none;
+  font-weight: bold;
 }
 
 .button:hover {
@@ -107,13 +109,13 @@ input:autofill {
 }
 
 .create-button {
-  background-color: hsl(27, 90%, 50%);
+  background-color: #f88120;
   color: white;
   font-size: 20px;
 }
 
 .create-button:hover {
-  background-color: hsl(27, 90%, 48%);
+  background-color: #f77408;
 }
 
 .save-button {
@@ -127,6 +129,7 @@ input:autofill {
 
 .selected-navbar-item {
   background-color: #d9d9d9;
+  font-weight: bold;
 }
 
 .selected-navbar-item:hover {
@@ -144,7 +147,6 @@ input:autofill {
 #store-name {
   font-size: 22px;
   line-height: 22px;
-  color: #108531;
 }
 
 #sitename {
@@ -152,69 +154,149 @@ input:autofill {
   cursor: default;
 }
 
-#login-signup-form-div {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex column;
-  width: fit-content;
-  padding: 20px;
-  box-shadow: 0px 0px 5px 0px #c9c9c9;
-}
-
-#login-signup-form-div input {
-  line-height: 40px;
-}
-
-#login-form {
-  width: 250px;
+#flex-body {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
-#signup-form div {
-  width: 250px;
+#website-name p:nth-of-type(2) {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 20px 50px 0px 0px;
+  text-align: right;
 }
 
-#signup-form {
+#website-name p:nth-of-type(1) {
+  font-size: 42px;
+  font-weight: bold;
+  color: #108531;
+  margin: 0px 50px 2px 0px;
+}
+
+#account-type-div{
+  padding: 30px;
+  margin-left: 50px;
+}
+
+.div-about-header {
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+#account-type-div input {
+  display: none;
+}
+
+#account-type-div input:checked + label {
+  border: 2px solid #2196f3;
+}
+
+#account-type-div label {
+  height: 60px;
+  width: 200px;
   display: flex;
+  margin: 0px;
+  margin-bottom: 5px;
+  align-items: center;
+  border: 1px solid #c9c9c9;
+  padding-left: 30px;
+  border-radius: 5px;
 }
 
-#signup-form div {
-  display: flex;
-  flex-direction: column;
-}
-
-#signup-form div:first-child {
+#account-type-div label > span {
   margin-right: 10px;
 }
 
-#login-signup-buttons {
-  margin-top: 20px;
+.login-signup-buttons button {
+  color: white;
+  width: 75px;
+  margin-left: auto;
+}
+
+.next-button {
+  background-color: #f88120;
+}
+
+.next-button:hover {
+  background-color: #f77408;
+}
+
+#login-as-select {
+  /* not working, don't know why */
+  line-height: 40px;
+}
+
+#signup-back-arrow1 span, #signup-back-arrow2 span{
+  border-radius: 20px;
+  margin-left: 50px;
+}
+
+#login-form-div {
+  display: flex column;
+  width: fit-content;
+  height: fit-content;
+  padding: 30px;
+  box-shadow: 0px 0px 5px 0px #c9c9c9;
+  margin-left: 50px;
+}
+
+#login-form-div input {
+  line-height: 40px;
+}
+
+#login-form, #customer-signup-form {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+#business-info-div, #store-owner-signup-form-div, #customer-signup-form-div {
+  width: 310px;
+  padding: 30px;
+  margin-left: 10px;
+}
+
+.login-signup-buttons {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  margin-top: 10px;
 }
 
-#switch-form-link:hover {
-  color: #108531;
+#login-button {
+  background-color: #2196f3;
+}
+
+.signup-button {
+  background-color: #53b050;
+}
+
+.signup-button:hover {
+  background-color: #4fa94c;
+}
+
+.switch-form-link:hover {
+  color: #2196f3;
 }
 
 #error {
   color: white;
   background-color: #dc2e3a;
-  height: 50px;
-  line-height: 50px;
+  height: 40px;
+  line-height: 20px;
   width: 265px;
+  height: fit-content;
   text-align: center;
   position: fixed;
   z-index: 2;
-  bottom: 0;
-  right: 0;
-  margin-right: 40px;
-  margin-bottom: 20px;
+  top: 0;
+  margin-top: 5px;
+  left: calc(100vw/2 - 132.5px);
   border-radius: 5px;
+  padding: 10px;
+  cursor: default;
 }
 
 body {
@@ -234,7 +316,6 @@ header {
   z-index: 1;
   box-shadow: 0px 0px 5px 0px #c9c9c9;
   background-color: #f4f4f4;
-  border-top: 5px solid #108531;
 }
 
 header > a {
@@ -313,7 +394,7 @@ main > * {
 }
 
 #notes-header {
-  background-color: #F2F281;
+  background-color: #f5e77a;
   height: 50px;
   text-align: center;
   line-height: 50px;
@@ -411,14 +492,14 @@ main > * {
 #rating > input:hover ~ label,
 #rating > input:checked ~ label,
 .star {
-  color: rgb(255, 200, 20);
+  color: #ffc814;
 }
 
 #delete-item-clickable-text {
   position: absolute;
   bottom: 0px;
   margin-bottom: 10px;
-  color: gray;;
+  color: gray;
   cursor: pointer;
 }
 
@@ -440,7 +521,8 @@ main > * {
   box-shadow: 0px 0px 15px 2px #c9c9c9;
   padding: 20px;
   justify-content: flex-start;
-  border-left: solid 5px #f54753;;
+  border: solid 1px #f54753;
+  border-bottom: solid 5px #f54753;
   align-items: center;
   justify-content: space-between;
   text-align: center;
@@ -450,23 +532,33 @@ main > * {
   font-size: 12px;
 }
 
+#product-to-delete, #account-to-delete {
+  font-weight: bold;
+}
+
 #popup-yes-no-div {
   width: 100%;
   display: flex;
-  justify-content:space-evenly;
+  justify-content: center;
 }
 
-#yes-button, #no-button {
+#yes-button,
+#no-button {
   width: 100px;
 }
 
 #yes-button {
   background-color: #f54753;
   color: white;
+  margin-left: 5px;
 }
 
 #yes-button:hover {
   background-color: hsl(356, 90%, 57%);
+}
+
+#no-button {
+  margin-right: 5px;
 }
 
 #product-information-popup-div {
@@ -479,10 +571,11 @@ main > * {
   box-shadow: 0px 0px 15px 2px #c9c9c9;
   padding: 20px;
   justify-content: flex-start;
-  border-left: solid 5px #108531;
+  border: solid 1px #2196f3;
+  border-bottom: solid 5px #2196f3;
 }
 
-#product-information-popup-div div{
+#product-information-popup-div div {
   margin-bottom: 10px;
   width: 80%;
   line-height: 20px;
@@ -565,7 +658,7 @@ main > * {
 }
 
 #search-div:focus-within {
-  border-color: rgb(0, 135, 95);
+  border: 2px solid #2196f3;
 }
 
 #search-field {
@@ -580,10 +673,7 @@ main > * {
 
 #search-icon {
   margin-right: 10px;
-  height: 12px;
-  width: 12px;
-  background-image: url('images/search.png');
-  background-size: cover;
+  cursor: default;
 }
 
 #list-div {
@@ -727,6 +817,7 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-weight: bold;
 }
 
 #customer-name {
@@ -898,18 +989,6 @@ footer {
   justify-content: space-between;
 }
 
-.payment-type-name {
-  font-size: 16px;
-}
-
-#payment-types-div .payment-type:first-of-type {
-  background-color: #ffdb58;
-}
-
-#payment-types-div .payment-type:nth-of-type(2) {
-  background-color: #D5C9B9;
-}
-
 #payment-types-div .payment-calculation-div {
   display: flex;
   margin-top: 10px;
@@ -923,12 +1002,7 @@ footer {
 }
 
 #payment-types-div input {
-  border: none;
   width: 100px;
-}
-
-#payment-types-div input:focus {
-  border: 1px solid #108531;
 }
 
 .payment-type {
@@ -942,32 +1016,22 @@ footer {
   cursor: pointer;
 }
 
-.payment-check-mark {
-  display: none;
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  font-size: 24px;
+.payment-type-name {
+  font-weight: bold;
 }
 
-.payment-type:first-of-type:hover > .payment-check-mark {
-  display: block;
-  color: orange;
+#payment-types-div .payment-type:nth-of-type(1) {
+  border: 1px solid #2196f3;
+  border-bottom: solid 5px #2196f3;
 }
 
-.payment-type:nth-of-type(2):hover > .payment-check-mark {
-  display: block;
-  color: gray;
+#payment-types-div .payment-type:nth-of-type(2) {
+  border: 1px solid #FC9D00;
+  border-bottom: solid 5px #FC9D00;
 }
 
-.selected-payment-type > .payment-check-mark {
-  display: block;
-  color: #108531;
-}
-
-.payment-type.selected-payment-type:hover > .payment-check-mark {
-  display: block;
-  color: #108531;
+#payment-types-div .payment-type:nth-of-type(2) input:focus {
+  border-color: #FC9D00;
 }
 
 #history-tools {
@@ -999,7 +1063,9 @@ footer {
   width: 150px;
 }
 
-#startDate, #history-tools p, #endDate {
+#startDate,
+#history-tools p,
+#endDate {
   float: right;
   width: fit-content;
 }

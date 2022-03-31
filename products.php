@@ -160,7 +160,7 @@ if (!isset($_SESSION['username'])) {
           <button type="button" id="new-button" class="button create-button material-icons" onclick="toggleCreateForm()">add</button>
           <div id="search-div">
             <input type="text" id="search-field" class="field" placeholder="Search" onkeyup="filterList()">
-            <div id="search-icon" onclick="focusSearchBar()"></div>
+            <span id="search-icon" class="material-icons" onclick="focusSearchBar()">search</span>
           </div>
         </div>
         <div id="list-div" class="container">
