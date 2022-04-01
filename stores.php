@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['adminLoggedIn'])) {
     header('Location: login.php');
     die();
 }
@@ -25,19 +25,20 @@ if (!isset($_SESSION['username'])) {
         }?>
     </p>      
     <header>
-      <p id="sitename-header"><a href="customers.php">CREDIT PAD</a></p>
-      <a href="logout.php"><span id="store-icon" class="material-icons">storefront</span></a>
+      <p id="sitename-header"><a href="applicants.php">CREDIT PAD</a></p>
+      <a href="logout.php"><span id="account-icon" class="material-icons">account_circle</span></a>
     </header>
     <div id="content">
       <nav>
         <ul>
-          <li><a href="customers.php">CUSTOMERS</a></li>
-          <li><a href="products.php">PRODUCTS</a></li>
-          <li class="selected-navbar-item"><a href="reports.php">REPORTS</a></li>
+          <li><a href="applicants.php">APPLICANTS</a></li>
+          <li class="selected-navbar-item"><a href="stores.php">STORES</a></li>
         </ul>
       </nav>
       <main>
-        
+        <div id="store-list">
+
+        </div>
       </main>
       <div id="extra">
         <div id="notes-div">
@@ -53,8 +54,18 @@ if (!isset($_SESSION['username'])) {
         $("#search-field").focus();
       }
 
+      function loadStores(){
+        $.ajax({
+          url: "load-stores.php",
+          success: function (data){
+            $("#store-list").html(data);
+          }
+        });
+      }
+
       $(document).ready(function () {
         fetchNotes();
+        loadStores();
       });
       // shorthand for $(document).ready(); is $();
       // can also do $(window).on("load", function(){}); 
@@ -64,7 +75,8 @@ if (!isset($_SESSION['username'])) {
       function fetchNotes(){
         $.ajax({
           url: "update-note.php", 
-          type: "POST"
+          type: "POST",
+          data: {admin: true}
         });        
       }
 
@@ -73,7 +85,7 @@ if (!isset($_SESSION['username'])) {
         $.ajax({
           url: "update-note.php", 
           type: "POST",
-          data: {notes: notes}
+          data: {admin: true, notes: notes}
         });        
       }
     </script>

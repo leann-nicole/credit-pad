@@ -26,7 +26,7 @@ if (!isset($_SESSION['username'])) {
     </p>        
     <header>
       <p id="sitename-header"><a href="customers.php">CREDIT PAD</a></p>
-      <a href="logout.php"><span id="store-name" class="material-icons">storefront</span></a>
+      <a href="logout.php"><span id="store-icon" class="material-icons">storefront</span></a>
     </header>
     <div id="content">
       <nav>
@@ -95,7 +95,7 @@ if (!isset($_SESSION['username'])) {
               } ?>" required/>
             </div>
             <div id="form-buttons-div">
-              <button type="button" id="cancel" class="button" onclick="showHide()">Cancel</button>
+              <button type="button" id="cancel" class="gray-button" onclick="showHide()">Cancel</button>
               <button type="submit" form="create-form" id="save-form-button" class="button save-button" >Save</button>
             </div>
 

@@ -40,6 +40,6 @@ if (mysqli_num_rows($result)){
     }
 }
 else {
-    header("Location: signup.php?account=customer&error=customer or store does not exist");
+    header("Location: signup.php?account=customer&error=unable to create account");
 }
 

@@ -90,7 +90,6 @@ input:autofill {
 }
 
 .button {
-  background-color: #d9d9d9;
   border: none;
   cursor: pointer;
   height: 40px;
@@ -101,35 +100,48 @@ input:autofill {
   justify-content: center;
   border-radius: 5px;
   user-select: none;
-  font-weight: bold;
 }
 
-.button:hover {
+.gray-button {
+  background-color: #d9d9d9;
+  border: 1px solid #c9c9c9;
+  cursor: pointer;
+  height: 40px;
+  min-width: 40px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  user-select: none;
+}
+
+.gray-button:hover {
   background-color: #c9c9c9;
 }
 
 .create-button {
-  background-color: #f88120;
+  background-color: #FC9D00;
   color: white;
   font-size: 20px;
+  font-weight: normal;
 }
 
 .create-button:hover {
-  background-color: #f77408;
+  background-color: hsl(37, 100%, 47%);
 }
 
 .save-button {
-  background-color: #53b050;
+  background-color: hsl(118, 38%, 50%);
   color: white;
 }
 
 .save-button:hover {
-  background-color: #4fa94c;
+  background-color: hsl(118, 38%, 48%);
 }
 
 .selected-navbar-item {
   background-color: #d9d9d9;
-  font-weight: bold;
 }
 
 .selected-navbar-item:hover {
@@ -144,9 +156,10 @@ input:autofill {
   font-weight: bold;
 }
 
-#store-name {
+#store-icon, #account-icon {
   font-size: 22px;
   line-height: 22px;
+  color: #363535;
 }
 
 #sitename {
@@ -533,7 +546,7 @@ main > * {
 }
 
 #product-to-delete, #account-to-delete {
-  font-weight: bold;
+  font-size: 16px;
 }
 
 #popup-yes-no-div {
@@ -582,7 +595,7 @@ main > * {
 }
 
 #product-name-info {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 24px;
   padding-bottom: 10px;
   border-bottom: 1px solid #d9d9d9;
@@ -761,7 +774,7 @@ main > * {
 
 footer {
   height: 150px;
-  background-color: #2c292a;
+  background-color: #363535;
 }
 
 #customer-profile-info-div {
@@ -817,17 +830,16 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: bold;
 }
 
 #customer-name {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 24px;
   margin-bottom: 5px;
 }
 
 #customer-credit {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 24px;
   margin-bottom: 5px;
 }
@@ -841,12 +853,8 @@ footer {
   cursor: default;
 }
 
-#customer-details tr td:first-of-type {
-  text-align: right;
-}
-
-#customer-details tr td:nth-of-type(2) {
-  padding-left: 10px;
+#customer-details tr td {
+  padding-left: 20px;
 }
 
 #tab-section {
@@ -971,7 +979,7 @@ footer {
 }
 
 #grand-total {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 40px;
   float: right;
   padding-right: 20px;
@@ -1087,7 +1095,7 @@ footer {
 }
 
 .history-item-total {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .history-item-content {
@@ -1151,4 +1159,80 @@ footer {
 
 .credit-history-item .history-item-type {
   background-color: gray;
+}
+
+.applicant-item, .store-item {
+  padding: 20px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.applicant-business-name, .store-name {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.applicant-business-location, .store-location {
+  margin: 5px 0px;
+  border-bottom: 1px solid #c9c9c9;
+  padding-bottom: 10px;
+}
+
+.applicant-details, .store-details {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-left: 20px;
+}
+
+.applicant-details tr, .store-details tr {
+  height: 20px;
+}
+
+.applicant-details tr td:nth-of-type(2), .store-details tr td:nth-of-type(2) {
+  padding-left: 20px;
+}
+
+.applicant-buttons {
+  display: flex;
+  justify-content: right;
+}
+
+.applicant-buttons button {
+  width: 100px;
+}
+
+.approve-button {
+  margin-right: 5px;
+  background-color: #2196f3;
+  color: white;
+}
+
+.approve-button:hover {
+  margin-right: 5px;
+  background-color: #1690f3;
+}
+
+.applicant-date, .store-approval-date {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  margin: 24px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+#no-applications-banner, #no-stores-banner {
+  height: calc(100vh - 70px);
+  width: 100%;
+  padding: 10px;
+}
+
+#no-applications-banner div, #no-stores-banner div {
+  background-color: #e6e6e6;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

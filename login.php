@@ -57,18 +57,20 @@ session_start();
       function prepareForm(){
         let loginAs = $("#login-as-select option:selected").val();
         if (loginAs == "customer" || loginAs == "store owner"){
-          $("label:contains('name')").show();
-          $("label:contains('store')").show();
+          $("#uname").prop("required", true);
+          $("#bname").prop("required", true);
           $("#uname").show();
           $("#bname").show();
+          $("label:contains('name')").show();
+          $("label:contains('store')").show();
         }
         else if (loginAs == "administrator"){
           $("#uname").prop("required", false);
           $("#bname").prop("required", false);
-          $("label:contains('name')").hide();
-          $("label:contains('store')").hide();
           $("#uname").hide();
           $("#bname").hide();
+          $("label:contains('name')").hide();
+          $("label:contains('store')").hide();
         }
       }
 

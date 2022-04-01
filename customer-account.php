@@ -25,7 +25,7 @@ if (!isset($_SESSION['username'])) {
     </p>        
     <header>
       <p id="sitename-header"><a href="customers.php">CREDIT PAD</a></p>
-      <a href="logout.php"><span id="store-name" class="material-icons">storefront</span></a>
+      <a href="logout.php"><span id="store-icon" class="material-icons">storefront</span></a>
     </header>
     <div id="content">
       <nav>
@@ -92,7 +92,7 @@ if (!isset($_SESSION['username'])) {
               } ?>" required/>
             </div>
             <div id="form-buttons-div">
-              <button type="button" id="cancel" class="button" onclick="toggleEditForm()">Cancel</button>
+              <button type="button" id="cancel" class="gray-button" onclick="toggleEditForm()">Cancel</button>
               <button type="submit" form="edit-form" id="save-form-button" class="button save-button" >Save</button>
             </div>
 
@@ -148,7 +148,7 @@ if (!isset($_SESSION['username'])) {
             <span id="account-to-delete"></span>
             <span id="deletion-reminder">This will erase all payment and credit transactions made by this account.</span>
             <div id="popup-yes-no-div">
-              <button id="no-button" class="button" onclick="toggleDeleteItem()">Cancel</button>
+              <button id="no-button" class="gray-button" onclick="toggleDeleteItem()">Cancel</button>
               <button id="yes-button" class="button" onclick="deleteItem()">Delete</button>
             </div>
           </div>

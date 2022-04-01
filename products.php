@@ -31,7 +31,7 @@ if (!isset($_SESSION['username'])) {
     </p>        
     <header>
       <p id="sitename-header"><a href="customers.php">CREDIT PAD</a></p>
-      <a href="logout.php"><span id="store-name" class="material-icons">storefront</span></a>
+      <a href="logout.php"><span id="store-icon" class="material-icons">storefront</span></a>
     </header>
     <div id="content">
       <nav>
@@ -85,7 +85,7 @@ if (!isset($_SESSION['username'])) {
               
             </div>
             <div id="form-buttons-div">
-              <button type="button" id="cancel" class="button" onclick="toggleCreateForm()">Cancel</button>
+              <button type="button" id="cancel" class="gray-button" onclick="toggleCreateForm()">Cancel</button>
               <button type="submit" form="create-form" id="save-form-button" class="button save-button">Save</button>
             </div>
 
@@ -140,7 +140,7 @@ if (!isset($_SESSION['username'])) {
               
             </div>
             <div id="form-buttons-div-edit">
-              <button type="button" id="cancel-edit" class="button" onclick="toggleEditForm(this)">Cancel</button>
+              <button type="button" id="cancel-edit" class="gray-button" onclick="toggleEditForm(this)">Cancel</button>
               <button type="submit" form="edit-form" id="save-form-button-edit" class="button save-button">Save</button>
             </div>
 
@@ -150,7 +150,7 @@ if (!isset($_SESSION['username'])) {
             <span>Are you sure you want to delete this product?</span>
             <span id="product-to-delete"></span>
             <div id="popup-yes-no-div">
-              <button id="no-button" class="button" onclick="toggleDeleteItem()">Cancel</button>
+              <button id="no-button" class="gray-button" onclick="toggleDeleteItem()">Cancel</button>
               <button id="yes-button" class="button" onclick="deleteItem()">Delete</button>
             </div>
           </div>

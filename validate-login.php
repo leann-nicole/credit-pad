@@ -48,25 +48,19 @@ if ($_POST['account-type'] == "store owner"){
     }
 
     // check if username, business name, and password are correct
-    $query = "SELECT * FROM stores WHERE store_operator = '$username' AND business_name = '$store' limit 1";
+    $query = "SELECT * FROM stores WHERE store_operator = '$username' AND business_name = '$store' LIMIT 1";
     $result = mysqli_query($con, $query); // mysqli_query() returns a mysqli_result object when successful, false if failed
     $row = mysqli_fetch_assoc($result); // mysqli_fetch_assoc() returns an associative array corresponding to the fetched row. ex. $row = array("name"=>"Leann", "age"=>"42");
-    if (mysqli_num_rows($result) == 0 or $row['password'] != $password) {
+    if (mysqli_num_rows($result) == 0 || $row['password'] != $password) {
         // if user does not exist or password is incorrect
-        header('Location: login.php?error=incorrect credentials');
+        header("Location: login.php?error=incorrect credentials");
         die();
     } else {
         // prepare user notes
-        $query = "SELECT * FROM notes WHERE business_name = '$store'";
+        $query = "SELECT notes FROM stores WHERE business_name = '$store'";
         $result = mysqli_query($con, $query);
-        if (mysqli_num_rows($result)) {
-            $rows = mysqli_fetch_assoc($result);
-            $_SESSION["notes"] = $rows["content"];
-        } else {
-            $query = "INSERT INTO notes (business_name) VALUES ('$store')";
-            mysqli_query($con, $query);
-            $_SESSION["notes"] = "";
-        }
+        $rows = mysqli_fetch_assoc($result);
+        $_SESSION["notes"] = $rows["notes"];
         header('Location: customers.php');
         die();
     }
@@ -100,7 +94,11 @@ else if ($_POST['account-type'] == "administrator"){
     $row = mysqli_fetch_assoc($result);
     if ($password == $row['password']){
         $_SESSION['adminLoggedIn'] = true;
-        header("Location: administrator-home.php");
+        $query = "SELECT notes FROM administrator";
+        $result = mysqli_query($con, $query);
+        $rows = mysqli_fetch_assoc($result);
+        $_SESSION["notes"] = $rows["notes"];
+        header("Location: applicants.php");
         die();
     }
     else {

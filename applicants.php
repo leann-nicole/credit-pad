@@ -25,18 +25,20 @@ if (!isset($_SESSION['adminLoggedIn'])) {
         }?>
     </p>      
     <header>
-      <p id="sitename-header"><a href="administrator-home.php">CREDIT PAD</a></p>
-      <a href="logout.php"><span id="store-name" class="material-icons">storefront</span></a>
+      <p id="sitename-header"><a href="applicants.php">CREDIT PAD</a></p>
+      <a href="logout.php"><span id="account-icon" class="material-icons">account_circle</span></a>
     </header>
     <div id="content">
       <nav>
         <ul>
-          <li class="selected-navbar-item"><a href="administrator-home.php">APPLICATIONS</a></li>
-          <li><a href="#">STORES</a></li>
+          <li class="selected-navbar-item"><a href="applicants.php">APPLICANTS</a></li>
+          <li><a href="stores.php">STORES</a></li>
         </ul>
       </nav>
       <main>
-        
+        <div id="applicant-list">
+
+        </div>
       </main>
       <div id="extra">
         <div id="notes-div">
@@ -52,8 +54,18 @@ if (!isset($_SESSION['adminLoggedIn'])) {
         $("#search-field").focus();
       }
 
+      function loadApplicants(){
+        $.ajax({
+          url: "load-applicants.php",
+          success: function (data){
+            $("#applicant-list").html(data);
+          }
+        });
+      }
+
       $(document).ready(function () {
         fetchNotes();
+        loadApplicants();
       });
       // shorthand for $(document).ready(); is $();
       // can also do $(window).on("load", function(){}); 
@@ -63,7 +75,8 @@ if (!isset($_SESSION['adminLoggedIn'])) {
       function fetchNotes(){
         $.ajax({
           url: "update-note.php", 
-          type: "POST"
+          type: "POST",
+          data: {admin: true}
         });        
       }
 
@@ -72,8 +85,25 @@ if (!isset($_SESSION['adminLoggedIn'])) {
         $.ajax({
           url: "update-note.php", 
           type: "POST",
-          data: {notes: notes}
+          data: {admin: true, notes: notes}
         });        
+      }
+
+      function approveApplicant(element){
+        let applicantItem = element.parentElement.parentElement.parentElement;
+        let storeName = applicantItem.getElementsByClassName("applicant-business-name")[0].textContent;
+        $.ajax({
+          url: "approve-applicant.php",
+          type: "POST",
+          data: {storeName: storeName},
+          success: function(data){
+            loadApplicants();
+          }
+        });
+      }
+
+      function rejectApplicant(element){
+        
       }
     </script>
   </body>

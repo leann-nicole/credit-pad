@@ -48,7 +48,7 @@ if (!filter_var($store_owner_email, FILTER_VALIDATE_EMAIL)){
     die();
 }
 
-$query = "INSERT INTO applications (business_name, business_addr, store_operator, sex, birthdate, mobile_no, email, password) VALUES ('$store_name', '$store_location', '$store_owner', '$store_owner_sex', '$store_owner_birthday', '$store_owner_mobile', '$store_owner_email', '$store_owner_password')";
+$query = "INSERT INTO applicants (business_name, business_addr, store_operator, sex, birthdate, mobile_no, email, password, application_date) VALUES ('$store_name', '$store_location', '$store_owner', '$store_owner_sex', '$store_owner_birthday', '$store_owner_mobile', '$store_owner_email', '$store_owner_password', now())";
 
 if (mysqli_query($con, $query)) {
     $_SESSION['username'] = $_SESSION["so-su-name"];
