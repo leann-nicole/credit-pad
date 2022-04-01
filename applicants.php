@@ -103,7 +103,20 @@ if (!isset($_SESSION['adminLoggedIn'])) {
       }
 
       function rejectApplicant(element){
-        
+        let applicantItem = element.parentElement.parentElement.parentElement;
+        let storeName = applicantItem.getElementsByClassName("applicant-business-name")[0].textContent;
+        let storeOperator = applicantItem.getElementsByClassName("applicant-name")[0].textContent;
+        let storeLocation = applicantItem.getElementsByClassName("applicant-business-location")[0].textContent;
+        let applicationDate = applicantItem.getElementsByClassName("applicant-date")[0].textContent;
+        console.log(storeName, storeOperator, storeLocation, applicationDate);
+        $.ajax({
+          url: "reject-applicant.php",
+          type: "POST",
+          data: {storeName: storeName, storeOperator: storeOperator, storeLocation: storeLocation, applicationDate: applicationDate},
+          success: function(data){
+            loadApplicants();
+          }
+        });
       }
     </script>
   </body>

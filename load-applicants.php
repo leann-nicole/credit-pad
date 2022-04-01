@@ -23,7 +23,7 @@ else {
             <table>
                 <tr>
                     <td>store operator</td>
-                    <td><?php echo $row['store_operator']; ?></td>
+                    <td class="applicant-name"><?php echo $row['store_operator']; ?></td>
                 </tr>
                 <tr>
                     <td>sex</td>
