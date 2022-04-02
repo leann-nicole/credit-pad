@@ -2,13 +2,15 @@
 session_start();
 include "connection.php";
 
-$query = "SELECT * FROM applicants ORDER BY application_date DESC";
+if ($_POST['sortBy'] == "application_date") $query = "SELECT * FROM applicants ORDER BY application_date {$_POST['sortOrder']}, business_name ASC"; // applicants who applied on the same day are to be sorted alphabetically (a-z)
+else $query = "SELECT * FROM applicants ORDER BY {$_POST['sortBy']} {$_POST['sortOrder']}";
+
 $result = mysqli_query($con, $query);
 
 if (mysqli_num_rows($result) == 0){
     ?>
 <div id="no-applications-banner" class="container">
-    <div>THERE ARE NO APPLICATIONS AT THE MOMENT.</div>
+    <div>No applications yet.</div>
 </div>
     <?php
 }

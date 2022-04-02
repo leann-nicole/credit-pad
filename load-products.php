@@ -40,7 +40,7 @@ echo '</table>';
 } else { ?>
 <table id="no-record-header">
     <tr>
-        <td>NO PRODUCTS YET</td>
+        <td>No products yet.</td>
     </tr>
 </table>
 <?php }

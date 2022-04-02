@@ -37,7 +37,7 @@ session_start(); // if you want to use the $_SESSION superglobal, for accessing 
         </div>
     </div>
     <!--CUSTOMER SIGNUP FORM-->
-    <div type="button" id="signup-back-arrow1" class="hidden-item"><span class="material-icons button" onclick="selectAccount()">arrow_back</span></div>
+    <div type="button" id="signup-back-arrow1" class="hidden-item"><span class="material-icons gray-button" onclick="selectAccount()">arrow_back</span></div>
     <div class="container hidden-item" id="customer-signup-form-div">
         <span class="div-about-header">Sign up as customer</span>
         <form id="customer-signup-form" action="validate-signup-customer.php" method="post"> <!-- method=post for sensitive information we don't want displayed in the URL -->
@@ -74,7 +74,7 @@ session_start(); // if you want to use the $_SESSION superglobal, for accessing 
         </div>
     </div>
     <!--STORE OWNER SIGNUP FORM-->
-    <div type="button" id="signup-back-arrow2" class="hidden-item"><span class="material-icons button" onclick="startSignUp()">arrow_back</span></div>
+    <div type="button" id="signup-back-arrow2" class="hidden-item"><span class="material-icons gray-button" onclick="startSignUp()">arrow_back</span></div>
     <div class="container hidden-item" id="store-owner-signup-form-div">
         <span class="div-about-header">Sign up as store owner</span>
         <form id="store-owner-signup-form" action="validate-signup-store.php" method="post">

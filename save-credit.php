@@ -21,14 +21,14 @@ else {
     $query = "INSERT INTO credit_transactions (date, business_name, customer, product, quantity, price, subtotal, entry_no) VALUES ('$date', '$store', '$customer', '$product', '$quantity', '$price', '$subtotal', '$entryNo')";
 }
 
-
 if (!mysqli_query($con, $query)){
-    header("Location: customer-account.php?error=unable to save credit transaction");
+    header("Location: customer-account.php?customer=$customer&error=unable to save credit transaction");
     die();
 }
+
 $query = "UPDATE customers SET current_debt = current_debt + $grandTotal WHERE name = '$customer' AND business_name = '$store'";
 if (!mysqli_query($con, $query)){
-    header("Location: customer-account.php?error=unable to update customer credit");
+    header("Location: customer-account.php?customer=$customer&error=unable to update customer credit");
     die();
 }
 

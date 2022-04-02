@@ -2,13 +2,15 @@
 session_start();
 include "connection.php";
 
-$query = "SELECT * FROM stores ORDER BY date_approved DESC";
+if ($_POST['sortBy'] == "date_approved") $query = "SELECT * FROM stores ORDER BY date_approved {$_POST['sortOrder']}, business_name ASC"; // store with similar approval dates are sorted alphabetically (a-z)
+else $query = "SELECT * FROM stores ORDER BY {$_POST['sortBy']} {$_POST['sortOrder']}";
+
 $result = mysqli_query($con, $query);
 
 if (mysqli_num_rows($result) == 0){
     ?>
-<div id="no-applications-banner" class="container">
-    <div>THERE ARE NO APPLICATIONS AT THE MOMENT.</div>
+<div id="no-stores-banner" class="container">
+    <div>No stores yet.</div>
 </div>
     <?php
 }

@@ -23,6 +23,7 @@ session_start();
       <p>Log in</p>
     </div>
     <div id="login-form-div" class="container">
+    <span class="div-about-header">Log in</span>
       <form id="login-form" action="validate-login.php" method="post"> <!-- method=post for sensitive information we don't want displayed in the URL -->
         <label for="login-as-select" class="field-name">account</label>  
         <select id="login-as-select" name="account-type" class="field" onchange="prepareForm()">

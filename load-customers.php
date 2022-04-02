@@ -47,7 +47,7 @@ else {
 ?>
 <table id="no-record-header">
     <tr>
-        <td>NO CUSTOMERS YET</td>
+        <td>No customers yet.</td>
     </tr>
 </table>
 <?php

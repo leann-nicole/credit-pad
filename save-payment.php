@@ -22,12 +22,12 @@ else {
 }
 
 if (!mysqli_query($con, $query)){
-    header("Location: customer-account.php?error=unable to save payment transaction");
+    header("Location: customer-account.php?customer=$customer&error=unable to save payment transaction");
     die();
 }
 
 $query = "UPDATE customers SET current_debt = current_debt - $amountPaid WHERE name = '$customer' AND business_name = '$store'";
 if (!mysqli_query($con, $query)){
-    header("Location: customer-account.php?error=unable to update customer credit");
+    header("Location: customer-account.php?customer=$customer&error=unable to update customer credit");
     die();
 }

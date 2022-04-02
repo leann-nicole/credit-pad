@@ -230,12 +230,13 @@ if (!isset($_SESSION['username'])) {
           </div>
           <div id="history-div">
             <div id="history-tools">
-              <div id="payments" class="button selected-history-type" onclick="filterHistory(this)">Payments</div>
-              <div id="credits" class="button selected-history-type" onclick="filterHistory(this)">Credits</div>
-              <button type="button" id="sort-history-button" class="button" onclick="fetchHistory(this)">Most Recent First</button>
-              <input type="date" id="endDate" class="field" title="end date" onchange="filterHistory(this)">
-              <p>~</p>
-              <input type="date" id="startDate" class="field" title="start date" onchange="filterHistory(this)">
+              <span id="payments" class="button selected-history-type" onclick="filterHistory(this)">Payments</span>
+              <span id="credits" class="button selected-history-type" onclick="filterHistory(this)">Credits</span>
+              <button type="button" class="gray-button sort-button-order" onclick="fetchHistory(this)">Date<span id="sort-arrow" class="material-icons">arrow_downward</span></button>
+              <div id="date-interval">
+                <input type="date" id="start-date" class="field" title="start date" onchange="filterHistory(this)">
+                <input type="date" id="end-date" class="field" title="end date" onchange="filterHistory(this)">
+              </div>
             </div>
             <div id="history-list"></div>
           </div>
@@ -356,8 +357,8 @@ if (!isset($_SESSION['username'])) {
         // filter by date first
         // this stage also resets previous filters by setting the display of any date matched item to flex
         // filter by type will take place right after
-        let startDate = $("#startDate").val();
-        let endDate = $("#endDate").val();
+        let startDate = $("#start-date").val();
+        let endDate = $("#end-date").val();
         
         if (startDate == "" && endDate == ""){ // default, show all
           historyItems.forEach(function (item) {
@@ -411,7 +412,7 @@ if (!isset($_SESSION['username'])) {
         }
 
         // then filter remaining by type
-        if (element != undefined && element.tagName == "DIV") element.classList.toggle("selected-history-type");
+        if (element != undefined && element.tagName == "SPAN") element.classList.toggle("selected-history-type");
         
         let paymentsSelected = document.getElementById("payments").classList.contains("selected-history-type");
         let creditsSelected = document.getElementById("credits").classList.contains("selected-history-type");
@@ -517,9 +518,11 @@ if (!isset($_SESSION['username'])) {
                 $.ajax({
                   url: "save-credit.php",
                   type: "POST",
-                  data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, entryNo: entryNo, comment: comment}
+                  data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, entryNo: entryNo, comment: comment},
+                  success: function (data){
+                    commentSaved = true;
+                  }
                 });
-                commentSaved = true;
               }
               else {
                 $.ajax({
@@ -571,15 +574,16 @@ if (!isset($_SESSION['username'])) {
               $.ajax({
               url: "save-payment.php",
               type: "POST",
-              data: {paymentType: "full payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment, entryNo: entryNo}
+              data: {paymentType: "full payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment, entryNo: entryNo},
+              success: function (data){
+                // clear inputs and comments & update current credit
+                $("#full-payment input").val("");
+                $("#payment-comment").val("");
+                $("#change1").text("change:");
+                let newCustomerCredit = atMost2Dec(currentCredit - amountPaid); 
+                document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
+              }
               });         
-
-              // clear inputs and comments & update current credit
-              $("#full-payment input").val("");
-              $("#payment-comment").val("");
-              $("#change1").text("change:");
-              let newCustomerCredit = atMost2Dec(currentCredit - amountPaid); 
-              document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
             }
             else if (currentCredit != 0 && choice.id == "partial-payment"){
               let cash = choice.getElementsByTagName("input")[0].value;
@@ -596,14 +600,15 @@ if (!isset($_SESSION['username'])) {
               $.ajax({
               url: "save-payment.php",
               type: "POST",
-              data: {paymentType: "partial payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment, entryNo: entryNo}
+              data: {paymentType: "partial payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment, entryNo: entryNo},
+              success: function (data){
+                $("#partial-payment input").val("");
+                $("#payment-comment").val("");
+                $("#change2").text("change:");
+                let newCustomerCredit = atMost2Dec(currentCredit - amountPaid);
+                document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
+              }
               });
-
-              $("#partial-payment input").val("");
-              $("#payment-comment").val("");
-              $("#change2").text("change:");
-              let newCustomerCredit = atMost2Dec(currentCredit - amountPaid);
-              document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
             }
           }
         });
@@ -844,11 +849,11 @@ if (!isset($_SESSION['username'])) {
         if (element != undefined){ // if button was clicked (not switch tab)
           if (historyOrder == "Most Recent First"){
             historyOrder = "Least Recent First";
-            $("#sort-history-button").text("Least Recent First");
+            $(".sort-button-order").html("Date<span id='sort-arrow' class='material-icons'>arrow_upward</span>");
           }
           else {
             historyOrder = "Most Recent First";
-            $("#sort-history-button").text("Most Recent First");
+            $(".sort-button-order").html("Date<span id='sort-arrow' class='material-icons'>arrow_downward</span>");
           }
         }
         

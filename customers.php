@@ -219,6 +219,7 @@ if (!isset($_SESSION['username'])) {
       }
 
       function filterList(){
+        if ($("table").attr("id") == "no-record-header") return;
         let searchInput = document.getElementById("search-field").value.toLowerCase(); // get search bar and value in it
         let tableRows = document.getElementById("customer-list-table").getElementsByTagName("tr"); // get table and rows in it
 

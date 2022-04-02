@@ -193,8 +193,13 @@ input:autofill {
   margin-left: 50px;
 }
 
-.div-about-header {
+#account-type-div .div-about-header {
   margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.div-about-header {
+  margin-bottom: 10px;
   font-weight: bold;
 }
 
@@ -378,7 +383,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px 0px;
+  padding: 20px 0px 15px 0px;
   min-width: 752px;
   position: relative;
 }
@@ -394,7 +399,7 @@ main > * {
 
 #notes-div {
   position: sticky;
-  top: 60px;
+  top: 70px;
   max-width: 265px;
   min-width: 150px;
   display: flex;
@@ -663,7 +668,7 @@ main > * {
   border: 1px solid #c9c9c9;
   border-radius: 5px;
   margin-right: 10px;
-  width: 300px;
+  width: 350px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -690,8 +695,8 @@ main > * {
 }
 
 #list-div {
-  height: calc(100vh - 125px);
-  min-height: 512px;
+  height: calc(100vh - 135px);
+  min-height: 250px;
   box-shadow: 0px 0px 5px 0px #c9c9c9;
   position: relative;
 }
@@ -779,11 +784,11 @@ footer {
 
 #customer-profile-info-div {
   position: relative;
-  padding: 30px;
+  padding: 20px;
   padding-right: 100px;
   display: flex;
   flex-direction: row;
-  height: 200px;
+  height: 185px;
   margin-bottom: 10px;
 }
 
@@ -1044,10 +1049,11 @@ footer {
 
 #history-tools {
   height: 40px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  padding: 0px 10px;
 }
 
-#history-tools div {
+#history-tools > span {
   display: inline-flex;
   height: 30px;
   padding: 0px 10px;
@@ -1065,22 +1071,38 @@ footer {
   background-color: gray;
 }
 
-#sort-history-button {
+.sort-button-by, .sort-button-order {
   float: right;
-  margin-left: 10px;
-  width: 150px;
+  border-left: 0px;
+  border-radius: 0px 5px 5px 0px;
 }
 
-#startDate,
-#history-tools p,
-#endDate {
+#sort-arrow {
+  margin-left: 5px;
+}
+
+#date-interval {
   float: right;
+  display: flex;
+  justify-content: center;
+}
+
+#start-date,
+#end-date {
   width: fit-content;
 }
 
-#history-tools p {
-  margin: 0px 5px;
-  line-height: 40px;
+#start-date {
+  border-radius: 5px 0px 0px 5px;
+  border-right: 0px;
+}
+
+#start-date:focus + input {
+  border-left: 2px solid #2196f3;
+}
+
+#end-date {
+  border-radius: 0px;
 }
 
 #history-list {
@@ -1223,16 +1245,43 @@ footer {
 }
 
 #no-applications-banner, #no-stores-banner {
-  height: calc(100vh - 70px);
+  height: calc(100vh - 140px);
+  min-height: 250px;
   width: 100%;
-  padding: 10px;
+  padding: 0px;
+  background-color: #e6e6e6;
+  box-shadow: none;
 }
 
 #no-applications-banner div, #no-stores-banner div {
-  background-color: #e6e6e6;
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
+#admin-list-tools {
+  margin-bottom: 10px;
+}
+
+#admin-list-tools > * {
+  margin: 0px;
+}
+
+#admin-list-tools #search-div {
+  margin: 0px;
+  width: 45%;
+  max-width: calc(100% - 480px);
+  float: left;
+}
+
+#admin-list-tools #sort-arrow{
+  margin: 0px;
+}
+
+#admin-list-tools .sort-button-by{
+  border-radius: 0px;
+  width: 65px;
+}
+
