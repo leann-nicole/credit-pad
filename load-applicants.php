@@ -18,7 +18,7 @@ else {
     while($row = mysqli_fetch_assoc($result)){
         ?>
     <div class="container applicant-item">
-        <div class="applicant-date"><?php if ($row['application_date'] != NULL) echo date_format(date_create($row['application_date']), "F d, Y"); ?></div>
+        <div class="applicant-date" data-date="<?php echo date("Y-m-d", strtotime($row['application_date'])); ?>"><?php if ($row['application_date'] != NULL) echo date_format(date_create($row['application_date']), "F d, Y"); ?></div>
         <p class="applicant-business-name"><?php echo $row['business_name']; ?></p>
         <p class="applicant-business-location"><?php echo $row['business_addr']; ?></p>
         <div class="applicant-details">

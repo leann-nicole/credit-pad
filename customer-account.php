@@ -365,19 +365,8 @@ if (!isset($_SESSION['username'])) {
             item.style.display = "flex";
           })
         }
-        else if (startDate != "" && endDate == ""){ // one date provided, exact match needed
-          let dateToMatch = startDate;
-          historyItems.forEach(function (item, index) {
-            let itemDate = item.querySelector(".history-item-date").getAttribute("data-date");
-            if (itemDate == dateToMatch) item.style.display = "flex";
-            else{
-              item.style.display = "none";
-              toFilterByType = toFilterByType.filter(e => e != index);
-            }
-          })
-        }
-        else if (startDate == "" && endDate != ""){ // one date provided, exact match needed
-          let dateToMatch = endDate;
+        else if ((startDate != "" && endDate == "") || (startDate == "" && endDate != "")){ // one date provided, exact match needed
+          let dateToMatch = (startDate != "" && endDate == "")? startDate : endDate;
           historyItems.forEach(function (item, index) {
             let itemDate = item.querySelector(".history-item-date").getAttribute("data-date");
             if (itemDate == dateToMatch) item.style.display = "flex";

@@ -21,7 +21,7 @@ else {
         $row1 = mysqli_fetch_assoc($result1);
         ?>
     <div class="container store-item">
-        <div class="store-approval-date"><?php if ($row['date_approved'] != NULL) echo date_format(date_create($row['date_approved']), "F d, Y"); ?></div>
+        <div class="store-approval-date" data-date="<?php echo date("Y-m-d", strtotime($row['date_approved'])); ?>"><?php if ($row['date_approved'] != NULL) echo date_format(date_create($row['date_approved']), "F d, Y"); ?></div>
         <p class="store-name"><?php echo $row['business_name']; ?></p>
         <p class="store-location"><?php echo $row['business_addr']; ?></p>
         <div class="store-details">

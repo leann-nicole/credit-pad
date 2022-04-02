@@ -40,8 +40,8 @@ if (!isset($_SESSION['adminLoggedIn'])) {
           <button type="button" class="gray-button sort-button-order" onclick="loadStores('order')"><span id="sort-arrow" class="material-icons">arrow_downward</span></button>
           <button type="button" class="gray-button sort-button-by" onclick="loadStores('by')">Date</button>
           <div id="date-interval">
-            <input type="date" id="start-date" class="field" title="start date" onchange="filterHistory(this)">
-            <input type="date" id="end-date" class="field" title="end date" onchange="filterHistory(this)">
+            <input type="date" id="start-date" class="field" title="start date" onchange="filterList()">
+            <input type="date" id="end-date" class="field" title="end date" onchange="filterList()">
           </div>
           <div id="search-div">
             <input type="text" id="search-field" class="field" placeholder="Search" onkeyup="filterList()">
@@ -71,13 +71,56 @@ if (!isset($_SESSION['adminLoggedIn'])) {
       }
 
       function filterList(){
+        let storeList = document.querySelectorAll(".store-item"); // get applicants
+        
+        // filter by date first
+        let startDate = $("#start-date").val();
+        let endDate = $("#end-date").val();
+        
+        if (startDate == "" && endDate == ""){ // default, show all
+          storeList.forEach(function (item) {
+            item.style.display = "flex";
+          })
+        }
+        else if ((startDate != "" && endDate == "") || (startDate == "" && endDate != "")){ // one date provided, exact match needed
+          let dateToMatch = (startDate != "" && endDate == "")? startDate : endDate;
+          storeList.forEach(function (item, index) {
+            let itemDate = item.querySelector(".store-approval-date").getAttribute("data-date");
+            if (itemDate == dateToMatch) item.style.display = "flex";
+            else{
+              item.style.display = "none";
+            }
+          })
+        }
+        else if (startDate == endDate ) { // one date provided, exact match needed
+          let dateToMatch = startDate;
+          storeList.forEach(function (item, index) {
+            let itemDate = item.querySelector(".store-approval-date").getAttribute("data-date");
+            if (itemDate == dateToMatch) item.style.display = "flex";
+            else{
+              item.style.display = "none";
+            }
+          })
+        }
+        else if (startDate != endDate) { // two dates provided, match within range
+          let lowerDate = new Date(startDate);
+          let higherDate = new Date(endDate);
+          storeList.forEach(function (item, index){
+            let itemDate = new Date(item.querySelector(".store-approval-date").getAttribute("data-date"));
+            if (itemDate >= lowerDate && itemDate <= higherDate || itemDate <= lowerDate && itemDate >= higherDate) item.style.display = "flex";
+            else {
+              item.style.display = "none";
+            }
+          })
+        }
+        // then filter by search input
         if ($("table").attr("id") == "no-stores-banner") return;
         let searchInput = document.getElementById("search-field").value.toLowerCase(); // get search bar and value in it
-        let applicantList = document.getElementsByClassName("store-name"); // get applicants
 
-        for (let i = 0; i < applicantList.length; i++){ // loop through applicants
-          if (applicantList[i].textContent.toLowerCase().indexOf(searchInput) > -1) applicantList[i].parentElement.style.display = "";
-          else applicantList[i].parentElement.style.display = "none";
+        for (let i = 0; i < storeList.length; i++){ // loop through applicants
+          // show item if it contains the search value and is also unfiltered by the date filter yet
+          if ((storeList[i].style.display != "none") && (storeList[i].querySelector(".store-name").textContent.toLowerCase().indexOf(searchInput) > -1)) storeList[i].style.display = "";
+          else storeList[i].style.display = "none";
         }
       }
 
