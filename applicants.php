@@ -26,7 +26,7 @@ if (!isset($_SESSION['adminLoggedIn'])) {
     </p>      
     <header>
       <p id="sitename-header"><a href="applicants.php">CREDIT PAD</a></p>
-      <a href="logout.php"><span id="account-icon" class="material-icons">account_circle</span></a>
+      <a href="logout.php"><span id="account-icon" class="material-icons">person</span></a>
     </header>
     <div id="content">
       <nav>
@@ -44,7 +44,7 @@ if (!isset($_SESSION['adminLoggedIn'])) {
             <input type="date" id="end-date" class="field" title="end date" onchange="filterList()">
           </div>
           <div id="search-div">
-            <input type="text" id="search-field" class="field" placeholder="Search" onkeyup="filterList()">
+            <input type="text" id="search-field" class="field" placeholder="Search" onkeyup="filterList()" spellcheck="false">
             <span id="search-icon" class="material-icons" onclick="focusSearchBar()">search</span>
           </div>
         </div>

@@ -81,10 +81,6 @@ input:autofill {
   line-height: 20px;
 }
 
-.history-item:hover {
-  box-shadow: 0px 0px 5px 0px #c9c9c9;
-}
-
 .material-icons {
   font-size: 18px;
 }
@@ -154,6 +150,7 @@ input:autofill {
   line-height: 22px;
   color: #108531;
   font-weight: bold;
+  margin: none;
 }
 
 #store-icon, #account-icon {
@@ -1285,3 +1282,11 @@ footer {
   width: 65px;
 }
 
+#customer-history-container {
+  justify-content: flex-start;
+  position: relative;
+  box-shadow: 0px 0px 5px 0px #c9c9c9;
+  height: fit-content;
+  min-height: calc(100vh - 85px);
+  padding-top: 20px;
+}

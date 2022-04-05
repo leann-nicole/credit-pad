@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['ownerLoggedIn'])) {
     header('Location: login.php');
     die();
 }
@@ -353,7 +353,7 @@ if (!isset($_SESSION['username'])) {
         let toFilterByType = [];
         for (let i = 0; i < historyItems.length; i++) toFilterByType.push(i);
 
-        // to step process
+        // two step process
         // filter by date first
         // this stage also resets previous filters by setting the display of any date matched item to flex
         // filter by type will take place right after
@@ -492,7 +492,6 @@ if (!isset($_SESSION['username'])) {
             let creditDate = $("#credit-date").val();
             let newCustomerCredit = atMost2Dec(Number(document.getElementById("customer-credit").textContent.substr(2).replace(/,/g, '')) + grandTotal); // replace() because Number() doesn't process commas. and using replace() with a regular expression /,/g ensures all occurences and not just the first is replaced
             let comment = $("#credit-comment").val();
-            let commentSaved = false;
 
             // go through cart, individually saving each item to the database
             Array.from(cartItems).forEach(function(item, index, arr){
@@ -503,21 +502,18 @@ if (!isset($_SESSION['username'])) {
               let subTotal = Number(item.querySelector("span:nth-of-type(4)").textContent);
     
               // save to database
-              if (!commentSaved){
+              if (index == 0 && comment != ""){
                 $.ajax({
                   url: "save-credit.php",
                   type: "POST",
-                  data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, entryNo: entryNo, comment: comment},
-                  success: function (data){
-                    commentSaved = true;
-                  }
+                  data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, entryNo: entryNo, comment: comment}
                 });
               }
               else {
                 $.ajax({
                   url: "save-credit.php",
                   type: "POST",
-                  data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, entryNo: entryNo}
+                  data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: 0, creditDate: creditDate, entryNo: entryNo}
                 });
               }            
             });
@@ -553,26 +549,43 @@ if (!isset($_SESSION['username'])) {
               let cash = choice.getElementsByTagName("input")[0].value;
 
               if (cash == "") return;
-              cash = atMost2Dec(cash)
+              cash = atMost2Dec(cash);
               let amountPaid = Number($("#customer-credit").text().substr(2).replace(/,/g, ""));
               if (cash < amountPaid){ return; }
               let change = atMost2Dec(cash - amountPaid);
               let paymentDate = $("#payment-date").val();
               let comment = $("#payment-comment").val();
 
-              $.ajax({
-              url: "save-payment.php",
-              type: "POST",
-              data: {paymentType: "full payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment, entryNo: entryNo},
-              success: function (data){
-                // clear inputs and comments & update current credit
-                $("#full-payment input").val("");
-                $("#payment-comment").val("");
-                $("#change1").text("change:");
-                let newCustomerCredit = atMost2Dec(currentCredit - amountPaid); 
-                document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
+              if (comment != ""){
+                $.ajax({
+                  url: "save-payment.php",
+                  type: "POST",
+                  data: {paymentType: "full payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment, entryNo: entryNo},
+                  success: function (data){
+                    // clear inputs and comments & update current credit
+                    $("#full-payment input").val("");
+                    $("#payment-comment").val("");
+                    $("#change1").text("change:");
+                    let newCustomerCredit = atMost2Dec(currentCredit - amountPaid); 
+                    document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
+                  }
+                });         
               }
-              });         
+              else {
+                $.ajax({
+                  url: "save-payment.php",
+                  type: "POST",
+                  data: {paymentType: "full payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, entryNo: entryNo},
+                  success: function (data){
+                    // clear inputs and comments & update current credit
+                    $("#full-payment input").val("");
+                    $("#payment-comment").val("");
+                    $("#change1").text("change:");
+                    let newCustomerCredit = atMost2Dec(currentCredit - amountPaid); 
+                    document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
+                  }
+                });         
+              }
             }
             else if (currentCredit != 0 && choice.id == "partial-payment"){
               let cash = choice.getElementsByTagName("input")[0].value;
@@ -586,18 +599,34 @@ if (!isset($_SESSION['username'])) {
               let paymentDate = $("#payment-date").val();
               let comment = $("#payment-comment").val();
 
-              $.ajax({
-              url: "save-payment.php",
-              type: "POST",
-              data: {paymentType: "partial payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment, entryNo: entryNo},
-              success: function (data){
-                $("#partial-payment input").val("");
-                $("#payment-comment").val("");
-                $("#change2").text("change:");
-                let newCustomerCredit = atMost2Dec(currentCredit - amountPaid);
-                document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
+              if (comment != ""){
+                $.ajax({
+                  url: "save-payment.php",
+                  type: "POST",
+                  data: {paymentType: "partial payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, comment: comment, entryNo: entryNo},
+                  success: function (data){
+                    $("#partial-payment input").val("");
+                    $("#payment-comment").val("");
+                    $("#change2").text("change:");
+                    let newCustomerCredit = atMost2Dec(currentCredit - amountPaid);
+                    document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
+                  }
+                });
               }
-              });
+              else {
+                $.ajax({
+                  url: "save-payment.php",
+                  type: "POST",
+                  data: {paymentType: "partial payment", customer: customer, paymentDate: paymentDate, cash: cash, amountPaid: amountPaid, change: change, entryNo: entryNo},
+                  success: function (data){
+                    $("#partial-payment input").val("");
+                    $("#payment-comment").val("");
+                    $("#change2").text("change:");
+                    let newCustomerCredit = atMost2Dec(currentCredit - amountPaid);
+                    document.getElementById("customer-credit").textContent = "₱\ " + newCustomerCredit.toLocaleString();
+                  }
+                });
+              }
             }
           }
         });

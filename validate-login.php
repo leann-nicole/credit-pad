@@ -61,6 +61,8 @@ if ($_POST['account-type'] == "store owner"){
         $result = mysqli_query($con, $query);
         $rows = mysqli_fetch_assoc($result);
         $_SESSION["notes"] = $rows["notes"];
+
+        $_SESSION['ownerLoggedIn'] = true;
         header('Location: customers.php');
         die();
     }
@@ -69,6 +71,7 @@ else if ($_POST['account-type'] == "customer"){
     $_SESSION['account-type'] = $_POST['account-type'];
     $_SESSION['username'] = $_POST['username'];
     $_SESSION['business_name'] = $_POST['business_name'];
+
     $username = mysqli_real_escape_string($con, $_POST['username']);
     $store = mysqli_real_escape_string($con, $_POST['business_name']);
     $password = mysqli_real_escape_string($con, $_POST['password']);
@@ -82,7 +85,13 @@ else if ($_POST['account-type'] == "customer"){
         header('Location: login.php?error=incorrect credentials');
         die();
     } else {
-        header('Location: customer-home.php');
+        $query = "SELECT notes FROM customers WHERE name = '$username'";
+        $result = mysqli_query($con, $query);
+        $rows = mysqli_fetch_assoc($result);
+        $_SESSION["notes"] = $rows["notes"];
+
+        $_SESSION['customerLoggedIn'] = true;
+        header('Location: customer-history.php');
         die();
     }
 }
@@ -93,16 +102,17 @@ else if ($_POST['account-type'] == "administrator"){
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_assoc($result);
     if ($password == $row['password']){
-        $_SESSION['adminLoggedIn'] = true;
         $query = "SELECT notes FROM administrator";
         $result = mysqli_query($con, $query);
         $rows = mysqli_fetch_assoc($result);
         $_SESSION["notes"] = $rows["notes"];
+
+        $_SESSION['adminLoggedIn'] = true;
         header("Location: applicants.php");
         die();
     }
     else {
-        header("Location: login.php?error=incorrect credentials");
+        header("Location: login.php?error=incorrect password");
         die();
     }
 }

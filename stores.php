@@ -26,7 +26,7 @@ if (!isset($_SESSION['adminLoggedIn'])) {
     </p>      
     <header>
       <p id="sitename-header"><a href="applicants.php">CREDIT PAD</a></p>
-      <a href="logout.php"><span id="account-icon" class="material-icons">account_circle</span></a>
+      <a href="logout.php"><span id="account-icon" class="material-icons">person</span></a>
     </header>
     <div id="content">
       <nav>

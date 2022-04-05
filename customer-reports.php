@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['ownerLoggedIn'])) {
+if (!isset($_SESSION['customerLoggedIn'])) {
     header('Location: login.php');
     die();
 }
@@ -25,15 +25,14 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         }?>
     </p>      
     <header>
-      <p id="sitename-header"><a href="customers.php">CREDIT PAD</a></p>
-      <a href="logout.php"><span id="store-icon" class="material-icons">storefront</span></a>
+      <p id="sitename-header"><a href="customer-history.php">CREDIT PAD</a></p>
+      <a href="logout.php"><span id="store-icon" class="material-icons">person</span></a>
     </header>
     <div id="content">
       <nav>
         <ul>
-          <li><a href="customers.php">HISTORY</a></li>
-          <li><a href="products.php">PRODUCTS</a></li>
-          <li class="selected-navbar-item"><a href="reports.php">REPORTS</a></li>
+          <li><a href="customer-history.php">HISTORY</a></li>
+          <li class="selected-navbar-item"><a href="customer-reports.php">REPORTS</a></li>
         </ul>
       </nav>
       <main>
@@ -64,7 +63,8 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
       function fetchNotes(){
         $.ajax({
           url: "update-note.php", 
-          type: "POST"
+          type: "POST",
+          data: {customer: true}
         });        
       }
 
@@ -73,7 +73,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         $.ajax({
           url: "update-note.php", 
           type: "POST",
-          data: {notes: notes}
+          data: {customer: true, notes: notes}
         });        
       }
     </script>
