@@ -30,31 +30,31 @@ if (!isset($_SESSION['customerLoggedIn'])) {
     </header>
     <div id="content">
       <nav>
-        <ul>
-          <li class="selected-navbar-item"><a href="customer-history.php">HISTORY</a></li>
-          <li><a href="customer-reports.php">REPORTS</a></li>
-        </ul>
+        
       </nav>
       <main id="customer-main-section">
         <div id="customer-profile-info-div" class="container" data-name="<?php echo $_SESSION['username']; ?>"></div>
-        <div id="customer-history-container" class="container">
-          <div id="history-tools">
-            <span id="payments" class="button selected-history-type" onclick="filterHistory(this)">Payments</span>
-            <span id="credits" class="button selected-history-type" onclick="filterHistory(this)">Credits</span>
-            <button type="button" class="gray-button sort-button-order" onclick="fetchHistory(this)">Date<span id="sort-arrow" class="material-icons">arrow_downward</span></button>
-            <div id="date-interval">
-              <input type="date" id="start-date" class="field" title="start date" onchange="filterHistory(this)">
-              <input type="date" id="end-date" class="field" title="end date" onchange="filterHistory(this)">
+        <div id="tab-section">
+          <div class="selected-navbar-item" onclick="switchTab(this)">HISTORY</div>
+          <div onclick="switchTab(this)">REPORTS</div>
+        </div>
+        <div id="tab-content" class="container">
+          <div id="history-div">
+            <div id="history-tools">
+              <span id="payments" class="button selected-history-type" onclick="filterHistory(this)">Payments</span>
+              <span id="credits" class="button selected-history-type" onclick="filterHistory(this)">Credits</span>
+              <button type="button" class="gray-button sort-button-order" onclick="fetchHistory(this)">Date<span id="sort-arrow" class="material-icons">arrow_downward</span></button>
+              <div id="date-interval">
+                <input type="date" id="start-date" class="field" title="start date" onchange="filterHistory(this)">
+                <input type="date" id="end-date" class="field" title="end date" onchange="filterHistory(this)">
+              </div>
             </div>
+            <div id="history-list"></div>
           </div>
-          <div id="history-list"></div>
+          <div id="reports-div"></div>
         </div>
       </main>
       <div id="extra">
-        <div id="notes-div">
-          <div id="notes-header">NOTES</div>
-          <textarea id="notes" class="field" placeholder="Write your quick notes here" onkeyup="updateNotes(this)" spellcheck="false"><?php if(!empty($_SESSION["notes"])){echo $_SESSION["notes"];}?></textarea>
-        </div>
       </div>
     </div>
     <footer></footer>
@@ -65,23 +65,6 @@ if (!isset($_SESSION['customerLoggedIn'])) {
 
       function focusSearchBar(){
         $("#search-field").focus();
-      }
-
-      function fetchNotes(){
-        $.ajax({
-          url: "update-note.php", 
-          type: "POST",
-          data: {customer: true}
-        });        
-      }
-
-      function updateNotes(element){
-        let notes = element.value;
-        $.ajax({
-          url: "update-note.php", 
-          type: "POST",
-          data: {customer: true, notes: notes}
-        });        
       }
 
       function fetchCustomerInfo(){
@@ -199,11 +182,30 @@ if (!isset($_SESSION['customerLoggedIn'])) {
         });
       }
 
+      function showTabContent() {
+        let tab = $("#tab-section > .selected-navbar-item").text();
+        if (tab == "HISTORY") {
+          fetchHistory();
+          document.querySelector("#tab-content > div:nth-of-type(1)").style.display = "flex";
+          document.querySelector("#tab-content > div:nth-of-type(2)").style.display = "none";
+        }
+        else if (tab == "REPORTS"){
+          document.querySelector("#tab-content > div:nth-of-type(1)").style.display = "none";
+          document.querySelector("#tab-content > div:nth-of-type(2)").style.display = "flex";
+        }
+      }
+
+      function switchTab(element){
+        document.querySelector("#tab-section > .selected-navbar-item").classList.remove("selected-navbar-item");
+        element.classList.add("selected-navbar-item");
+        showTabContent();
+      }
+
       $(document).ready(function () {
         customer = $("#customer-profile-info-div").data("name");
         fetchCustomerInfo();
+        showTabContent();
         fetchHistory();
-        fetchNotes();
       });
       // shorthand for $(document).ready(); is $();
       // can also do $(window).on("load", function(){}); 

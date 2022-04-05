@@ -865,12 +865,13 @@ footer {
 }
 
 #tab-section div {
-  flex-grow: 1;
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 20px 20px 0px 0px;
   cursor: pointer;
+  max-width: 185px;
 }
 
 #tab-section div:hover {
@@ -1282,11 +1283,3 @@ footer {
   width: 65px;
 }
 
-#customer-history-container {
-  justify-content: flex-start;
-  position: relative;
-  box-shadow: 0px 0px 5px 0px #c9c9c9;
-  height: fit-content;
-  min-height: calc(100vh - 85px);
-  padding-top: 20px;
-}

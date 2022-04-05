@@ -502,12 +502,21 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
               let subTotal = Number(item.querySelector("span:nth-of-type(4)").textContent);
     
               // save to database
-              if (index == 0 && comment != ""){
-                $.ajax({
-                  url: "save-credit.php",
-                  type: "POST",
-                  data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, entryNo: entryNo, comment: comment}
-                });
+              if (index == 0){
+                if (comment != "") {
+                  $.ajax({
+                    url: "save-credit.php",
+                    type: "POST",
+                    data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, entryNo: entryNo, comment: comment}
+                  });
+                }
+                else {
+                  $.ajax({
+                    url: "save-credit.php",
+                    type: "POST",
+                    data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, entryNo: entryNo}
+                  });
+                }
               }
               else {
                 $.ajax({
@@ -843,11 +852,11 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
           document.querySelector("#tab-content > div:nth-of-type(4)").style.display = "none";
         }
         else if (tab == "HISTORY") {
+          fetchHistory();   
           document.querySelector("#tab-content > div:nth-of-type(1)").style.display = "none";
           document.querySelector("#tab-content > div:nth-of-type(2)").style.display = "none";
           document.querySelector("#tab-content > div:nth-of-type(3)").style.display = "flex";  
           document.querySelector("#tab-content > div:nth-of-type(4)").style.display = "none";   
-          fetchHistory();   
         }
         else if (tab == "REPORTS") {
           document.querySelector("#tab-content > div:nth-of-type(1)").style.display = "none";
