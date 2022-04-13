@@ -184,47 +184,50 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
                 <button type="button" id="add-button" class="button material-icons" onclick="addCartItem()" title="add">add</button>
               </div>
             </div>
-            <div id="save-credit-div">
-              <textarea id="credit-comment" class="field" placeholder="Write a comment here" spellcheck="false" maxlength="500"></textarea>
-              <input type="date" id="credit-date" class="field" value="<?php echo date(
-                  'Y-m-d'
-              ); ?>">
+            <textarea id="credit-comment" class="field" placeholder="Write a comment here" spellcheck="false" maxlength="500"></textarea>
+
+            <div id="dates-div">
+              <label id="credit-date-label" for="credit-date">Credit date
+                <input type="date" id="credit-date" class="field" value="<?php echo date('Y-m-d'); ?>" onchange="changeDueDate(this)">
+              </label>
+              <label id="due-date-label" for="credit-date">Due date
+                <input type="date" id="due-date" class="field" value="<?php echo date('Y-m-d', strtotime('+1 month')); ?>">
+              </label>
               <button type="button" id="save-credit-button" class="button save-button" onclick="saveCredit()">Save</button>
               <div id="grand-total"></div>
             </div>
+            
           </div>
           <div id="payment-div">
-              <div id="payment-types-div">
-                <div id="full-payment" class="payment-type selected-payment-type" onclick="selectPayment(this)">
-                  <p class="payment-type-name">FULL PAYMENT</p>
-                  <div class="payment-calculation-div">
-                    <label for="cash-received1">
-                      <p class="field-name">cash received</p>
-                      <input type="number" min="1" step="0.01" id="cash-received1" class="field" oninput="getChange(this)">
-                    </label>
-                  </div>
-                  <p id="change1">change:</p>
-                </div>   
-                <div id="partial-payment" class="payment-type" onclick="selectPayment(this)">
-                  <p class="payment-type-name">PARTIAL PAYMENT</p>
-                  <div class="payment-calculation-div">
-                    <label for="cash-received2">
-                      <p class="field-name">cash received</p>
-                      <input type="number" min="1" step="0.01" id="cash-received2" class="field" oninput="getChange(this)">
-                    </label>
-                    <label for="amount-paid2" class="test">
-                      <p class="field-name">amount paid</p>
-                      <input type="number" min="1" step="0.01" id="amount-paid" class="field" oninput="getChange(this)">
-                    </label>
-                  </div>
-                  <p id="change2">change:</p>
+            <div id="payment-types-div">
+              <div id="full-payment" class="payment-type selected-payment-type" onclick="selectPayment(this)">
+                <p class="payment-type-name">FULL PAYMENT</p>
+                <div class="payment-calculation-div">
+                  <label for="cash-received1">
+                    <p class="field-name">cash received</p>
+                    <input type="number" min="1" step="0.01" id="cash-received1" class="field" oninput="getChange(this)">
+                  </label>
                 </div>
+                <p id="change1">change:</p>
+              </div>   
+              <div id="partial-payment" class="payment-type" onclick="selectPayment(this)">
+                <p class="payment-type-name">PARTIAL PAYMENT</p>
+                <div class="payment-calculation-div">
+                  <label for="cash-received2">
+                    <p class="field-name">cash received</p>
+                    <input type="number" min="1" step="0.01" id="cash-received2" class="field" oninput="getChange(this)">
+                  </label>
+                  <label for="amount-paid2" class="test">
+                    <p class="field-name">amount paid</p>
+                    <input type="number" min="1" step="0.01" id="amount-paid" class="field" oninput="getChange(this)">
+                  </label>
+                </div>
+                <p id="change2">change:</p>
               </div>
-            <div id="save-payment-div">
-              <textarea id="payment-comment" class="field" placeholder="Write a comment here" spellcheck="false"></textarea>
-              <input type="date" id="payment-date" class="field" value="<?php echo date(
-                  'Y-m-d'
-              ); ?>">
+            </div>
+            <textarea id="payment-comment" class="field" placeholder="Write a comment here" spellcheck="false"></textarea>              
+            <div id="dates-div">
+              <label id="payment-date-label" for="payment-date">Payment date<input type="date" id="payment-date" class="field" value="<?php echo date('Y-m-d'); ?>"></label>
               <button type="button" id="save-payment-button" class="button save-button" onclick="savePayment()">Save</button>
             </div>
           </div>
@@ -263,6 +266,12 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
       let customer = "";
       let entryNo = 0;
       let historyOrder = "Most Recent First";
+
+      function changeDueDate(element){
+        let creditDate = new Date(element.value);
+        let dueDate = new Date(creditDate.setMonth(creditDate.getMonth() + 1));
+        $("#due-date").val(dueDate.toISOString().split("T")[0]);
+      }
 
       function atMost2Dec(n){
         return Number(Math.round(n+ "e"+2)+"e-"+2); 
@@ -478,7 +487,8 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
 
       function saveCredit() {
         let transactionDate = $("#credit-date").val();
-        if (!grandTotal || transactionDate == "") { return; }
+        let dueDate = $("#due-date").val();
+        if (!grandTotal || transactionDate == "" || dueDate == "") return;
       
         // get entry number for transaction
         $.ajax({
@@ -503,26 +513,17 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
     
               // save to database
               if (index == 0){
-                if (comment != "") {
-                  $.ajax({
-                    url: "save-credit.php",
-                    type: "POST",
-                    data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, entryNo: entryNo, comment: comment}
-                  });
-                }
-                else {
-                  $.ajax({
-                    url: "save-credit.php",
-                    type: "POST",
-                    data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, entryNo: entryNo}
-                  });
-                }
+                $.ajax({
+                  url: "save-credit.php",
+                  type: "POST",
+                  data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: grandTotal, creditDate: creditDate, dueDate: dueDate, entryNo: entryNo, comment: comment}
+                });
               }
               else {
                 $.ajax({
                   url: "save-credit.php",
                   type: "POST",
-                  data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: 0, creditDate: creditDate, entryNo: entryNo}
+                  data: {customer: customer, product: product, quantity: quantity, price: price, subTotal: subTotal, grandTotal: 0, creditDate: creditDate, dueDate: dueDate, entryNo: entryNo}
                 });
               }            
             });

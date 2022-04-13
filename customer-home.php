@@ -25,7 +25,7 @@ if (!isset($_SESSION['customerLoggedIn'])) {
         }?>
     </p>      
     <header>
-      <p id="sitename-header"><a href="customer-history.php">CREDIT PAD</a></p>
+      <p id="sitename-header"><a href="customer-home.php">CREDIT PAD</a></p>
       <a href="logout.php"><span id="store-icon" class="material-icons">person</span></a>
     </header>
     <div id="content">
@@ -33,7 +33,7 @@ if (!isset($_SESSION['customerLoggedIn'])) {
         
       </nav>
       <main id="customer-main-section">
-        <div id="customer-profile-info-div" class="container" data-name="<?php echo $_SESSION['username']; ?>"></div>
+        <div id="customer-profile-info-div" class="container" data-name="<?php echo $_SESSION['username']; ?>" data-store="<?php echo $_SESSION['business_name']; ?>"></div>
         <div id="tab-section">
           <div class="selected-navbar-item" onclick="switchTab(this)">HISTORY</div>
           <div onclick="switchTab(this)">REPORTS</div>
@@ -55,12 +55,17 @@ if (!isset($_SESSION['customerLoggedIn'])) {
         </div>
       </main>
       <div id="extra">
+      <div id="notifications-div">
+        <div id="notifications-header">NOTIFICATIONS</div>
+        <div id="notification-list"><p class="notification">No notifcations at the moment.</p></div>
+      </div>
       </div>
     </div>
     <footer></footer>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
       let customer = "";
+      let store = "";
       let historyOrder = "Most Recent First";
 
       function focusSearchBar(){
@@ -201,11 +206,26 @@ if (!isset($_SESSION['customerLoggedIn'])) {
         showTabContent();
       }
 
+      function fetchNotifications(){
+        $.ajax({
+          url: "fetch-notifications.php",
+          type: "POST",
+          data: {customer: customer, store: store},
+          success: function (data){
+            if (data != ""){
+              $("#notification-list").html(data);
+            }                     
+          }
+        });
+      }
+
       $(document).ready(function () {
         customer = $("#customer-profile-info-div").data("name");
+        store = $("#customer-profile-info-div").data("store");
         fetchCustomerInfo();
         showTabContent();
         fetchHistory();
+        fetchNotifications();
       });
       // shorthand for $(document).ready(); is $();
       // can also do $(window).on("load", function(){}); 

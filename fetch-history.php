@@ -44,11 +44,13 @@ for($i = 0; $i < sizeof($dates); $i++){
     $entries = max($latestCreditEntryNo, $latestPaymentEntryNo);
 
     for ($entryNo = $entries; $entryNo >= 1; $entryNo--){
-        $query = "SELECT product, quantity, subtotal, comment FROM credit_transactions WHERE business_name = '$store' AND customer = '$customer' AND date = '$dates[$i]' AND entry_no = '$entryNo'";
+        $query = "SELECT status, due_date, product, quantity, subtotal, comment FROM credit_transactions WHERE business_name = '$store' AND customer = '$customer' AND date = '$dates[$i]' AND entry_no = '$entryNo'";
         $resultCredit = mysqli_query($con, $query);
         if (mysqli_num_rows($resultCredit)){ // if there are records with the date and the entry no exist in the CREDITS table
             $comment = "";
             $grandTotal = 0;
+            $dueDate = "";
+            $creditStatus = "NULL";
             ?>
             <div class="history-item credit-history-item" data-type="credit-history-item">
                 <table class="history-item-content"> 
@@ -57,7 +59,9 @@ for($i = 0; $i < sizeof($dates); $i++){
                             <table class="credit-content-table"><?php
             while ($creditTransaction = mysqli_fetch_assoc($resultCredit)){
                 $comment .= $creditTransaction["comment"];
-                $grandTotal += $creditTransaction["subtotal"];?>
+                $grandTotal += $creditTransaction["subtotal"];
+                if ($creditTransaction["status"] == 'unpaid') $creditStatus = 'unpaid';
+                ?>
                                 <tr>
                                     <td class="credit-items-column">
                                         <p><?php if (fmod($creditTransaction["quantity"], 1)){ echo number_format($creditTransaction["quantity"], 2); } else { echo number_format($creditTransaction["quantity"]); } echo " " . $creditTransaction["product"];?></p>
@@ -77,7 +81,7 @@ for($i = 0; $i < sizeof($dates); $i++){
                     </tr>
                 </table>
                 <div class="history-item-header">
-                    <p class="history-item-type">CREDIT</p>
+                    <p class="history-item-type <?php if($creditStatus == 'unpaid'){ echo "unpaid-credit-label"; }?>">CREDIT</p>
                     <p class="history-item-date" data-date="<?php echo date("Y-m-d", strtotime($dates[$i])); ?>"><?php echo date("F j, Y", strtotime($dates[$i])); ?></p>
                     <p class="history-item-total"><?php echo "₱ "; if (fmod($grandTotal, 1)){ echo number_format($grandTotal, 2); } else { echo number_format($grandTotal); }?></p>
                 </div>

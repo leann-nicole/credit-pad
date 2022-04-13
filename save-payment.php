@@ -12,6 +12,11 @@ $amountPaid = $_POST['amountPaid'];
 $change = $_POST['change'];
 $entryNo = $_POST["entryNo"];
 
+if ($paymentType == "full payment") {
+    $query = "UPDATE credit_transactions SET status = 'paid' WHERE customer = '$customer' AND business_name = '$store'";
+    mysqli_query($con, $query);
+}
+
 if (!empty($_POST["comment"])){
     $comment = mysqli_real_escape_string($con, $_POST["comment"]);
     $query = "INSERT INTO payment_transactions (payment_type, date, business_name, customer, cash, amount_paid, change_amount, entry_no, comment) VALUES ('$paymentType', '$date', '$store', '$customer', '$cash', '$amountPaid', '$change', '$entryNo', '$comment')";

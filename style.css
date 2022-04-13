@@ -871,7 +871,7 @@ footer {
   align-items: center;
   border-radius: 20px 20px 0px 0px;
   cursor: pointer;
-  max-width: 185px;
+  max-width: calc(752px/4);
 }
 
 #tab-section div:hover {
@@ -888,7 +888,7 @@ footer {
   box-shadow: 0px 0px 5px 0px #c9c9c9;
   height: fit-content;
   min-height: 315px;
-  padding-top: 20px;
+  padding: 20px 10px 15px 10px;
 }
 
 #tab-content > * {
@@ -907,7 +907,7 @@ footer {
 #cart-list-div {
   border-radius: 5px;
   background-color: #d9d9d9;
-  min-height: 160px;
+  min-height: 210px;
   height: fit-content;
 }
 
@@ -965,17 +965,36 @@ footer {
 #payment-comment {
   line-height: 20px;
   resize: vertical;
-  min-height: 42px;
-  margin-bottom: 8px;
+  height: 60px;
+  min-height: 60px;
+  margin: 10px 0px 15px 0px;
 }
 
-#save-credit-div,
-#save-payment-div {
-  margin-top: 12px;
+#dates-div {
+  display: flex;
   position: relative;
 }
 
+#dates-div label:nth-of-type(2) {
+  margin-left: 10px;
+}
+
+#credit-date-label,
+#payment-date-label,
+#due-date-label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0px;
+}
+
+#credit-date-label input,
+#payment-date-label input,
+#due-date-label input {
+  margin-top: 5px;
+}
+
 #credit-date,
+#due-date,
 #payment-date {
   width: fit-content;
   margin: 0px;
@@ -984,18 +1003,21 @@ footer {
 #grand-total {
   font-size: 16px;
   line-height: 40px;
-  float: right;
-  padding-right: 20px;
+  position: absolute;
+  bottom: 0px;
+  right: 85px;
 }
 
 #save-credit-button,
 #save-payment-button {
-  float: right;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
   width: 75px;
 }
 
 #payment-types-div {
-  height: 180px;
+  height: 230px;
   display: flex;
   justify-content: space-between;
 }
@@ -1112,6 +1134,7 @@ footer {
   flex-direction: column;
   align-items: flex-start;
   flex: 1;
+  position: relative;
 }
 
 .history-item-total {
@@ -1179,6 +1202,10 @@ footer {
 
 .credit-history-item .history-item-type {
   background-color: gray;
+}
+
+.credit-history-item .history-item-type.unpaid-credit-label {
+  background-color: #dc2e3a;
 }
 
 .applicant-item, .store-item {
@@ -1283,3 +1310,58 @@ footer {
   width: 65px;
 }
 
+#notifications-div {
+  position: sticky;
+  top: 70px;
+  max-width: 265px;
+  min-width: 150px;
+  height: 300px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px 0px #c9c9c9;
+  padding: 0px 10px 10px 10px;
+}
+
+#notifications-header {
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  cursor: default;
+  border-radius: 5px 5px 0px 0px;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+#notification-list {
+  height: 230px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  overflow-y: scroll;
+}
+
+#notification-list::-webkit-scrollbar {
+  /* for Chrome */
+  display: none;
+}
+
+#notification-list {
+  -ms-overflow-style: none; /* for Edge */
+  scrollbar-width: none; /* for Firefox */
+}
+
+#notification-list p {
+  background-color:  #e6e6e6;
+}
+
+.notification {
+  padding: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color:  #f5e77a;
+  border-radius: 5px;
+  line-height: 20px;
+  margin-bottom: 5px;
+}

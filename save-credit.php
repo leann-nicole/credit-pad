@@ -5,6 +5,7 @@ include "connection.php";
 $store = mysqli_real_escape_string($con, $_SESSION["business_name"]);
 
 $date = $_POST["creditDate"];
+$due = $_POST["dueDate"];
 $customer = $_POST["customer"];
 $product = $_POST["product"];
 $quantity = $_POST["quantity"];
@@ -13,12 +14,15 @@ $subtotal = $_POST["subTotal"];
 $grandTotal = $_POST["grandTotal"];
 $entryNo = $_POST["entryNo"];
 
-if (!empty($_POST["comment"])){
-    $comment = mysqli_real_escape_string($con, $_POST["comment"]);
-    $query = "INSERT INTO credit_transactions (date, business_name, customer, product, quantity, price, subtotal, entry_no, comment) VALUES ('$date', '$store', '$customer', '$product', '$quantity', '$price', '$subtotal', '$entryNo', '$comment')";
+if (isset($_POST["comment"])){ // if index 0
+    if (!empty($_POST["comment"])){
+        $comment = mysqli_real_escape_string($con, $_POST["comment"]);
+        $query = "INSERT INTO credit_transactions (date, due_date, business_name, customer, product, quantity, price, subtotal, grand_total, entry_no, comment, status) VALUES ('$date', '$due', '$store', '$customer', '$product', '$quantity', '$price', '$subtotal', '$grandTotal', '$entryNo', '$comment', 'unpaid')";    
+    }
+    else $query = "INSERT INTO credit_transactions (date, due_date, business_name, customer, product, quantity, price, subtotal, grand_total, entry_no, status) VALUES ('$date', '$due', '$store', '$customer', '$product', '$quantity', '$price', '$subtotal', '$grandTotal', '$entryNo', 'unpaid')";    
 }
 else {
-    $query = "INSERT INTO credit_transactions (date, business_name, customer, product, quantity, price, subtotal, entry_no) VALUES ('$date', '$store', '$customer', '$product', '$quantity', '$price', '$subtotal', '$entryNo')";
+    $query = "INSERT INTO credit_transactions (date, due_date, business_name, customer, product, quantity, price, subtotal, entry_no) VALUES ('$date', '$due', '$store', '$customer', '$product', '$quantity', '$price', '$subtotal', '$entryNo')";
 }
 
 if (!mysqli_query($con, $query)){

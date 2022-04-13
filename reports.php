@@ -31,7 +31,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
     <div id="content">
       <nav>
         <ul>
-          <li><a href="customers.php">HISTORY</a></li>
+          <li><a href="customers.php">CUSTOMERS</a></li>
           <li><a href="products.php">PRODUCTS</a></li>
           <li class="selected-navbar-item"><a href="reports.php">REPORTS</a></li>
         </ul>

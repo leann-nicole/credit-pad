@@ -91,7 +91,7 @@ else if ($_POST['account-type'] == "customer"){
         $_SESSION["notes"] = $rows["notes"];
 
         $_SESSION['customerLoggedIn'] = true;
-        header('Location: customer-history.php');
+        header('Location: customer-home.php');
         die();
     }
 }
