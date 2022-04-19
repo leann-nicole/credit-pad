@@ -36,13 +36,11 @@ session_start();
             isset($_SESSION['username'])
         ) {
             echo $_SESSION['username'];
-        } ?>" required/>
+        } ?>" onkeyup="listStores()" required/>
         <label for="bname" class="field-name">store</label>
-        <input id="bname" type="text" class="field" name="business_name" value="<?php if (
-            isset($_SESSION['business_name'])
-        ) {
-            echo $_SESSION['business_name'];
-        } ?>" required/>        
+        <select id="bname" name="business_name" class="field">
+
+        </select>
         <label for="pass" class="field-name">password</label>
         <input id="pass" type="password" class="field" name="password" required/>
       </form>
@@ -55,6 +53,19 @@ session_start();
     <script>
       function closeError(){$("#error").addClass("hidden-item");} 
 
+      function listStores(){
+        let accountType = $("#login-as-select option:selected").text();
+        let username = $("#uname").val();
+        $.ajax({
+          url: "list-stores.php",
+          type: "POST",
+          data: {accountType: accountType, username: username},
+          success: function (data){
+            $("#bname").html(data);
+          }
+        });
+      }
+
       function prepareForm(){
         let loginAs = $("#login-as-select option:selected").val();
         if (loginAs == "customer" || loginAs == "store owner"){
@@ -64,6 +75,7 @@ session_start();
           $("#bname").show();
           $("label:contains('name')").show();
           $("label:contains('store')").show();
+          listStores();
         }
         else if (loginAs == "administrator"){
           $("#uname").prop("required", false);
@@ -77,6 +89,7 @@ session_start();
 
       $(document).ready(function(){
         prepareForm();
+        listStores();
       });
     </script>
   </body>
