@@ -5,7 +5,7 @@ include "connection.php";
 $store = mysqli_real_escape_string($con, $_SESSION["business_name"]);
 
 // fetch customer information
-$customer = $_POST["customer"];
+$customer = mysqli_real_escape_string($con, $_POST["customer"]);
 $query = "SELECT * FROM customers WHERE name = '$customer' AND business_name = '$store'";
 $result = mysqli_query($con, $query);
 $rows = mysqli_fetch_assoc($result);
@@ -18,6 +18,8 @@ $email = $rows["email"];
 $address = $rows["address"];
 $credit = $rows["current_debt"];
 $rating = $rows["rating"];
+$customer = $_POST["customer"];
+
 
 ?>
 

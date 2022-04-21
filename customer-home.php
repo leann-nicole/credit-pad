@@ -43,6 +43,7 @@ if (!isset($_SESSION['customerLoggedIn'])) {
             <div id="history-tools">
               <span id="payments" class="button selected-history-type" onclick="filterHistory(this)">Payments</span>
               <span id="credits" class="button selected-history-type" onclick="filterHistory(this)">Credits</span>
+              <button type="button" class="button print-button">Print</button>
               <button type="button" class="gray-button sort-button-order" onclick="fetchHistory(this)">Date<span id="sort-arrow" class="material-icons">arrow_downward</span></button>
               <div id="date-interval">
                 <input type="date" id="start-date" class="field" title="start date" onchange="filterHistory(this)">

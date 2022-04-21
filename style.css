@@ -871,7 +871,7 @@ footer {
   align-items: center;
   border-radius: 20px 20px 0px 0px;
   cursor: pointer;
-  max-width: calc(752px/4);
+  max-width: calc(100%/4);
 }
 
 #tab-section div:hover {
@@ -889,6 +889,7 @@ footer {
   height: fit-content;
   min-height: 315px;
   padding: 20px 10px 15px 10px;
+  min-width: fit-content;
 }
 
 #tab-content > * {
@@ -1105,6 +1106,7 @@ footer {
   float: right;
   display: flex;
   justify-content: center;
+  margin-left: 10px;
 }
 
 #start-date,
@@ -1123,6 +1125,14 @@ footer {
 
 #end-date {
   border-radius: 0px;
+}
+
+.print-button {
+  width: 75px;
+  margin-left: 10px;
+  background-color: #834FE2;
+  color: white;
+  float: right;
 }
 
 #history-list {
@@ -1206,6 +1216,28 @@ footer {
 
 .credit-history-item .history-item-type.unpaid-credit-label {
   background-color: #dc2e3a;
+}
+
+#period {
+  width: 150px;
+  float: right;  
+}
+
+#reports-div div .print-button {
+  margin: 0px 10px;
+}
+
+#stats {
+  margin: 15px 40px;
+  display: flex;
+}
+
+#stats div {
+  flex: 1;
+}
+
+.period-totals p:nth-of-type(2){
+  font-size: 16px;
 }
 
 .applicant-item, .store-item {
@@ -1379,3 +1411,4 @@ footer {
 .notification-message div{
   line-height: 20px;
 }
+

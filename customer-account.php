@@ -235,6 +235,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
             <div id="history-tools">
               <span id="payments" class="button selected-history-type" onclick="filterHistory(this)">Payments</span>
               <span id="credits" class="button selected-history-type" onclick="filterHistory(this)">Credits</span>
+              <button type="button" class="button print-button">Print</button>
               <button type="button" class="gray-button sort-button-order" onclick="fetchHistory(this)">Date<span id="sort-arrow" class="material-icons">arrow_downward</span></button>
               <div id="date-interval">
                 <input type="date" id="start-date" class="field" title="start date" onchange="filterHistory(this)">
@@ -243,7 +244,19 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
             </div>
             <div id="history-list"></div>
           </div>
-          <div id="reports-div">reports</div>
+          <div id="reports-div">
+            <div>
+              <button type="button" class="button print-button">Print</button>
+              <select name="period" id="period" class="field" onchange="generateReport()">
+                <option value="week" data-period="week" selected>This week</option>
+                <option value="month" data-period="month">This month</option>
+                <option value="year" data-period="year">This year</option>
+              </select>
+            </div>
+            <div id="total-credit-payment-div">
+
+            </div>
+          </div>
         </div>
       </main>
       <div id="extra">
@@ -838,6 +851,19 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         });
       }
 
+      function generateReport(){
+        let period = $("#period option:selected").data("period");
+        console.log(period);
+        $.ajax({
+          url: "fetch-report.php",
+          type: "POST", 
+          data: {customer: customer, period: period},
+          success: function (data){
+            $("#total-credit-payment-div").html(data);
+          }
+        });
+      }
+
       function showTabContent() {
         let tab = $("#tab-section > .selected-navbar-item").text();
         if (tab == "CREDIT") {
@@ -863,7 +889,8 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
           document.querySelector("#tab-content > div:nth-of-type(1)").style.display = "none";
           document.querySelector("#tab-content > div:nth-of-type(2)").style.display = "none";
           document.querySelector("#tab-content > div:nth-of-type(3)").style.display = "none";  
-          document.querySelector("#tab-content > div:nth-of-type(4)").style.display = "flex";      
+          document.querySelector("#tab-content > div:nth-of-type(4)").style.display = "flex";  
+          generateReport();    
         }
       }
 

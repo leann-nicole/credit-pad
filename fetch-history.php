@@ -4,7 +4,7 @@ include "connection.php";
 
 $store = mysqli_real_escape_string($con, $_SESSION["business_name"]);
 
-$customer = $_POST["customer"];
+$customer = mysqli_real_escape_string($con, $_POST["customer"]);
 
 $query = "SELECT DISTINCT date FROM credit_transactions WHERE business_name = '$store' AND customer = '$customer'";
 $resultCreditDates = mysqli_query($con, $query);
