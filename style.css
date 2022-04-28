@@ -3,7 +3,7 @@
 * {
   margin: 0;
   padding: 0;
-  color: black;
+  color: #363535;
   font-family: 'Poppins', sans-serif;
   font-size: 14px;
   line-height: 14px;
@@ -120,7 +120,11 @@ input:autofill {
   background-color: #FC9D00;
   color: white;
   font-size: 20px;
-  font-weight: normal;
+}
+
+.create-button span {
+  color: white;
+  margin-left: 5px;
 }
 
 .create-button:hover {
@@ -147,16 +151,51 @@ input:autofill {
 #sitename,
 #sitename-header > a {
   font-size: 22px;
-  line-height: 22px;
+  line-height: 50px;
   color: #108531;
   font-weight: bold;
   margin: none;
 }
 
-#store-icon, #account-icon {
+#dropdown {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+#dropdown span {
   font-size: 22px;
-  line-height: 22px;
-  color: #363535;
+}
+
+#dropdown-button {
+  font-size: 22px;
+  line-height: 50px;
+  height: 50px;
+  background-color: none;
+  border: none;
+  cursor: pointer;
+}
+
+#dropdown-menu {
+  padding: 0px;
+}
+
+#dropdown-menu a {
+  width: 150px;
+  line-height: 30px;
+  padding-left: 20px;
+}
+
+#dropdown-menu a:first-of-type {
+  padding-top: 5px;
+}
+
+#dropdown-menu a:last-of-type {
+  padding-bottom: 5px;
+}
+
+#dropdown-menu a:hover {
+  background-color: #e6e6e6;
 }
 
 #sitename {
@@ -325,7 +364,6 @@ header {
   padding: 0px 40px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
   position: sticky;
   top: 0px;
   z-index: 1;
@@ -716,7 +754,8 @@ main > * {
 .list-table,
 #no-record-header {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0px;
 }
 
 #no-record-header {
@@ -728,24 +767,32 @@ main > * {
 .sortable-header {
   position: sticky;
   top: 0;
-  background-color: #d9d9d9;
-  font-weight: normal;
+  background-color: white;
+  font-weight: bold;
   cursor: pointer;
+  border-bottom: 2px solid #363535;
+  line-height: 40px;
 }
 
-.sortable-header:hover {
-  background-color: #c9c9c9;
+.sortable-header span {
+  float: right;
+  line-height: unset;
+  display: none; 
+}
+
+.sortable-header:hover span {
+  display: block;
 }
 
 .list-table tr {
   height: 40px;
-  border-bottom: 1px solid #d9d9d9;
 }
 
 .list-table tr:first-of-type {
   border: none;
   height: 40px;
   line-height: 40px;
+  text-align: left;
 }
 
 .list-table tr:hover {
@@ -755,6 +802,7 @@ main > * {
 
 .list-table td {
   padding-left: 20px;
+  border-bottom: 1px solid #e6e6e6;
 }
 
 #customer-list-table td:nth-of-type(3) {
@@ -764,19 +812,31 @@ main > * {
 
 #col1 {
   width: 50%;
+  padding: 0px 20px;
 }
 
 #col2 {
   width: 30%;
+  padding: 0px 20px;
 }
 
 #col3 {
   width: 20%;
+  padding: 0px 20px;
 }
 
 footer {
   height: 150px;
   background-color: #363535;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#footer-website-name {
+  font-size: 22px;
+  font-weight: bold;
+  color: gray;
 }
 
 #customer-profile-info-div {
@@ -907,7 +967,7 @@ footer {
 
 #cart-list-div {
   border-radius: 5px;
-  background-color: #d9d9d9;
+  background-color: #e6e6e6;
   min-height: 210px;
   height: fit-content;
 }
@@ -924,7 +984,7 @@ footer {
 .cart-item span:first-of-type,
 #cart-labels-div span:first-of-type,
 #cart-input-div input:first-of-type {
-  width: 350px;
+  width: 300px;
 }
 
 .cart-item span,
@@ -1130,9 +1190,13 @@ footer {
 .print-button {
   width: 75px;
   margin-left: 10px;
-  background-color: #834FE2;
+  background-color: hsl(261, 72%, 60%);
   color: white;
   float: right;
+}
+
+.print-button:hover {
+  background-color: hsl(261, 72%, 58%);
 }
 
 #history-list {
@@ -1228,18 +1292,125 @@ footer {
 }
 
 #stats {
-  margin: 15px 40px;
+  margin: 15px 30px;
   display: flex;
-}
-
-#stats div {
-  flex: 1;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 100px;
 }
 
 .period-totals p:nth-of-type(2){
   font-size: 16px;
 }
 
+.weekday-header {
+  height: 40px;
+  background-color: #e6e6e6;
+  padding: 0px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0px 30px;
+}
+
+.weekday-content {
+  margin: 0px 30px;
+}
+
+.weekday-content table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.weekday-content > table .weekday-transaction {
+  min-height: 40px;
+  border: 1px solid #e6e6e6;
+}
+
+.weekday-transaction td {
+  padding: 0px 10px;
+}
+
+.weekday-transaction > td:nth-of-type(3) {
+  padding: 0px;
+}
+
+.weekday-transaction > td:first-of-type {
+  vertical-align: top;
+  width: 40px;
+  border-right: 1px solid #e6e6e6;
+}
+
+.weekday-transaction > td:first-of-type p {
+  color: white;
+  border-radius: 10px;
+  width: 20px;
+  line-height: 20px;
+  margin: 10px 0px;
+  text-align: center;
+}
+
+.weekday-transaction > td:nth-of-type(2) {
+  vertical-align: top;
+  border-right: 1px solid #e6e6e6;
+  padding: 10px;
+  line-height: 20px;
+}
+
+.weekday-transaction .credit-transaction-type p {
+  background-color: gray;
+}
+
+.weekday-transaction .unpaid-credit-transaction-type p {
+  background-color: #dc2e3a;
+}
+
+.weekday-transaction .payment-transaction-type p {
+  background-color: #53b050;
+}
+
+.weekday-transaction .due-transaction-type p {
+  background-color: #FC9D00;
+}
+
+.transaction-table tr  {
+  height: 40px;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.transaction-table tr:last-of-type  {
+  border-bottom: none;
+}
+
+.transaction-table td {
+  border-right: 1px solid #e6e6e6;
+}
+
+.date-column {
+  width: 75px;
+}
+
+.paid-column {
+  width: calc(100% - 280px);
+}
+
+.cash-column {
+  width: 140px;
+}
+
+.change-column {
+  width: 140px;
+}
+
+.subtotal-column {
+  width: 100px;
+}
+
+.transaction-table td:last-of-type {
+  border-right: none;
+}
+
+/****************************************************/
 .applicant-item, .store-item {
   padding: 20px;
   margin-bottom: 10px;

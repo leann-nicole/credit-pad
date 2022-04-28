@@ -25,8 +25,14 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         }?>
     </p>        
     <header>
-      <p id="sitename-header"><a href="customers.php">CREDIT PAD</a></p>
-      <a href="logout.php"><span id="store-icon" class="material-icons">storefront</span></a>
+      <p id="sitename-header"><a href="customers.php">Credit Pad</a></p>
+      <div id="dropdown">
+        <button type="button" id="dropdown-button" class="material-icons" onclick="toggleAccountOptions()">storefront<span class="material-icons">arrow_drop_down</span></button>
+        <div id="dropdown-menu" class="hidden-item">
+          <a href="profile.php">Profile</a>
+          <a href="logout.php">Log out</a>
+        </div>
+      </div>
     </header>
     <div id="content">
       <nav>
@@ -143,7 +149,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
           </div>
         </div>
         <div id="tools">
-          <button type="button" id="new-button" class="button create-button material-icons" onclick="showHide()">add</button>
+          <button type="button" id="new-button" class="button create-button material-icons" onclick="showHide()">add<span>New</span></button>
           <div id="search-div">
             <input type="text" id="search-field" class="field" placeholder="Search" onkeyup="filterList()">
             <span id="search-icon" class="material-icons" onclick="focusSearchBar()">search</span>
@@ -162,9 +168,16 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         </div>
       </div>
     </div>
-    <footer></footer>
+    <footer><a href="customers.php" id="footer-website-name">Credit Pad</a></footer>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
+      function toggleAccountOptions(){
+        $("#dropdown-menu").toggleClass("hidden-item");
+        $("#dropdown-menu").toggleClass("container");
+        let arrow = $("#dropdown-button span").text();
+        (arrow == "arrow_drop_down")? $("#dropdown-button span").text("arrow_drop_up") : $("#dropdown-button span").text("arrow_drop_down");
+      }
+
       function focusSearchBar(){
         $("#search-field").focus();
       }
@@ -187,16 +200,19 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
       }
 
       function sortCustomers(element) {
-          let ccolname = element.getAttribute("data-colname");
-          $.ajax({
-            url: "load-customers.php",
-            type: "POST",
-            data: {ccolname: ccolname},
-            success: function (data) {
-                $("#list-inner-div").html(data);
-                filterList();
-            }
-          });
+        let ccolname = element.getAttribute("data-colname");
+        $.ajax({
+          url: "load-customers.php",
+          type: "POST",
+          data: {ccolname: ccolname},
+          success: function (data) {
+              $("#list-inner-div").html(data);
+              filterList();
+              let selector = "#" + element.id + " span";
+              let arrow = element.getElementsByTagName("span")[0].textContent;
+              (arrow == "arrow_drop_down")? $(selector).text("arrow_drop_up") : $(selector).text("arrow_drop_down");
+          }
+        });
       }
 
       $(document).ready(function () {

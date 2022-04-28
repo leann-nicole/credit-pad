@@ -25,8 +25,14 @@ if (!isset($_SESSION['adminLoggedIn'])) {
         }?>
     </p>      
     <header>
-      <p id="sitename-header"><a href="applicants.php">CREDIT PAD</a></p>
-      <a href="logout.php"><span id="account-icon" class="material-icons">person</span></a>
+      <p id="sitename-header"><a href="customers.php">Credit Pad</a></p>
+      <div id="dropdown">
+        <button type="button" id="dropdown-button" class="material-icons" onclick="toggleAccountOptions()">person<span class="material-icons">arrow_drop_down</span></button>
+        <div id="dropdown-menu" class="hidden-item">
+          <a href="profile.php">Profile</a>
+          <a href="logout.php">Log out</a>
+        </div>
+      </div>
     </header>
     <div id="content">
       <nav>
@@ -59,12 +65,19 @@ if (!isset($_SESSION['adminLoggedIn'])) {
         </div>
       </div>
     </div>
-    <footer></footer>
+    <footer>Credit Pad</footer>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
       // global variables
       let sortBy = "date_approved";
       let sortOrder = "DESC";
+
+      function toggleAccountOptions(){
+        $("#dropdown-menu").toggleClass("hidden-item");
+        $("#dropdown-menu").toggleClass("container");
+        let arrow = $("#dropdown-button span").text();
+        (arrow == "arrow_drop_down")? $("#dropdown-button span").text("arrow_drop_up") : $("#dropdown-button span").text("arrow_drop_down");
+      }
 
       function focusSearchBar(){
         $("#search-field").focus();

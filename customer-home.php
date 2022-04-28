@@ -25,8 +25,14 @@ if (!isset($_SESSION['customerLoggedIn'])) {
         }?>
     </p>      
     <header>
-      <p id="sitename-header"><a href="customer-home.php">CREDIT PAD</a></p>
-      <a href="logout.php"><span id="store-icon" class="material-icons">person</span></a>
+      <p id="sitename-header"><a href="customers.php">CREDIT PAD</a></p>
+      <div id="dropdown">
+        <button type="button" id="dropdown-button" class="material-icons" onclick="toggleAccountOptions()">person<span class="material-icons">arrow_drop_down</span></button>
+        <div id="dropdown-menu" class="hidden-item">
+          <a href="profile.php">Profile</a>
+          <a href="logout.php">Log out</a>
+        </div>
+      </div>
     </header>
     <div id="content">
       <nav>
@@ -68,6 +74,13 @@ if (!isset($_SESSION['customerLoggedIn'])) {
       let customer = "";
       let store = "";
       let historyOrder = "Most Recent First";
+
+      function toggleAccountOptions(){
+        $("#dropdown-menu").toggleClass("hidden-item");
+        $("#dropdown-menu").toggleClass("container");
+        let arrow = $("#dropdown-button span").text();
+        (arrow == "arrow_drop_down")? $("#dropdown-button span").text("arrow_drop_up") : $("#dropdown-button span").text("arrow_drop_down");
+      }
 
       function focusSearchBar(){
         $("#search-field").focus();

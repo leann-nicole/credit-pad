@@ -12,8 +12,8 @@ $category = $_POST['category'];
 
 // store data into $_SESSION superglobal to be able to access them across pages
 $_SESSION['product'] = $product;
-$_SESSION['price'] = $price;
-$_SESSION['category'] = $category;
+$_SESSION['fprice'] = $price;
+$_SESSION['fcategory'] = $category;
 $_SESSION['description'] = $description;
 
 // escape special characters (remove their special meaning) to avoid errors when doing an SQL query below
@@ -61,8 +61,8 @@ if (mysqli_query($con, $query)) {
     // upon successfully saving the new product information to the database, unset the following variables to clear the form
     unset($_SESSION['product']);
     unset($_SESSION['description']);
-    unset($_SESSION['category']);
-    unset($_SESSION['price']);
+    unset($_SESSION['fcategory']);
+    unset($_SESSION['fprice']);
     header('Location: products.php?success=product successfully registered');
     die();
 } else {

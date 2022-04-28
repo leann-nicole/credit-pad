@@ -31,7 +31,13 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
     </p>        
     <header>
       <p id="sitename-header"><a href="customers.php">CREDIT PAD</a></p>
-      <a href="logout.php"><span id="store-icon" class="material-icons">storefront</span></a>
+      <div id="dropdown">
+        <button type="button" id="dropdown-button" class="material-icons" onclick="toggleAccountOptions()">storefront<span class="material-icons">arrow_drop_down</span></button>
+        <div id="dropdown-menu" class="hidden-item">
+          <a href="profile.php">Profile</a>
+          <a href="logout.php">Log out</a>
+        </div>
+      </div>
     </header>
     <div id="content">
       <nav>
@@ -67,18 +73,18 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
                 <div id="cp-category">
                   <label for="category" class="field-name">category</label>
                     <input id="category" type="text" class="field" list="categories" maxlength="30" name="category" value="<?php if (
-                        isset($_SESSION['category'])
+                        isset($_SESSION['fcategory'])
                     ) {
-                        echo $_SESSION['category'];
+                        echo $_SESSION['fcategory'];
                     } ?>" placeholder="optional"/>
                       <datalist id="categories"></datalist>
                 </div>
                 <div id="cp-price">
                   <label for="price"class="field-name">price</label>
                   <input class="field" type="number" id="price" name="price" min="1" step="0.01" value="<?php if (
-                      isset($_SESSION['price'])
+                      isset($_SESSION['fprice'])
                   ) {
-                      echo $_SESSION['price'];
+                      echo $_SESSION['fprice'];
                   } ?>" required/>
                 </div>                
               </div>
@@ -157,7 +163,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         </div>
 
         <div id="tools">
-          <button type="button" id="new-button" class="button create-button material-icons" onclick="toggleCreateForm()">add</button>
+          <button type="button" id="new-button" class="button create-button material-icons" onclick="toggleCreateForm()">add<span>New</span></button>
           <div id="search-div">
             <input type="text" id="search-field" class="field" placeholder="Search" onkeyup="filterList()">
             <span id="search-icon" class="material-icons" onclick="focusSearchBar()">search</span>
@@ -181,7 +187,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         </div>
     </div>
     </div>
-    <footer></footer>
+    <footer><a href="customers.php" id="footer-website-name">Credit Pad</a></footer>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
       // hide product info popup when user clicks anywhere outside it
@@ -201,6 +207,13 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
       $("#delete-item-clickable-text").click(function(e){ // ignore clicks on delete product text
         e.stopPropagation();
       });
+
+      function toggleAccountOptions(){
+        $("#dropdown-menu").toggleClass("hidden-item");
+        $("#dropdown-menu").toggleClass("container");
+        let arrow = $("#dropdown-button span").text();
+        (arrow == "arrow_drop_down")? $("#dropdown-button span").text("arrow_drop_up") : $("#dropdown-button span").text("arrow_drop_down");
+      }
 
       function deleteItem(){
         let item = $("#product-to-delete").text();
@@ -288,6 +301,9 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
           success: function (data) {
               $("#list-inner-div").html(data);
               filterList();
+              let selector = "#" + element.id + " span";
+              let arrow = element.getElementsByTagName("span")[0].textContent;
+              (arrow == "arrow_drop_down")? $(selector).text("arrow_drop_up") : $(selector).text("arrow_drop_down");
           }
         });
       }
