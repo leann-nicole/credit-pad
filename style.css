@@ -770,7 +770,7 @@ main > * {
   background-color: white;
   font-weight: bold;
   cursor: pointer;
-  border-bottom: 2px solid #363535;
+  border-bottom: 1px solid #363535;
   line-height: 40px;
 }
 
@@ -1303,13 +1303,13 @@ footer {
   font-size: 16px;
 }
 
-.weekday-header {
+.period-header {
   height: 40px;
   background-color: #e6e6e6;
   padding: 0px 10px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   margin: 0px 30px;
 }
 
@@ -1329,10 +1329,6 @@ footer {
 
 .weekday-transaction td {
   padding: 0px 10px;
-}
-
-.weekday-transaction > td:nth-of-type(3) {
-  padding: 0px;
 }
 
 .weekday-transaction > td:first-of-type {
@@ -1390,20 +1386,8 @@ footer {
   width: 75px;
 }
 
-.paid-column {
-  width: calc(100% - 280px);
-}
-
-.cash-column {
-  width: 140px;
-}
-
-.change-column {
-  width: 140px;
-}
-
-.subtotal-column {
-  width: 100px;
+.amount_column {
+  width: calc(100% - 115px);
 }
 
 .transaction-table td:last-of-type {

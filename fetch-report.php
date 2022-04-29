@@ -62,114 +62,191 @@ function displayStats($transactionDate, $dueDate){
     <?php
 }
 
-function getEntryTable($weekday, $i){?>
-    <td>
-        <table class="transaction-table">
-            <tr><?php
-                if ($weekday[$i]["transaction-type"] == "payment"){?>
-                <td class="paid-column">₱ <?php if(fmod($weekday[$i]["amount_paid"], 1)) echo number_format($weekday[$i]["amount_paid"], 2); else echo number_format($weekday[$i]["amount_paid"]); echo " " . $weekday[$i]["payment_type"]; ?></td>
-                <td class="cash-column">₱ <?php if(fmod($weekday[$i]["cash"], 1)) echo number_format($weekday[$i]["cash"], 2); else echo number_format($weekday[$i]["cash"]); echo " cash"; ?></td>
-                <td class="change-column">₱ <?php if(fmod($weekday[$i]["change_amount"], 1)) echo number_format($weekday[$i]["change_amount"], 2); else echo number_format($weekday[$i]["change_amount"]); echo " change"; ?></td>
-                <?php }
-                else if ($weekday[$i]["transaction-type"] == "credit"){?>
-                <td class="subtotal-column">₱ <?php if(fmod($weekday[$i]["subtotal"], 1)) echo number_format($weekday[$i]["subtotal"], 2); else echo number_format($weekday[$i]["subtotal"]); ?></td>
-                <td class="items-column"><?php if(fmod($weekday[$i]["quantity"], 1)) echo number_format($weekday[$i]["quantity"], 2); else echo number_format($weekday[$i]["quantity"]); echo " " . $weekday[$i]["product"]; ?></td>
-                <?php }
-                else if ($weekday[$i]["transaction-type"] == "due"){?>
-                <td class="subtotal-column">₱ <?php if(fmod($weekday[$i]["subtotal"], 1)) echo number_format($weekday[$i]["subtotal"], 2); else echo number_format($weekday[$i]["subtotal"]); ?></td>
-                <td class="items-column"><?php if(fmod($weekday[$i]["quantity"], 1)) echo number_format($weekday[$i]["quantity"], 2); else echo number_format($weekday[$i]["quantity"]); echo " " . $weekday[$i]["product"]; ?></td>
-                <?php } ?>
-            </tr><?php
-        while ($i + 1 < count($weekday) && $weekday[$i + 1]["entry_no"] == $weekday[$i]["entry_no"]){ 
-            $i++;?>
-            <tr><?php
-                if ($weekday[$i]["transaction-type"] == "payment"){?>
-                <td class="paid-column">₱ <?php if(fmod($weekday[$i]["amount_paid"], 1)) echo number_format($weekday[$i]["amount_paid"], 2); else echo number_format($weekday[$i]["amount_paid"]); echo " " . $weekday[$i]["payment_type"]; ?></td>
-                <td class="cash-column">₱ <?php if(fmod($weekday[$i]["cash"], 1)) echo number_format($weekday[$i]["cash"], 2); else echo number_format($weekday[$i]["cash"]); echo " cash"; ?></td>
-                <td class="change-column">₱ <?php if(fmod($weekday[$i]["change_amount"], 1)) echo number_format($weekday[$i]["change_amount"], 2); else echo number_format($weekday[$i]["change_amount"]); echo " change"; ?></td>
-                <?php }
-                else if ($weekday[$i]["transaction-type"] == "credit"){?>
-                <td class="subtotal-column">₱ <?php if(fmod($weekday[$i]["subtotal"], 1)) echo number_format($weekday[$i]["subtotal"], 2); else echo number_format($weekday[$i]["subtotal"]); ?></td>
-                <td class="items-column"><?php if(fmod($weekday[$i]["quantity"], 1)) echo number_format($weekday[$i]["quantity"], 2); else echo number_format($weekday[$i]["quantity"]); echo " " . $weekday[$i]["product"]; ?></td>
-                <?php }
-                else if ($weekday[$i]["transaction-type"] == "due"){?>
-                <td class="date-column"><?php echo date("M j", strtotime($weekday[$i]["due_date"])); ?></td>
-                <td class="subtotal-column">₱ <?php if(fmod($weekday[$i]["subtotal"], 1)) echo number_format($weekday[$i]["subtotal"], 2); else echo number_format($weekday[$i]["subtotal"]); ?></td>
-                <td class="items-column"><?php if(fmod($weekday[$i]["quantity"], 1)) echo number_format($weekday[$i]["quantity"], 2); else echo number_format($weekday[$i]["quantity"]); echo " " . $weekday[$i]["product"]; ?></td>
-                <?php } ?>
-            </tr><?php
-        } ?>
-        </table>
-    </td><?php
-    return $i;
-}
+function weekOfMonth($date) {
+    $firstOfMonth = date("Y-m-01", $date);
+    return intval(date("W", $date)) - intval(date("W", strtotime($firstOfMonth))) + 1;
 
-function sortTransactions($a, $b){
-    return ($a["entry_no"] > $b["entry_no"])? -1 : 1;
 }
 
 function displayTable($transactionDate, $dueDate, $period){
     $records = getRecords($transactionDate, $dueDate);
-    $weekdays = [[]]; //  0 sunday, 1 monday, 2 tuesday, ...
+    $days = [[]]; 
+    $weeks = [[]];
+    $months = [[]];
+
     if ($period == "week"){
-        // distribute credit transactions to respective weekday
-        while ($row = mysqli_fetch_assoc($records[0])){
-            $row["transaction-type"] = "credit";
-            $weekday = date("w", strtotime($row["date"]));
-            $weekdays[$weekday][] = $row;
-        }
-        // distribute payment transactions to respective weekday
-        while ($row = mysqli_fetch_assoc($records[1])){
-            $row["transaction-type"] = "payment";
-            $weekday = date("w", strtotime($row["date"]));
-            $weekdays[$weekday][] = $row;
+        for ($r = 0; $r < 7; $r++)
+            for ($c = 0; $c < 4; $c++)
+                $days[$r][$c] = 0;
+    }
+    else if ($period == "month"){
+        for ($r = 0; $r < 31; $r++)
+            for ($c = 0; $c < 4; $c++)
+                $days[$r][$c] = 0;
+        for ($r = 0; $r < 5; $r++)
+            $weeks[$r] = [];
+    }
+    else if ($period == "year"){
+        for ($r = 0; $r < 366; $r++)
+            for ($c = 0; $c < 4; $c++)
+                $days[$r][$c] = 0;
+        for ($r = 0; $r < 12; $r++)
+            $months[$r] = [];
+    }
+    
+    while ($row = mysqli_fetch_assoc($records[0])){
+        if ($period == "week") $d = date("w", strtotime($row["date"]));
+        else if ($period == "month") $d = date("j", strtotime($row["date"]));
+        else if ($period == "year") $d = date("z", strtotime($row["date"]));
+        $days[$d][0] = strtotime($row["date"]);    
+        $days[$d][1] += $row["subtotal"];  
+    }
+    while ($row = mysqli_fetch_assoc($records[1])){
+        if ($period == "week") $d = date("w", strtotime($row["date"]));
+        else if ($period == "month") $d = date("j", strtotime($row["date"]));
+        else if ($period == "year") $d = date("z", strtotime($row["date"]));
+        $days[$d][0] = strtotime($row["date"]);    
+        $days[$d][2] += $row["amount_paid"];    
+    }
+    while ($row = mysqli_fetch_assoc($records[2])){
+        if ($period == "week") $d = date("w", strtotime($row["due_date"]));
+        else if ($period == "month") $d = date("j", strtotime($row["due_date"]));
+        else if ($period == "year") $d = date("z", strtotime($row["due_date"]));
+        $days[$d][0] = strtotime($row["due_date"]);    
+        $days[$d][3] += $row["subtotal"];    
+    }
+
+    if ($period == "year"){
+        for ($i = 0; $i < 366; $i++){
+            if ($days[$i][0]) {
+                if ($days[$i][1]){
+                    $month = date("n", $days[$i][0]);
+                    $months[$month][]= ["credit", $days[$i][0], $days[$i][1]];
+                }
+                if ($days[$i][2]){
+                    $month = date("n", $days[$i][0]);
+                    $months[$month][]= ["payment", $days[$i][0], $days[$i][2]];
+                }
+                if ($days[$i][3]){
+                    $month = date("n", $days[$i][0]);
+                    $months[$month][]= ["due", $days[$i][0], $days[$i][3]];
+                }
+            }
         }
 
-        // arrange credit and payment transactions within each day of the week by entry no
-        foreach($weekdays as $index => $value){
-            if (count($weekdays[$index])) usort($weekdays[$index], "sortTransactions");
-        }
-        // distribute due credit transactions to respective weekday, they will be listed last in the table
-        while ($row = mysqli_fetch_assoc($records[2])){
-            $row["transaction-type"] = "due";
-            $weekday = date("w", strtotime($row["due_date"]));
-            $weekdays[$weekday][] = $row;
-        } 
-        // print the table
-        foreach($weekdays as $weekday){
-            if (count($weekday)){ // if there are transactions within the weekday ?> 
-                <div class="weekday-header" onclick="toggleContent(this)">
-                    <p><?php echo strtoupper(date("l", strtotime($weekday[0]["date"]))); ?></p>
+        foreach($months as $index => $m){
+            if (count($m)){ // if day has transactions ?>
+                <div class="period-header" onclick="toggleContent(this)">
+                    <p><?php echo DateTime::createFromFormat("!m", $index)->format("F"); ?></p>
                 </div>
                 <div class="weekday-content">
                     <table><?php
-                    for($i = 0; $i < count($weekday); $i++){?>
+                        foreach($m as $d){ ?>
                         <tr class="weekday-transaction"><?php
-                        if ($weekday[$i]["transaction-type"] == "credit" && $weekday[$i]["status"] == "paid"){?>
+                        if ($d[0] == "credit"){?>
                             <td class="credit-transaction-type"><p>C</p></td>
-                            <td class="date-column"><?php echo date("M j", strtotime($weekday[$i]["date"])); ?></td><?php
-                            $i = getEntryTable($weekday, $i);
+                            <td class="date-column"><?php echo date("M j", $d[1]); ?></td>
+                            <td class="amount-column">₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); ?></td><?php
                         }
-                        else if ($weekday[$i]["transaction-type"] == "credit" && ($weekday[$i]["status"] == "unpaid" || $weekday[$i]["status"] == NULL)){?>
-                            <td class="unpaid-credit-transaction-type"><p>C</p></td>
-                            <td class="date-column"><?php echo date("M j", strtotime($weekday[$i]["date"])); ?></td><?php 
-                            $i = getEntryTable($weekday, $i);
-                        }
-                        else if ($weekday[$i]["transaction-type"] == "payment"){?>
+                        else if ($d[0] == "payment"){?>
                             <td class="payment-transaction-type"><p>P</p></td>
-                            <td class="date-column"><?php echo date("M j", strtotime($weekday[$i]["date"])); ?></td><?php 
-                            $i = getEntryTable($weekday, $i);
+                            <td class="date-column"><?php echo date("M j", $d[1]); ?></td>
+                            <td class="amount-column">₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); ?></td><?php
                         }
-                        else if ($weekday[$i]["transaction-type"] == "due"){?>
+                        else if ($d[0] == "due"){?>
                             <td class="due-transaction-type"><p>D</p></td>
-                            <td class="date-column"><?php echo date("M j", strtotime($weekday[$i]["due_date"])); ?></td><?php 
-                            $i = getEntryTable($weekday, $i);
+                            <td class="date-column"><?php echo date("M j", $d[1]); ?></td>
+                            <td class="amount-column">₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); ?></td><?php
                         }?>
                         </tr><?php
-                    }?>
+                        }?>
                     </table>
+                </div><?php
+            }
+        }
+    }
+
+    else if ($period == "month"){
+        for ($i = 0; $i < 31; $i++){
+            if ($days[$i][0]) {
+                if ($days[$i][1]){
+                    $week = weekOfMonth($days[$i][0]);
+                    $weeks[$week][] = ["credit", $days[$i][0], $days[$i][1]];
+                }
+                if ($days[$i][2]){
+                    $week = weekOfMonth($days[$i][0]);
+                    $weeks[$week][] = ["payment", $days[$i][0], $days[$i][2]];
+                }
+                if ($days[$i][3]){
+                    $week = weekOfMonth($days[$i][0]);
+                    $weeks[$week][] = ["due", $days[$i][0], $days[$i][3]];
+                }
+            }
+        }
+
+        foreach($weeks as $index => $w){
+            if (count($w)){ // if day has transactions ?>
+                <div class="period-header" onclick="toggleContent(this)">
+                    <p><?php echo "WEEK " . $index; ?></p>
                 </div>
-                <?php
+                <div class="weekday-content">
+                    <table><?php
+                        foreach($w as $d){ ?>
+                        <tr class="weekday-transaction"><?php
+                        if ($d[0] == "credit"){?>
+                            <td class="credit-transaction-type"><p>C</p></td>
+                            <td class="date-column"><?php echo date("M j", $d[1]); ?></td>
+                            <td class="amount-column">₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); ?></td><?php
+                        }
+                        else if ($d[0] == "payment"){?>
+                            <td class="payment-transaction-type"><p>P</p></td>
+                            <td class="date-column"><?php echo date("M j", $d[1]); ?></td>
+                            <td class="amount-column">₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); ?></td><?php
+                        }
+                        else if ($d[0] == "due"){?>
+                            <td class="due-transaction-type"><p>D</p></td>
+                            <td class="date-column"><?php echo date("M j", $d[1]); ?></td>
+                            <td class="amount-column">₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); ?></td><?php
+                        }?>
+                        </tr><?php
+                        }?>
+                    </table>
+                </div><?php
+            }
+        }
+    }
+
+    else if ($period == "week"){
+        foreach($days as $d){
+            if ($d[0]){ // if day has transactions ?>
+                <div class="period-header" onclick="toggleContent(this)">
+                    <p><?php echo strtoupper(date("l", $d[0])); ?></p>
+                </div>
+                <div class="weekday-content">
+                    <table>
+                        <tr class="weekday-transaction"><?php
+                        if ($d[1]){?>
+                            <td class="credit-transaction-type"><p>C</p></td>
+                            <td class="date-column"><?php echo date("M j", $d[0]); ?></td>
+                            <td class="amount-column">₱ <?php if (fmod($d[1],1)) echo number_format($d[1],2); else echo number_format($d[1]); ?></td><?php
+                        }?>
+                        </tr>
+                        <tr class="weekday-transaction"><?php
+                        if ($d[2]){?>
+                            <td class="payment-transaction-type"><p>P</p></td>
+                            <td class="date-column"><?php echo date("M j", $d[0]); ?></td>
+                            <td class="amount-column">₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); ?></td><?php
+                        }?>
+                        </tr>
+                        <tr class="weekday-transaction"><?php
+                        if ($d[3]){?>
+                            <td class="due-transaction-type"><p>D</p></td>
+                            <td class="date-column"><?php echo date("M j", $d[0]); ?></td>
+                            <td class="amount-column">₱ <?php if (fmod($d[3],1)) echo number_format($d[3],2); else echo number_format($d[3]); ?></td><?php
+                        }?>
+                        </tr>
+                    </table>
+                </div><?php
             }
         }
     }

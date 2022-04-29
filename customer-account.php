@@ -24,7 +24,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         ?>
     </p>        
     <header>
-      <p id="sitename-header"><a href="customers.php">CREDIT PAD</a></p>
+      <p id="sitename-header"><a href="customers.php">Credit Pad</a></p>
       <div id="dropdown">
         <button type="button" id="dropdown-button" class="material-icons" onclick="toggleAccountOptions()">storefront<span class="material-icons">arrow_drop_down</span></button>
         <div id="dropdown-menu" class="hidden-item">
@@ -287,6 +287,8 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
       let historyOrder = "Most Recent First";
 
       function toggleContent(element){
+        if (!element.style.borderBottom && element.nextElementSibling.nextElementSibling) element.style.borderBottom = "1px solid lightgray";
+        else element.style.borderBottom = "";
         element.nextElementSibling.classList.toggle("hidden-item");
       }
 
