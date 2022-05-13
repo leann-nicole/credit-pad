@@ -770,7 +770,7 @@ main > * {
   background-color: white;
   font-weight: bold;
   cursor: pointer;
-  border-bottom: 1px solid #363535;
+  border-bottom: 1px solid gray;
   line-height: 40px;
 }
 
@@ -1291,16 +1291,26 @@ footer {
   margin: 0px 10px;
 }
 
+#graph-div {
+  width: 600px;
+  height: 300px;
+  margin: 5px auto 20px auto;
+}
+
+.sub-period {
+  background-color: pink;
+}
+
 #stats {
   margin: 15px 30px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  height: 100px;
 }
 
-.period-totals p:nth-of-type(2){
+.period-totals span:nth-of-type(2){
   font-size: 16px;
+  line-height: 40px;
 }
 
 .period-header {
@@ -1311,6 +1321,7 @@ footer {
   align-items: center;
   justify-content: center;
   margin: 0px 30px;
+  cursor: pointer;
 }
 
 .weekday-content {
@@ -1322,79 +1333,43 @@ footer {
   width: 100%;
 }
 
-.weekday-content > table .weekday-transaction {
-  min-height: 40px;
+.period-transaction {
+  height: 40px;
   border: 1px solid #e6e6e6;
 }
 
-.weekday-transaction td {
+.period-transaction td {
   padding: 0px 10px;
-}
-
-.weekday-transaction > td:first-of-type {
-  vertical-align: top;
-  width: 40px;
+  width: 28%;
   border-right: 1px solid #e6e6e6;
 }
 
-.weekday-transaction > td:first-of-type p {
+.period-transaction td:first-of-type {
+  width: 16%;
+}
+
+.transaction-type span {
   color: white;
   border-radius: 10px;
+  display: inline-block;
   width: 20px;
   line-height: 20px;
-  margin: 10px 0px;
+  margin: 10px 10px 10px 0px;
   text-align: center;
 }
 
-.weekday-transaction > td:nth-of-type(2) {
-  vertical-align: top;
-  border-right: 1px solid #e6e6e6;
-  padding: 10px;
-  line-height: 20px;
-}
-
-.weekday-transaction .credit-transaction-type p {
+.credit-transaction-type span {
   background-color: gray;
 }
 
-.weekday-transaction .unpaid-credit-transaction-type p {
-  background-color: #dc2e3a;
-}
-
-.weekday-transaction .payment-transaction-type p {
+.payment-transaction-type span {
   background-color: #53b050;
 }
 
-.weekday-transaction .due-transaction-type p {
+.due-transaction-type span {
   background-color: #FC9D00;
 }
 
-.transaction-table tr  {
-  height: 40px;
-  border-bottom: 1px solid #e6e6e6;
-}
-
-.transaction-table tr:last-of-type  {
-  border-bottom: none;
-}
-
-.transaction-table td {
-  border-right: 1px solid #e6e6e6;
-}
-
-.date-column {
-  width: 75px;
-}
-
-.amount_column {
-  width: calc(100% - 115px);
-}
-
-.transaction-table td:last-of-type {
-  border-right: none;
-}
-
-/****************************************************/
 .applicant-item, .store-item {
   padding: 20px;
   margin-bottom: 10px;

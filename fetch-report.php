@@ -35,36 +35,38 @@ function displayStats($transactionDate, $dueDate){
     // print total credit
     while ($row = mysqli_fetch_assoc($records[0])) $totalCredit += $row["subtotal"];
     ?>
-    <div id="period-totals">
-        <p>Total Credit</p>
+    <div class="period-totals">
+        <span>Total Credit</span>
         <br>
-        <p>₱ <?php if (fmod($totalCredit, 1)) echo number_format($totalCredit, 2); else echo number_format($totalCredit); ?><p>
+        <span>₱ <?php if (fmod($totalCredit, 1)) echo number_format($totalCredit, 2); else echo number_format($totalCredit); ?><span>
     </div>
     <?php
     // print total payment
     while ($row = mysqli_fetch_assoc($records[1])) $totalPayment += $row["amount_paid"];
     ?>
-    <div id="period-totaLs">
-        <p>Total Payment</p>
+    <div class="period-totals">
+        <span>Total Payment</span>
         <br>
-        <p>₱ <?php if (fmod($totalPayment, 1)) echo number_format($totalPayment, 2); else echo number_format($totalPayment); ?><p>
+        <span>₱ <?php if (fmod($totalPayment, 1)) echo number_format($totalPayment, 2); else echo number_format($totalPayment); ?><span>
     </div>
     <?php
     // print total due
     while ($row = mysqli_fetch_assoc($records[2])) $totalDue += $row["subtotal"];
     ?>
-    <div id="period-totals">
-        <p>Total Due</p>
+    <div class="period-totals">
+        <span>Total Due</span>
         <br>
-        <p>₱ <?php if (fmod($totalDue, 1)) echo number_format($totalDue, 2); else echo number_format($totalDue); ?><p>
+        <span>₱ <?php if (fmod($totalDue, 1)) echo number_format($totalDue, 2); else echo number_format($totalDue); ?><span>
     </div>
 </div>
     <?php
 }
 
 function weekOfMonth($date) {
-    $firstOfMonth = date("Y-m-01", $date);
-    return intval(date("W", $date)) - intval(date("W", strtotime($firstOfMonth))) + 1;
+    $firstDay = intval(date("W", strtotime(date("Y-m-01", $date))));
+    $currentDay = intval(date("W", $date));
+    if ($firstDay == $currentDay) return 1;
+    return $currentDay - $firstDay;
 
 }
 
@@ -80,10 +82,10 @@ function displayTable($transactionDate, $dueDate, $period){
                 $days[$r][$c] = 0;
     }
     else if ($period == "month"){
-        for ($r = 0; $r < 31; $r++)
+        for ($r = 0; $r < 32; $r++)
             for ($c = 0; $c < 4; $c++)
                 $days[$r][$c] = 0;
-        for ($r = 0; $r < 5; $r++)
+        for ($r = 0; $r < 6; $r++)
             $weeks[$r] = [];
     }
     else if ($period == "year"){
@@ -119,45 +121,24 @@ function displayTable($transactionDate, $dueDate, $period){
     if ($period == "year"){
         for ($i = 0; $i < 366; $i++){
             if ($days[$i][0]) {
-                if ($days[$i][1]){
-                    $month = date("n", $days[$i][0]);
-                    $months[$month][]= ["credit", $days[$i][0], $days[$i][1]];
-                }
-                if ($days[$i][2]){
-                    $month = date("n", $days[$i][0]);
-                    $months[$month][]= ["payment", $days[$i][0], $days[$i][2]];
-                }
-                if ($days[$i][3]){
-                    $month = date("n", $days[$i][0]);
-                    $months[$month][]= ["due", $days[$i][0], $days[$i][3]];
-                }
+                $month = date("n", $days[$i][0]);
+                $months[$month][] = [$days[$i][0], $days[$i][1], $days[$i][2], $days[$i][3]];
             }
         }
 
         foreach($months as $index => $m){
             if (count($m)){ // if day has transactions ?>
                 <div class="period-header" onclick="toggleContent(this)">
-                    <p><?php echo DateTime::createFromFormat("!m", $index)->format("F"); ?></p>
+                    <span><?php echo DateTime::createFromFormat("!m", $index)->format("F"); ?></span>
                 </div>
                 <div class="weekday-content">
                     <table><?php
                         foreach($m as $d){ ?>
-                        <tr class="weekday-transaction"><?php
-                        if ($d[0] == "credit"){?>
-                            <td class="credit-transaction-type"><p>C</p></td>
-                            <td class="date-column"><?php echo date("M j", $d[1]); ?></td>
-                            <td class="amount-column">₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); ?></td><?php
-                        }
-                        else if ($d[0] == "payment"){?>
-                            <td class="payment-transaction-type"><p>P</p></td>
-                            <td class="date-column"><?php echo date("M j", $d[1]); ?></td>
-                            <td class="amount-column">₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); ?></td><?php
-                        }
-                        else if ($d[0] == "due"){?>
-                            <td class="due-transaction-type"><p>D</p></td>
-                            <td class="date-column"><?php echo date("M j", $d[1]); ?></td>
-                            <td class="amount-column">₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); ?></td><?php
-                        }?>
+                        <tr class="period-transaction">
+                            <td class="date-column"><?php echo date("F j", $d[0]); ?></td>
+                            <td class="transaction-type credit-transaction-type"><?php if ($d[1]){?> <span>C</span>₱ <?php if (fmod($d[1],1)) echo number_format($d[1],2); else echo number_format($d[1]); }?></td>
+                            <td class="transaction-type payment-transaction-type"><?php if ($d[2]){?> <span>P</span>₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); }?></td>
+                            <td class="transaction-type due-transaction-type"><?php if ($d[3]){?> <span>D</span>₱ <?php if (fmod($d[3],1)) echo number_format($d[3],2); else echo number_format($d[3]); }?></td>
                         </tr><?php
                         }?>
                     </table>
@@ -167,47 +148,26 @@ function displayTable($transactionDate, $dueDate, $period){
     }
 
     else if ($period == "month"){
-        for ($i = 0; $i < 31; $i++){
+        for ($i = 0; $i < 32; $i++){
             if ($days[$i][0]) {
-                if ($days[$i][1]){
-                    $week = weekOfMonth($days[$i][0]);
-                    $weeks[$week][] = ["credit", $days[$i][0], $days[$i][1]];
-                }
-                if ($days[$i][2]){
-                    $week = weekOfMonth($days[$i][0]);
-                    $weeks[$week][] = ["payment", $days[$i][0], $days[$i][2]];
-                }
-                if ($days[$i][3]){
-                    $week = weekOfMonth($days[$i][0]);
-                    $weeks[$week][] = ["due", $days[$i][0], $days[$i][3]];
-                }
+                $week = weekOfMonth($days[$i][0]);
+                $weeks[$week][] = [$days[$i][0], $days[$i][1], $days[$i][2], $days[$i][3]];
             }
         }
 
         foreach($weeks as $index => $w){
             if (count($w)){ // if day has transactions ?>
                 <div class="period-header" onclick="toggleContent(this)">
-                    <p><?php echo "WEEK " . $index; ?></p>
+                    <span><?php echo "WEEK " . $index; ?></span>
                 </div>
                 <div class="weekday-content">
-                    <table><?php
+                <table><?php
                         foreach($w as $d){ ?>
-                        <tr class="weekday-transaction"><?php
-                        if ($d[0] == "credit"){?>
-                            <td class="credit-transaction-type"><p>C</p></td>
-                            <td class="date-column"><?php echo date("M j", $d[1]); ?></td>
-                            <td class="amount-column">₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); ?></td><?php
-                        }
-                        else if ($d[0] == "payment"){?>
-                            <td class="payment-transaction-type"><p>P</p></td>
-                            <td class="date-column"><?php echo date("M j", $d[1]); ?></td>
-                            <td class="amount-column">₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); ?></td><?php
-                        }
-                        else if ($d[0] == "due"){?>
-                            <td class="due-transaction-type"><p>D</p></td>
-                            <td class="date-column"><?php echo date("M j", $d[1]); ?></td>
-                            <td class="amount-column">₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); ?></td><?php
-                        }?>
+                        <tr class="period-transaction">
+                            <td class="date-column"><?php echo date("F j", $d[0]); ?></td>
+                            <td class="transaction-type credit-transaction-type"><?php if ($d[1]){?> <span>C</span>₱ <?php if (fmod($d[1],1)) echo number_format($d[1],2); else echo number_format($d[1]); }?></td>
+                            <td class="transaction-type payment-transaction-type"><?php if ($d[2]){?> <span>P</span>₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); }?></td>
+                            <td class="transaction-type due-transaction-type"><?php if ($d[3]){?> <span>D</span>₱ <?php if (fmod($d[3],1)) echo number_format($d[3],2); else echo number_format($d[3]); }?></td>
                         </tr><?php
                         }?>
                     </table>
@@ -220,30 +180,15 @@ function displayTable($transactionDate, $dueDate, $period){
         foreach($days as $d){
             if ($d[0]){ // if day has transactions ?>
                 <div class="period-header" onclick="toggleContent(this)">
-                    <p><?php echo strtoupper(date("l", $d[0])); ?></p>
+                    <span><?php echo strtoupper(date("l", $d[0])); ?></span>
                 </div>
                 <div class="weekday-content">
                     <table>
-                        <tr class="weekday-transaction"><?php
-                        if ($d[1]){?>
-                            <td class="credit-transaction-type"><p>C</p></td>
-                            <td class="date-column"><?php echo date("M j", $d[0]); ?></td>
-                            <td class="amount-column">₱ <?php if (fmod($d[1],1)) echo number_format($d[1],2); else echo number_format($d[1]); ?></td><?php
-                        }?>
-                        </tr>
-                        <tr class="weekday-transaction"><?php
-                        if ($d[2]){?>
-                            <td class="payment-transaction-type"><p>P</p></td>
-                            <td class="date-column"><?php echo date("M j", $d[0]); ?></td>
-                            <td class="amount-column">₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); ?></td><?php
-                        }?>
-                        </tr>
-                        <tr class="weekday-transaction"><?php
-                        if ($d[3]){?>
-                            <td class="due-transaction-type"><p>D</p></td>
-                            <td class="date-column"><?php echo date("M j", $d[0]); ?></td>
-                            <td class="amount-column">₱ <?php if (fmod($d[3],1)) echo number_format($d[3],2); else echo number_format($d[3]); ?></td><?php
-                        }?>
+                        <tr class="period-transaction">
+                            <td class="date-column"><?php echo date("F j", $d[0]); ?></td>
+                            <td class="transaction-type credit-transaction-type"><?php if ($d[1]){?> <span>C</span>₱ <?php if (fmod($d[1],1)) echo number_format($d[1],2); else echo number_format($d[1]); }?></td>
+                            <td class="transaction-type payment-transaction-type"><?php if ($d[2]){?> <span>P</span>₱ <?php if (fmod($d[2],1)) echo number_format($d[2],2); else echo number_format($d[2]); }?></td>
+                            <td class="transaction-type due-transaction-type"><?php if ($d[3]){?> <span>D</span>₱ <?php if (fmod($d[3],1)) echo number_format($d[3],2); else echo number_format($d[3]); }?></td>
                         </tr>
                     </table>
                 </div><?php
