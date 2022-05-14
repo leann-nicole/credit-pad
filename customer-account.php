@@ -260,7 +260,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
               </select>
             </div>
             <div id="graph-div"></div>
-            <div id="total-credit-payment-div">
+            <div id="table-div">
 
             </div>
           </div>
@@ -279,7 +279,6 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
     </div>
     <footer></footer>
     <script src="https://d3js.org/d3.v7.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-scale@4" defer></script>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
       // global variables
@@ -977,7 +976,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
           type: "POST", 
           data: {customer: customer, period: period},
           success: function (data){
-            $("#total-credit-payment-div").html(data);
+            $("#table-div").html(data);
           }
         });
       }

@@ -3,22 +3,25 @@ session_start();
 include "connection.php";
 
 $store = mysqli_real_escape_string($con, $_SESSION["business_name"]);
-$customer = mysqli_real_escape_string($con, $_POST["customer"]);
+$customer = "";
+if (isset($_POST["customer"])) {
+    $customer = mysqli_real_escape_string($con, $_POST["customer"]);
+}
 $period = $_POST["period"];
 
-function getRecords($transactionDate, $dueDate){
+function getRecords($transactionFilter, $dueFilter){
     $records = array();
-    global $store, $customer, $con;
+    global $store, $con;
     // get credit transactions occuring between current week
-    $query = "SELECT * FROM credit_transactions WHERE business_name = '$store' AND customer = '$customer' AND " . $transactionDate;
+    $query = "SELECT * FROM credit_transactions WHERE business_name = '$store' AND " . $transactionFilter;
     $records[] = mysqli_query($con, $query);
 
     // get credit transactions occuring between current week
-    $query = "SELECT * FROM payment_transactions WHERE business_name = '$store' AND customer = '$customer' AND " . $transactionDate;
+    $query = "SELECT * FROM payment_transactions WHERE business_name = '$store' AND " . $transactionFilter;
     $records[] = mysqli_query($con, $query);
 
     // get due credit transactions occuring between current week
-    $query = "SELECT * FROM credit_transactions WHERE business_name = '$store' AND customer = '$customer' AND (status = 'unpaid' OR status IS NULL) AND " . $dueDate;
+    $query = "SELECT * FROM credit_transactions WHERE business_name = '$store' AND " . $dueFilter;
     $records[] = mysqli_query($con, $query);
 
     return $records;
@@ -31,8 +34,8 @@ function weekOfMonth($date) {
     return $currentDay - $firstDay;
 }
 
-function getPeriodData($transactionDate, $dueDate, $period){
-    $records = getRecords($transactionDate, $dueDate);
+function getPeriodData($transactionFilter, $dueFilter, $period){
+    $records = getRecords($transactionFilter, $dueFilter);
     $days = [[]]; 
     $weeks = [[]];
     $months = [[]];
@@ -122,7 +125,7 @@ function getPeriodData($transactionDate, $dueDate, $period){
 }
 
 if ($period == "week"){
-    global $period;
+    global $period, $customer;
     // get sunday date and saturday date
     $dayOfWeek = date("w") + 1;
     if ($dayOfWeek == 2 or $dayOfWeek == 6){
@@ -136,22 +139,51 @@ if ($period == "week"){
     $startDate = date("Y-m-d", strtotime($before));
     $endDate = date("Y-m-d", strtotime($after));
 
-    $transactionDate = "date BETWEEN '$startDate' AND '$endDate'";
-    $dueDate = "due_date BETWEEN '$startDate' AND '$endDate'";
-    getPeriodData($transactionDate, $dueDate, $period);
+    $transactionFilter = "";
+    $dueFilter = "";
+
+    if (!empty($customer)){
+        $transactionFilter = "customer = '$customer' AND date BETWEEN '$startDate' AND '$endDate'";
+        $dueFilter = "customer = '$customer' AND (status = 'unpaid' OR status IS NULL) AND due_date BETWEEN '$startDate' AND '$endDate'";    
+    }
+    else {
+        $transactionFilter = "date BETWEEN '$startDate' AND '$endDate'";
+        $dueFilter = "(status = 'unpaid' OR status IS NULL) AND due_date BETWEEN '$startDate' AND '$endDate'";
+    }
+    getPeriodData($transactionFilter, $dueFilter, $period);
 }
 else if ($period == "month"){
-    global $period;
+    global $period, $customer;
     $month = date("m");
     $year = date("Y");
-    $transactionDate = "MONTH(date) = '$month' AND YEAR(date) = '$year'";
-    $dueDate = "MONTH(due_date) = '$month' AND YEAR(due_date) = '$year'";
-    getPeriodData($transactionDate, $dueDate, $period);
+
+    $transactionFilter = "";
+    $dueFilter = "";
+
+    if (!empty($customer)){
+        $transactionFilter = "customer = '$customer' AND MONTH(date) = '$month' AND YEAR(date) = '$year'";
+        $dueFilter = "customer = '$customer' AND (status = 'unpaid' OR status IS NULL) AND MONTH(due_date) = '$month' AND YEAR(due_date) = '$year'";    
+    }
+    else {
+        $transactionFilter = "MONTH(date) = '$month' AND YEAR(date) = '$year'";
+        $dueFilter = "(status = 'unpaid' OR status IS NULL) AND MONTH(due_date) = '$month' AND YEAR(due_date) = '$year'";    
+    }
+    getPeriodData($transactionFilter, $dueFilter, $period);
 }
 else if ($period == "year"){
-    global $period;
+    global $period, $customer;
     $year = date("Y");
-    $transactionDate = "YEAR(date) = '$year'";
-    $dueDate = "YEAR(due_date) = '$year'";
-    getPeriodData($transactionDate, $dueDate, $period);
+
+    $transactionFilter = "";
+    $dueFilter = "";
+
+    if (!empty($customer)){
+        $transactionFilter = "customer = '$customer' AND YEAR(date) = '$year'";
+        $dueFilter = "customer = '$customer' AND (status = 'unpaid' OR status IS NULL) AND YEAR(due_date) = '$year'";    
+    }
+    else {
+        $transactionFilter = "YEAR(date) = '$year'";
+        $dueFilter = "(status = 'unpaid' OR status IS NULL) AND YEAR(due_date) = '$year'";    
+    }
+    getPeriodData($transactionFilter, $dueFilter, $period);
 }

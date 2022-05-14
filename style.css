@@ -1297,10 +1297,6 @@ footer {
   margin: 5px auto 20px auto;
 }
 
-.sub-period {
-  background-color: pink;
-}
-
 #stats {
   margin: 15px 30px;
   display: flex;
@@ -1542,3 +1538,11 @@ footer {
   line-height: 20px;
 }
 
+#overall-report-div {
+  padding-top: 20px;
+  height: 100%;
+}
+
+#overall-report-div #graph-div {
+  margin-bottom: 70px;
+}
