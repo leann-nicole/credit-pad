@@ -57,10 +57,11 @@ if ($_POST['account-type'] == "store owner"){
         die();
     } else {
         // prepare user notes
-        $query = "SELECT notes FROM stores WHERE business_name = '$store'";
+        $query = "SELECT notes, business_addr FROM stores WHERE business_name = '$store'";
         $result = mysqli_query($con, $query);
         $rows = mysqli_fetch_assoc($result);
         $_SESSION["notes"] = $rows["notes"];
+        $_SESSION["business_location"] = $rows["business_addr"];
 
         $_SESSION['ownerLoggedIn'] = true;
         header('Location: customers.php');

@@ -161,15 +161,14 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
             </div>
           </div>
         </div>
-
-        <div id="tools">
-          <button type="button" id="new-button" class="button create-button material-icons" onclick="toggleCreateForm()">add<span>New</span></button>
-          <div id="search-div">
-            <input type="text" id="search-field" class="field" placeholder="Search" onkeyup="filterList()">
-            <span id="search-icon" class="material-icons" onclick="focusSearchBar()">search</span>
-          </div>
-        </div>
         <div id="list-div" class="container">
+          <div id="tools">
+            <button type="button" id="new-button" class="button create-button material-icons" onclick="toggleCreateForm()">add<span>New</span></button>
+            <div id="search-div">
+              <input type="text" id="search-field" class="field" placeholder="Search" onkeyup="filterList()">
+              <span id="search-icon" class="material-icons" onclick="focusSearchBar()">search</span>
+            </div>
+          </div>
           <div id="list-inner-div">
           
           </div>

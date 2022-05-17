@@ -39,7 +39,6 @@ function displayStats($transactionFilter, $dueFilter){
     ?>
     <div class="period-totals">
         <span>Total Credit</span>
-        <br>
         <span>₱ <?php if (fmod($totalCredit, 1)) echo number_format($totalCredit, 2); else echo number_format($totalCredit); ?><span>
     </div>
     <?php
@@ -48,7 +47,6 @@ function displayStats($transactionFilter, $dueFilter){
     ?>
     <div class="period-totals">
         <span>Total Payment</span>
-        <br>
         <span>₱ <?php if (fmod($totalPayment, 1)) echo number_format($totalPayment, 2); else echo number_format($totalPayment); ?><span>
     </div>
     <?php
@@ -57,7 +55,6 @@ function displayStats($transactionFilter, $dueFilter){
     ?>
     <div class="period-totals">
         <span>Total Due</span>
-        <br>
         <span>₱ <?php if (fmod($totalDue, 1)) echo number_format($totalDue, 2); else echo number_format($totalDue); ?><span>
     </div>
 </div>
@@ -123,7 +120,7 @@ function displayTable($transactionFilter, $dueFilter, $period){
     if ($period == "year"){
         for ($i = 0; $i < 366; $i++){
             if ($days[$i][0]) {
-                $month = date("n", $days[$i][0]);
+                $month = date("n", $days[$i][0]) - 1;
                 $months[$month][] = [$days[$i][0], $days[$i][1], $days[$i][2], $days[$i][3]];
             }
         }
@@ -131,7 +128,8 @@ function displayTable($transactionFilter, $dueFilter, $period){
         foreach($months as $index => $m){
             if (count($m)){ // if day has transactions ?>
                 <div class="period-header" onclick="toggleContent(this)">
-                    <span><?php echo DateTime::createFromFormat("!m", $index)->format("F"); ?></span>
+                    <span><?php echo DateTime::createFromFormat("!m", $index + 1)->format("F"); ?></span>
+                    <span class="material-icons expand-arrow">expand_less</span>
                 </div>
                 <div class="weekday-content">
                     <table><?php
@@ -161,6 +159,7 @@ function displayTable($transactionFilter, $dueFilter, $period){
             if (count($w)){ // if day has transactions ?>
                 <div class="period-header" onclick="toggleContent(this)">
                     <span><?php echo "WEEK " . $index; ?></span>
+                    <span class="material-icons expand-arrow">expand_less</span>
                 </div>
                 <div class="weekday-content">
                 <table><?php
@@ -183,6 +182,7 @@ function displayTable($transactionFilter, $dueFilter, $period){
             if ($d[0]){ // if day has transactions ?>
                 <div class="period-header" onclick="toggleContent(this)">
                     <span><?php echo strtoupper(date("l", $d[0])); ?></span>
+                    <span class="material-icons expand-arrow">expand_less</span>
                 </div>
                 <div class="weekday-content">
                     <table>

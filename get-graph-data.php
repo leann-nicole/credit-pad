@@ -9,6 +9,7 @@ if (isset($_POST["customer"])) {
 }
 $period = $_POST["period"];
 
+
 function getRecords($transactionFilter, $dueFilter){
     $records = array();
     global $store, $con;
@@ -113,7 +114,7 @@ function getPeriodData($transactionFilter, $dueFilter, $period){
     else if ($period == "year"){
         for ($i = 0; $i < 366; $i++){
             if ($days[$i][0]) {
-                $month = date("n", $days[$i][0]);
+                $month = date("n", $days[$i][0]) - 1;
                 $months[$month][0] += $days[$i][1];
                 $months[$month][1] += $days[$i][2];
                 $months[$month][2] += $days[$i][3];

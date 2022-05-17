@@ -25,6 +25,10 @@ input:autofill {
   background: white;
 }
 
+iframe {
+  display: none;
+}
+
 .field-name {
   margin-bottom: 5px;
 }
@@ -474,8 +478,7 @@ main > * {
 }
 
 .form-name {
-  width: 100%;
-  margin-bottom: 10px;
+  margin: 10px;
   background-color: #d9d9d9;
   line-height: 40px;
   padding-left: 20px;
@@ -691,6 +694,7 @@ main > * {
   justify-content: right;
   align-items: flex-start;
   height: 50px;
+  margin: 10px 10px 0px 0px;
 }
 
 #search-div,
@@ -730,8 +734,8 @@ main > * {
 }
 
 #list-div {
-  height: calc(100vh - 135px);
-  min-height: 250px;
+  height: calc(100vh - 90px);
+  min-height: 295px;
   box-shadow: 0px 0px 5px 0px #c9c9c9;
   position: relative;
 }
@@ -1149,7 +1153,7 @@ footer {
 
 #history-tools .button:nth-of-type(2).selected-history-type {
   color: white;
-  background-color: gray;
+  background-color: #508CB0;
 }
 
 .sort-button-by, .sort-button-order {
@@ -1275,7 +1279,7 @@ footer {
 }
 
 .credit-history-item .history-item-type {
-  background-color: gray;
+  background-color: #508CB0;
 }
 
 .credit-history-item .history-item-type.unpaid-credit-label {
@@ -1295,21 +1299,60 @@ footer {
   width: 600px;
   height: 300px;
   margin: 5px auto 20px auto;
+  position: relative;
+}
+
+.tooltip {
+  opacity: 0;
+  padding: 5px;
+  position: absolute;
+  border: 1px solid gray;
+  border-radius: 5px;
+  background-color: white;
 }
 
 #stats {
   margin: 15px 30px;
   display: flex;
-  justify-content: space-evenly;
+  height: 70px;
+}
+
+#stats .period-totals:nth-of-type(1){
+  background-color: #508CB0;
+}
+
+#stats .period-totals:nth-of-type(2){
+  background-color: #53b050;
+}
+
+#stats .period-totals:nth-of-type(3){
+  background-color: #FC9D00;
+}
+
+.period-totals {
+  background-color: lightgoldenrodyellow;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
 }
 
+.period-totals span {
+  color: white;
+}
+
+.period-totals span:nth-of-type(1){
+  font-size: 15px;
+}
+
 .period-totals span:nth-of-type(2){
-  font-size: 16px;
-  line-height: 40px;
+  font-size: 18px;
+  margin-top: 15px;
 }
 
 .period-header {
+  position: relative;
   height: 40px;
   background-color: #e6e6e6;
   padding: 0px 10px;
@@ -1318,6 +1361,12 @@ footer {
   justify-content: center;
   margin: 0px 30px;
   cursor: pointer;
+}
+
+.expand-arrow {
+  position: absolute;
+  right: 0px;
+  margin-right: 10px;
 }
 
 .weekday-content {
@@ -1355,7 +1404,7 @@ footer {
 }
 
 .credit-transaction-type span {
-  background-color: gray;
+  background-color: #508CB0;
 }
 
 .payment-transaction-type span {
@@ -1538,11 +1587,39 @@ footer {
   line-height: 20px;
 }
 
-#overall-report-div {
+.overall-report-div {
   padding-top: 20px;
-  height: 100%;
 }
 
-#overall-report-div #graph-div {
-  margin-bottom: 70px;
+#printframe-body {
+  background-color: white;
+}
+
+#printframe-body .expand-arrow {
+  display: none;
+}
+
+#report-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#report-header-sitename {
+  font-size: 22px;
+  line-height: 50px;
+  color: #108531;
+  font-weight: bold;
+  margin: none;
+}
+
+#report-period {
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+#report-date {
+  margin: 5px 0px 20px 0px;
 }

@@ -43,22 +43,21 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         </ul>
       </nav>
       <main>
-        <div id="overall-report-div" class="container">
-          <div id="reports-div">
-            <div>
-              <button type="button" class="button print-button">Print</button>
-              <select name="period" id="period" class="field" onchange="generateReport()">
-                <option value="week" data-period="week" selected>This week</option>
-                <option value="month" data-period="month">This month</option>
-                <option value="year" data-period="year">This year</option>
-              </select>
-            </div>
-            <div id="graph-div">
-              
-            </div>
-            <div id="total-credit-payment-div">
+        <iframe id="printFrame" name="printFrame" frameborder="0"></iframe>
+        <div id="reports-div" class="container overall-report-div">
+          <div>
+            <button type="button" class="button print-button" onclick="printDocument()">Print</button>
+            <select name="period" id="period" class="field" onchange="generateReport()">
+              <option value="week" data-period="week" selected>This week</option>
+              <option value="month" data-period="month">This month</option>
+              <option value="year" data-period="year">This year</option>
+            </select>
+          </div>
+          <div id="graph-div">
+            
+          </div>
+          <div id="table-div">
 
-            </div>
           </div>
         </div>
       </main>
@@ -85,6 +84,34 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         $("#search-field").focus();
       }
 
+      function printDocument(){
+        let graphContent = document.getElementById("graph-div").innerHTML;
+        let tableContent = document.getElementById("table-div").innerHTML;
+
+        let period = $("#period option:selected").data("period");
+        $.ajax({
+          url: "get-report-header.php",
+          type: "post",
+          data: {period: period},
+          success: function (data){
+            let jQPrintFrame = $("#printFrame").contents();
+            jQPrintFrame.find("#report-header").html(data);
+            jQPrintFrame.find("#graph-div").html(graphContent);
+            jQPrintFrame.find("#table-div").html(tableContent);
+
+            window.frames["printFrame"].print();
+          }
+        });
+      }
+
+      function toggleContent(element){
+        if (!element.style.borderBottom && element.nextElementSibling.nextElementSibling) element.style.borderBottom = "1px solid lightgray";
+        else element.style.borderBottom = "";
+        element.nextElementSibling.classList.toggle("hidden-item");
+        if (element.children[1].textContent == "expand_more") element.children[1].textContent = "expand_less";
+        else element.children[1].textContent = "expand_more";
+      }
+
       let margin = {top: 10, right: 30, bottom: 20, left: 50};
       let graphWidth = 600 - margin.left - margin.right;
       let graphHeight = 300 - margin.top - margin.bottom;
@@ -96,13 +123,16 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         let period = $("#period option:selected").data("period");
         $("#graph-div").html("");
 
+        let tooltip = d3.select("#graph-div")
+          .append("div")
+          .classed("tooltip", true)
+
         $.ajax({
           url: "get-graph-data.php",
           type: "POST", 
           data: {period: period},
           dataType: "json",
           success: function(data){
-            console.log(data);
             let subPeriods = "";
             let xValues = [];
             if (period == "month"){
@@ -114,7 +144,6 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
               if (period == "week") xValues = days;
               else xValues = months;
             }
-
             // determine by how much height of graph needs to be increased
             let biggestVal = subPeriods.map(function(sp){ // use map to get array of biggest numbers among all subperiods
               return sp.reduce(function(a,b){
@@ -162,12 +191,12 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
             let xSub = d3.scaleBand()
               .domain(bars)
               .range([0, x.bandwidth()])
-              .padding([0.05])
+              .padding([0.1])
             // define colors
             let color = d3.scaleOrdinal()
               .domain(bars)
-              .range(["gray", "#53b050", "#FC9D00"])
-            //
+              .range(["#508CB0", "#53b050", "#FC9D00"])
+
             svg.append("g")
               .selectAll("g")
               .data(subPeriods) 
@@ -182,7 +211,16 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
                 .attr("y", function(d) { return y(d); })
                 .attr("width", xSub.bandwidth())
                 .attr("height", function(d) { return graphHeight - y(d); })
-                .attr("fill", function(d, i) { return color(bars[i]); });
+                .attr("fill", function(d, i) { return color(bars[i]); })
+                .classed("bar", true)
+              
+            d3.selectAll(".bar") 
+              .on("mouseover", function (event, d) { tooltip.style("opacity", 1) })
+              .on("mousemove", function (event, d) { 
+                tooltip.html("₱ " + d)
+                  .style("left", (event.offsetX) + 10 + "px")
+                  .style("top", (event.offsetY) - 30 + "px") })
+              .on("mouseleave", function (event, d) { tooltip.style("opacity", 0) })
           }
         });
 
@@ -191,14 +229,38 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
           type: "POST", 
           data: {period: period},
           success: function (data){
-            $("#total-credit-payment-div").html(data);
+            $("#table-div").html(data);
           }
         });
+      }
+
+      function prepareFrame(){
+        let printFrame = document.getElementById("printFrame");
+        let frameDoc = (printFrame.contentWindow) ? printFrame.contentWindow : (printFrame.contentDocument.document) ? printFrame.contentDocument.document : printFrame.contentDocument;
+
+        frameDoc.document.open();
+        frameDoc.document.writeln(
+          `<!DOCTYPE html>
+          <html>
+            <head>
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            <link rel="stylesheet" href="style.css"/>
+            </head>
+            <body id="printframe-body">
+              <div id="report-header"></div>
+              <div id="graph-div"></div>
+              <div id="table-div"></div>
+            </body>
+          </html>
+          `
+        );
+        frameDoc.document.close(); 
       }
 
       $(document).ready(function () {
         fetchNotes();
         generateReport();
+        prepareFrame();
       });
       // shorthand for $(document).ready(); is $();
       // can also do $(window).on("load", function(){}); 

@@ -42,6 +42,8 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         </ul>
       </nav>
       <main>
+        <iframe id="printFrameHistory" name="printFrame" frameborder="0"></iframe>
+        <iframe id="printFrameReport" name="printFrame" frameborder="0"></iframe>
         <div id="edit-form-div-c" class="<?php if (!isset($_GET['error'])) {
             echo 'hidden-item';
         } ?> container">
@@ -241,7 +243,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
             <div id="history-tools">
               <span id="payments" class="button selected-history-type" onclick="filterHistory(this)">Payments</span>
               <span id="credits" class="button selected-history-type" onclick="filterHistory(this)">Credits</span>
-              <button type="button" class="button print-button">Print</button>
+              <button type="button" class="button print-button" onclick="printDocument()">Print</button>
               <button type="button" class="gray-button sort-button-order" onclick="fetchHistory(this)">Date<span id="sort-arrow" class="material-icons">arrow_downward</span></button>
               <div id="date-interval">
                 <input type="date" id="start-date" class="field" title="start date" onchange="filterHistory(this)">
@@ -252,7 +254,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
           </div>
           <div id="reports-div">
             <div>
-              <button type="button" class="button print-button">Print</button>
+              <button type="button" class="button print-button" onclick="printDocument()">Print</button>
               <select name="period" id="period" class="field" onchange="generateReport()">
                 <option value="week" data-period="week" selected>This week</option>
                 <option value="month" data-period="month">This month</option>
@@ -288,10 +290,16 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
       let entryNo = 0;
       let historyOrder = "Most Recent First";
 
+      function printDocument(){
+        let printWindow = window.open("");
+      }
+
       function toggleContent(element){
         if (!element.style.borderBottom && element.nextElementSibling.nextElementSibling) element.style.borderBottom = "1px solid lightgray";
         else element.style.borderBottom = "";
         element.nextElementSibling.classList.toggle("hidden-item");
+        if (element.children[1].textContent == "expand_more") element.children[1].textContent = "expand_less";
+        else element.children[1].textContent = "expand_more";
       }
 
       function toggleAccountOptions(){
@@ -883,6 +891,10 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         let period = $("#period option:selected").data("period");
         $("#graph-div").html("");
 
+        let tooltip = d3.select("#graph-div")
+          .append("div")
+          .classed("tooltip", true)
+          
         $.ajax({
           url: "get-graph-data.php",
           type: "POST", 
@@ -947,11 +959,11 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
             let xSub = d3.scaleBand()
               .domain(bars)
               .range([0, x.bandwidth()])
-              .padding([0.05])
+              .padding([0.1])
             // define colors
             let color = d3.scaleOrdinal()
               .domain(bars)
-              .range(["gray", "#53b050", "#FC9D00"])
+              .range(["#508CB0", "#53b050", "#FC9D00"])
             //
             svg.append("g")
               .selectAll("g")
@@ -967,7 +979,16 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
                 .attr("y", function(d) { return y(d); })
                 .attr("width", xSub.bandwidth())
                 .attr("height", function(d) { return graphHeight - y(d); })
-                .attr("fill", function(d, i) { return color(bars[i]); });
+                .attr("fill", function(d, i) { return color(bars[i]); })
+                .classed("bar", true)
+                
+            d3.selectAll(".bar") 
+              .on("mouseover", function (event, d) { tooltip.style("opacity", 1) })
+              .on("mousemove", function (event, d) { 
+                tooltip.html("₱ " + d)
+                  .style("left", (event.offsetX) + 10 + "px")
+                  .style("top", (event.offsetY) - 30 + "px") })
+              .on("mouseleave", function (event, d) { tooltip.style("opacity", 0) })
           }
         });
 
