@@ -21,18 +21,18 @@ else {?>
 <p id="report-date">
     <?php 
     if (!empty($_POST["startDate"]) && !empty($_POST["endDate"]))
-      echo date("F j, Y", strtotime($_POST["startDate"])) . " - " . date("F j, Y", strtotime($_POST["endDate"])); 
+      echo "from " . date("F j, Y", strtotime($_POST["startDate"])) . " until " . date("F j, Y", strtotime($_POST["endDate"])); 
     else if (!empty($_POST["endDate"]))
-        echo date("F j, Y", strtotime($_POST["endDate"]));
+        echo "until " . date("F j, Y", strtotime($_POST["endDate"]));
     else if (!empty($_POST["startDate"]))
-        echo date("F j, Y", strtotime($_POST["startDate"]));
+        echo "from " . date("F j, Y", strtotime($_POST["startDate"]));
     else echo "All time";
     ?>
 </p>
 <p id="history-type">
     <?php
     if (!empty($_POST["historyType"])){
-        if ($_POST["historyType"] != "PaymentCredit") echo "Credit and payment transactions";
+        if ($_POST["historyType"] == "PaymentCredit") echo "Credit and payment transactions";
         else if ($_POST["historyType"] == "Payment") echo "Payment transactions only";
         else echo "Credit transactions only";
     }

@@ -413,15 +413,26 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
           })
         }
         else if ((startDate != "" && endDate == "") || (startDate == "" && endDate != "")){ // one date provided, exact match needed
-          let dateToMatch = (startDate != "" && endDate == "")? startDate : endDate;
-          historyItems.forEach(function (item, index) {
-            let itemDate = item.querySelector(".history-item-date").getAttribute("data-date");
-            if (itemDate == dateToMatch) item.style.display = "flex";
-            else{
-              item.style.display = "none";
-              toFilterByType = toFilterByType.filter(e => e != index);
-            }
-          })
+          if (startDate != ""){
+            historyItems.forEach(function (item, index) {
+              let itemDate = item.querySelector(".history-item-date").getAttribute("data-date");
+              if (itemDate >= startDate) item.style.display = "flex";
+              else{
+                item.style.display = "none";
+                toFilterByType = toFilterByType.filter(e => e != index);
+              }
+            })
+          }
+          else {
+            historyItems.forEach(function (item, index) {
+              let itemDate = item.querySelector(".history-item-date").getAttribute("data-date");
+              if (itemDate <= endDate) item.style.display = "flex";
+              else{
+                item.style.display = "none";
+                toFilterByType = toFilterByType.filter(e => e != index);
+              }
+            })
+          }
         }
         else if (startDate == endDate ) { // one date provided, exact match needed
           let dateToMatch = startDate;
@@ -915,6 +926,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
               });
             }).reduce(function(a,b){return Math.max(a,b);}); // use reduce to get the biggest among the biggest :)
             
+            let noData = false;
             if (biggestVal != 0){
               // set graph biggest possible value on Y axis based on biggest value
               let q = biggestVal;
@@ -925,7 +937,10 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
               }
               biggestVal = Math.ceil(biggestVal/m) * m;
             }
-            else biggestVal = 10;
+            else {
+              noData = true;
+              biggestVal = 10;
+            } 
 
             // set up svg element
             let svg = d3.select("#graph-div")
@@ -985,6 +1000,13 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
                   .style("left", (event.offsetX) + 10 + "px")
                   .style("top", (event.offsetY) - 30 + "px") })
               .on("mouseleave", function (event, d) { tooltip.style("opacity", 0) })
+
+            if (noData){
+              d3.select("#graph-div")
+                .append("div")
+                .classed("no-data", true)
+                .text("No data available")
+            }
           }
         });
 
