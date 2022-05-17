@@ -1614,7 +1614,7 @@ footer {
   margin: none;
 }
 
-#report-period {
+#page-title {
   font-weight: bold;
   font-size: 16px;
   margin-top: 20px;
@@ -1622,4 +1622,8 @@ footer {
 
 #report-date {
   margin: 5px 0px 20px 0px;
+}
+
+#history-type {
+  font-weight: bold;
 }

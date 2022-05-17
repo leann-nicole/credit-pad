@@ -42,8 +42,8 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         </ul>
       </nav>
       <main>
-        <iframe id="printFrameHistory" name="printFrame" frameborder="0"></iframe>
-        <iframe id="printFrameReport" name="printFrame" frameborder="0"></iframe>
+        <iframe id="printFrameHistory" name="printFrameHistory" frameborder="0"></iframe>
+        <iframe id="printFrameReport" name="printFrameReport" frameborder="0"></iframe>
         <div id="edit-form-div-c" class="<?php if (!isset($_GET['error'])) {
             echo 'hidden-item';
         } ?> container">
@@ -241,9 +241,9 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
           </div>
           <div id="history-div">
             <div id="history-tools">
-              <span id="payments" class="button selected-history-type" onclick="filterHistory(this)">Payments</span>
-              <span id="credits" class="button selected-history-type" onclick="filterHistory(this)">Credits</span>
-              <button type="button" class="button print-button" onclick="printDocument()">Print</button>
+              <span id="payments" class="button selected-history-type" onclick="filterHistory(this)">Payment</span>
+              <span id="credits" class="button selected-history-type" onclick="filterHistory(this)">Credit</span>
+              <button type="button" class="button print-button" onclick="printDocumentHistory()">Print</button>
               <button type="button" class="gray-button sort-button-order" onclick="fetchHistory(this)">Date<span id="sort-arrow" class="material-icons">arrow_downward</span></button>
               <div id="date-interval">
                 <input type="date" id="start-date" class="field" title="start date" onchange="filterHistory(this)">
@@ -254,7 +254,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
           </div>
           <div id="reports-div">
             <div>
-              <button type="button" class="button print-button" onclick="printDocument()">Print</button>
+              <button type="button" class="button print-button" onclick="printDocumentReport()">Print</button>
               <select name="period" id="period" class="field" onchange="generateReport()">
                 <option value="week" data-period="week" selected>This week</option>
                 <option value="month" data-period="month">This month</option>
@@ -289,10 +289,6 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
       let customer = "";
       let entryNo = 0;
       let historyOrder = "Most Recent First";
-
-      function printDocument(){
-        let printWindow = window.open("");
-      }
 
       function toggleContent(element){
         if (!element.style.borderBottom && element.nextElementSibling.nextElementSibling) element.style.borderBottom = "1px solid lightgray";
@@ -1073,11 +1069,98 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         fetchHistory();
       }
 
+      function printDocumentHistory(){
+        let historyContent = document.getElementById("history-list").innerHTML;
+
+        let startDate = $("#start-date").val();
+        let endDate = $("#end-date").val();
+        let historyType = $(".selected-history-type").text();
+        console.log(historyType);
+        $.ajax({
+          url: "get-report-header.php",
+          type: "post",
+          data: {startDate : startDate, endDate : endDate, historyType : historyType},
+          success: function (data){
+            let jQPrintFrame = $("#printFrameHistory").contents();
+            jQPrintFrame.find("#report-header").html(data);
+            jQPrintFrame.find("#history-list-div").html(historyContent);
+
+            window.frames["printFrameHistory"].print();
+          }
+        });
+      }
+
+      function printDocumentReport(){
+        let graphContent = document.getElementById("graph-div").innerHTML;
+        let tableContent = document.getElementById("table-div").innerHTML;
+
+        let period = $("#period option:selected").data("period");
+        $.ajax({
+          url: "get-report-header.php",
+          type: "post",
+          data: {period: period, page: "report"},
+          success: function (data){
+            let jQPrintFrame = $("#printFrameReport").contents();
+            jQPrintFrame.find("#report-header").html(data);
+            jQPrintFrame.find("#graph-div").html(graphContent);
+            jQPrintFrame.find("#table-div").html(tableContent);
+
+            window.frames["printFrameReport"].print();
+          }
+        });
+      }
+
+      function prepareFrames(){
+        // history frame
+        let printFrame = document.getElementById("printFrameHistory");
+        let frameDoc = (printFrame.contentWindow) ? printFrame.contentWindow : (printFrame.contentDocument.document) ? printFrame.contentDocument.document : printFrame.contentDocument;
+        
+        frameDoc.document.open();
+        frameDoc.document.writeln(
+          `<!DOCTYPE html>
+          <html>
+            <head>
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            <link rel="stylesheet" href="style.css"/>
+            </head>
+            <body id="printframe-body">
+              <div id="report-header"></div>
+              <div id="history-list-div"></div>
+            </body>
+          </html>
+          `
+        );
+        frameDoc.document.close(); 
+
+        // report iframe
+        printFrame = document.getElementById("printFrameReport");
+        frameDoc = (printFrame.contentWindow) ? printFrame.contentWindow : (printFrame.contentDocument.document) ? printFrame.contentDocument.document : printFrame.contentDocument;
+
+        frameDoc.document.open();
+        frameDoc.document.writeln(
+          `<!DOCTYPE html>
+          <html>
+            <head>
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            <link rel="stylesheet" href="style.css"/>
+            </head>
+            <body id="printframe-body">
+              <div id="report-header"></div>
+              <div id="graph-div"></div>
+              <div id="table-div"></div>
+            </body>
+          </html>
+          `
+        );
+        frameDoc.document.close(); 
+      }
+
       $(document).ready(function () {
         customer = $("#customer-profile-info-div").data("name");
         fetchCustomerInfo();
         fetchNotes();
         fetchProducts();
+        prepareFrames();
       });
     </script>
   </body>
