@@ -1101,7 +1101,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         $.ajax({
           url: "get-report-header.php",
           type: "post",
-          data: {startDate : startDate, endDate : endDate, historyType : historyType},
+          data: {startDate : startDate, endDate : endDate, historyType : historyType, customer: customer},
           success: function (data){
             let jQPrintFrame = $("#printFrameHistory").contents();
             jQPrintFrame.find("#report-header").html(data);
@@ -1120,7 +1120,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         $.ajax({
           url: "get-report-header.php",
           type: "post",
-          data: {period: period, page: "report"},
+          data: {period: period, page: "report", customer: customer},
           success: function (data){
             let jQPrintFrame = $("#printFrameReport").contents();
             jQPrintFrame.find("#report-header").html(data);

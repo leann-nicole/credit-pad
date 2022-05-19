@@ -14,10 +14,12 @@ session_start();
     echo substr($period,1) . "ly Report";
     ?>
 </p>
+<?php if (isset($_POST["customer"])) { echo "<p id='customer-printed'>" . $_POST["customer"] . "</p>";} ?>
 <p id="report-date"><?php echo "Printed: " . date("F j, Y"); ?></p>
 <?php }
 else {?>
 <p id="page-title">History</p>
+<?php if (isset($_POST["customer"])) { echo "<p id='customer-printed'>" . $_POST["customer"] . "</p>";} ?>
 <p id="report-date">
     <?php 
     if (!empty($_POST["startDate"]) && !empty($_POST["endDate"]))

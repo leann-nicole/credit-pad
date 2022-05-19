@@ -1634,6 +1634,14 @@ footer {
   margin: 5px 0px 20px 0px;
 }
 
+#customer-printed {
+  margin-top: 5px;
+}
+
+#customer-printed + #report-date {
+  margin-top: 0px;
+}
+
 #history-type {
   font-weight: bold;
 }
