@@ -3,8 +3,8 @@ session_start();
 include "connection.php";
 
 $store = mysqli_real_escape_string($con, $_SESSION["business_name"]);
+$customer = mysqli_real_escape_string($con, $_POST["customer"]);
 
-$customer = $_POST["customer"];
 $transactionDate = $_POST["transactionDate"];
 
 $query = "SELECT MAX(entry_no) FROM credit_transactions WHERE business_name = '$store' AND customer = '$customer' AND date = '$transactionDate'";

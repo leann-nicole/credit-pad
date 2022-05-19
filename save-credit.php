@@ -3,10 +3,10 @@ session_start();
 include "connection.php";
 
 $store = mysqli_real_escape_string($con, $_SESSION["business_name"]);
+$customer = mysqli_real_escape_string($con, $_POST["customer"]);
 
 $date = $_POST["creditDate"];
 $due = $_POST["dueDate"];
-$customer = $_POST["customer"];
 $product = $_POST["product"];
 $quantity = $_POST["quantity"];
 $price = $_POST["price"];

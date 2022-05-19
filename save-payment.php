@@ -3,8 +3,8 @@ session_start();
 include 'connection.php';
 
 $store = mysqli_real_escape_string($con, $_SESSION["business_name"]);
+$customer = mysqli_real_escape_string($con, $_POST['customer']);
 
-$customer = $_POST['customer'];
 $paymentType = $_POST['paymentType'];
 $date = $_POST["paymentDate"];
 $cash = $_POST['cash'];
