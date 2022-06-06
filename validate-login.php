@@ -71,7 +71,14 @@ if ($_POST['account-type'] == "store owner"){
 else if ($_POST['account-type'] == "customer"){
     $_SESSION['account-type'] = $_POST['account-type'];
     $_SESSION['username'] = $_POST['username'];
+    $store = mysqli_real_escape_string($con, $_POST['business_name']);
     $_SESSION['business_name'] = $_POST['business_name'];
+
+    $query = "SELECT store_operator, business_addr FROM stores WHERE business_name = '$store'";
+    $result = mysqli_query($con, $query);
+    $rows = mysqli_fetch_assoc($result);
+    $_SESSION["store_operator"] = $rows["store_operator"];
+    $_SESSION["business_location"] = $rows["business_addr"];
 
     $username = mysqli_real_escape_string($con, $_POST['username']);
     $store = mysqli_real_escape_string($con, $_POST['business_name']);

@@ -279,7 +279,9 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         </div>
     </div>
     </div>
-    <footer></footer>
+    <footer>
+      <a href="customers.php" id="footer-website-name">Credit Pad</a>
+    </footer>
     <script src="https://d3js.org/d3.v7.min.js" defer></script>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
@@ -1097,7 +1099,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         let startDate = $("#start-date").val();
         let endDate = $("#end-date").val();
         let historyType = $(".selected-history-type").text();
-        console.log(historyType);
+
         $.ajax({
           url: "get-report-header.php",
           type: "post",

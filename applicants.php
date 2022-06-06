@@ -25,7 +25,7 @@ if (!isset($_SESSION['adminLoggedIn'])) {
         }?>
     </p>      
     <header>
-      <p id="sitename-header"><a href="customers.php">Credit Pad</a></p>
+      <p id="sitename-header"><a href="applicants.php">Credit Pad</a></p>
       <div id="dropdown">
         <button type="button" id="dropdown-button" class="material-icons" onclick="toggleAccountOptions()">person<span class="material-icons">arrow_drop_down</span></button>
         <div id="dropdown-menu" class="hidden-item">
@@ -65,7 +65,9 @@ if (!isset($_SESSION['adminLoggedIn'])) {
         </div>
       </div>
     </div>
-    <footer></footer>
+    <footer>
+      <a href="applicants.php" id="footer-website-name">Credit Pad</a>
+    </footer>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
       // global variables

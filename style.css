@@ -178,6 +178,7 @@ iframe {
   background-color: none;
   border: none;
   cursor: pointer;
+  background-color: transparent;
 }
 
 #dropdown-menu {
@@ -774,8 +775,8 @@ main > * {
   background-color: white;
   font-weight: bold;
   cursor: pointer;
-  border-bottom: 1px solid gray;
   line-height: 40px;
+  border-bottom: 1px solid #e6e6e6;
 }
 
 .sortable-header span {
@@ -1643,5 +1644,9 @@ footer {
 }
 
 #history-type {
+  font-weight: bold;
+}
+
+#business-name {
   font-weight: bold;
 }

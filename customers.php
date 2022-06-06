@@ -168,7 +168,9 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         </div>
       </div>
     </div>
-    <footer><a href="customers.php" id="footer-website-name">Credit Pad</a></footer>
+    <footer>
+      <a href="customers.php" id="footer-website-name">Credit Pad</a>
+    </footer>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
       function toggleAccountOptions(){

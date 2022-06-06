@@ -3,8 +3,17 @@ session_start();
 ?>
 
 <p id="report-header-sitename">Credit Pad</p>
-<p><?php echo $_SESSION["business_name"]; ?></p>
+<p id="business-name"><?php echo $_SESSION["business_name"]; ?></p><?php
+if ($_SESSION['customerLoggedIn']){
+    ?>
+<p><?php echo $_SESSION["store_operator"]; ?></p>
+    <?php
+}
+else if ($_SESSION['ownerLoggedIn']){
+    ?>
 <p><?php echo $_SESSION["username"]; ?></p>
+    <?php
+}?>
 <p><?php echo $_SESSION["business_location"]; ?></p>
 <?php if (isset($_POST["period"])) { ?>
 <p id="page-title">

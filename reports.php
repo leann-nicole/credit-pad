@@ -68,7 +68,9 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
         </div>
       </div>
     </div>
-    <footer><a href="customers.php" id="footer-website-name">Credit Pad</a></footer>
+    <footer>
+      <a href="customers.php" id="footer-website-name">Credit Pad</a>
+    </footer>
     <script src="https://d3js.org/d3.v7.min.js" defer></script>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
@@ -151,6 +153,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
               });
             }).reduce(function(a,b){return Math.max(a,b);}); // use reduce to get the biggest among the biggest :)
             
+            let noData = false;
             if (biggestVal != 0){
               // set graph biggest possible value on Y axis based on biggest value
               let q = biggestVal;
@@ -161,7 +164,10 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
               }
               biggestVal = Math.ceil(biggestVal/m) * m;
             }
-            else biggestVal = 10;
+            else {
+              noData = true;
+              biggestVal= 10;
+            }
 
             // set up svg element
             let svg = d3.select("#graph-div")
@@ -221,6 +227,13 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
                   .style("left", (event.offsetX) + 10 + "px")
                   .style("top", (event.offsetY) - 30 + "px") })
               .on("mouseleave", function (event, d) { tooltip.style("opacity", 0) })
+
+            if (noData){
+            d3.select("#graph-div")
+              .append("div")
+              .classed("no-data", true)
+              .text("No data available")
+            }
           }
         });
 

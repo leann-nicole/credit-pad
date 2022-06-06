@@ -25,7 +25,7 @@ if (!isset($_SESSION['customerLoggedIn'])) {
         }?>
     </p>      
     <header>
-      <p id="sitename-header"><a href="customers.php">Credit Pad</a></p>
+      <p id="sitename-header"><a href="customer-home.php">Credit Pad</a></p>
       <div id="dropdown">
         <button type="button" id="dropdown-button" class="material-icons" onclick="toggleAccountOptions()">person<span class="material-icons">arrow_drop_down</span></button>
         <div id="dropdown-menu" class="hidden-item">
@@ -39,6 +39,8 @@ if (!isset($_SESSION['customerLoggedIn'])) {
         
       </nav>
       <main id="customer-main-section">
+        <iframe id="printFrameHistory" name="printFrameHistory" frameborder="0"></iframe>
+        <iframe id="printFrameReport" name="printFrameReport" frameborder="0"></iframe>
         <div id="customer-profile-info-div" class="container" data-name="<?php echo $_SESSION['username']; ?>" data-store="<?php echo $_SESSION['business_name']; ?>"></div>
         <div id="tab-section">
           <div class="selected-navbar-item" onclick="switchTab(this)">HISTORY</div>
@@ -47,9 +49,9 @@ if (!isset($_SESSION['customerLoggedIn'])) {
         <div id="tab-content" class="container">
           <div id="history-div">
             <div id="history-tools">
-              <span id="payments" class="button selected-history-type" onclick="filterHistory(this)">Payments</span>
-              <span id="credits" class="button selected-history-type" onclick="filterHistory(this)">Credits</span>
-              <button type="button" class="button print-button">Print</button>
+              <span id="payments" class="button selected-history-type" onclick="filterHistory(this)">Payment</span>
+              <span id="credits" class="button selected-history-type" onclick="filterHistory(this)">Credit</span>
+              <button type="button" class="button print-button" onclick="printDocumentHistory()">Print</button>
               <button type="button" class="gray-button sort-button-order" onclick="fetchHistory(this)">Date<span id="sort-arrow" class="material-icons">arrow_downward</span></button>
               <div id="date-interval">
                 <input type="date" id="start-date" class="field" title="start date" onchange="filterHistory(this)">
@@ -58,7 +60,20 @@ if (!isset($_SESSION['customerLoggedIn'])) {
             </div>
             <div id="history-list"></div>
           </div>
-          <div id="reports-div"></div>
+          <div id="reports-div">
+            <div>
+                <button type="button" class="button print-button" onclick="printDocumentReport()">Print</button>
+                <select name="period" id="period" class="field" onchange="generateReport()">
+                  <option value="week" data-period="week" selected>This week</option>
+                  <option value="month" data-period="month">This month</option>
+                  <option value="year" data-period="year">This year</option>
+                </select>
+              </div>
+              <div id="graph-div"></div>
+              <div id="table-div">
+
+              </div>
+            </div>
         </div>
       </main>
       <div id="extra">
@@ -68,7 +83,10 @@ if (!isset($_SESSION['customerLoggedIn'])) {
       </div>
       </div>
     </div>
-    <footer></footer>
+    <footer>
+      <a href="customer-home.php" id="footer-website-name">Credit Pad</a>
+    </footer>
+    <script src="https://d3js.org/d3.v7.min.js" defer></script>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
       let customer = "";
@@ -209,6 +227,7 @@ if (!isset($_SESSION['customerLoggedIn'])) {
           document.querySelector("#tab-content > div:nth-of-type(2)").style.display = "none";
         }
         else if (tab == "REPORTS"){
+          generateReport();
           document.querySelector("#tab-content > div:nth-of-type(1)").style.display = "none";
           document.querySelector("#tab-content > div:nth-of-type(2)").style.display = "flex";
         }
@@ -218,6 +237,226 @@ if (!isset($_SESSION['customerLoggedIn'])) {
         document.querySelector("#tab-section > .selected-navbar-item").classList.remove("selected-navbar-item");
         element.classList.add("selected-navbar-item");
         showTabContent();
+      }
+
+      function printDocumentHistory(){
+        let historyContent = document.getElementById("history-list").innerHTML;
+
+        let startDate = $("#start-date").val();
+        let endDate = $("#end-date").val();
+        let historyType = $(".selected-history-type").text();
+
+        $.ajax({
+          url: "get-report-header.php",
+          type: "post",
+          data: {startDate : startDate, endDate : endDate, historyType : historyType, customer: customer},
+          success: function (data){
+            let jQPrintFrame = $("#printFrameHistory").contents();
+            jQPrintFrame.find("#report-header").html(data);
+            jQPrintFrame.find("#history-list-div").html(historyContent);
+
+            window.frames["printFrameHistory"].print();
+          }
+        });
+      }
+
+
+      function printDocumentReport(){
+        let graphContent = document.getElementById("graph-div").innerHTML;
+        let tableContent = document.getElementById("table-div").innerHTML;
+
+        let period = $("#period option:selected").data("period");
+        $.ajax({
+          url: "get-report-header.php",
+          type: "post",
+          data: {period: period, page: "report", customer: customer},
+          success: function (data){
+            let jQPrintFrame = $("#printFrameReport").contents();
+            jQPrintFrame.find("#report-header").html(data);
+            jQPrintFrame.find("#graph-div").html(graphContent);
+            jQPrintFrame.find("#table-div").html(tableContent);
+
+            window.frames["printFrameReport"].print();
+          }
+        });
+      }
+
+      let margin = {top: 10, right: 30, bottom: 20, left: 50};
+      let graphWidth = 600 - margin.left - margin.right;
+      let graphHeight = 300 - margin.top - margin.bottom;
+      let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      let weeks = ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"];
+      let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+      function generateReport(){
+        let period = $("#period option:selected").data("period");
+        $("#graph-div").html("");
+
+        let tooltip = d3.select("#graph-div")
+          .append("div")
+          .classed("tooltip", true)
+          
+        $.ajax({
+          url: "get-graph-data.php",
+          type: "POST", 
+          data: {customer: customer, period: period},
+          dataType: "json",
+          success: function(data){
+            let subPeriods = "";
+            let xValues = [];
+            if (period == "month"){
+              subPeriods = data.splice(1);
+              xValues = weeks;
+            }
+            else {
+              subPeriods = data;
+              if (period == "week") xValues = days;
+              else xValues = months;
+            }
+            // determine by how much height of graph needs to be increased
+            let biggestVal = subPeriods.map(function(sp){ // use map to get array of biggest numbers among all subperiods
+              return sp.reduce(function(a,b){
+                return Math.max(a,b);
+              });
+            }).reduce(function(a,b){return Math.max(a,b);}); // use reduce to get the biggest among the biggest :)
+            
+            let noData = false;
+            if (biggestVal != 0){
+              // set graph biggest possible value on Y axis based on biggest value
+              let q = biggestVal;
+              let m = 1;
+              while (q > 10){ // ex. q = 32, m = 10, biggest possible value on Y axis = round up (q/m) * m = 40
+                m *= 10;
+                q = Math.ceil(q/10);
+              }
+              biggestVal = Math.ceil(biggestVal/m) * m;
+            }
+            else {
+              noData = true;
+              biggestVal = 10;
+            } 
+
+            // set up svg element
+            let svg = d3.select("#graph-div")
+              .append("svg")
+                .attr("width", graphWidth + margin.left + margin.right)
+                .attr("height", graphHeight + margin.top + margin.bottom)
+              .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            // add X axis
+            let x = d3.scaleBand()
+              .domain(xValues)
+              .range([0, graphWidth])
+              .padding([0.2])
+            svg.append("g")
+              .attr("transform", "translate(0," + graphHeight + ")")
+              .call(d3.axisBottom(x).tickSize(0))
+            // add Y axis
+            let y = d3.scaleLinear()
+              .domain([0, biggestVal])
+              .range([graphHeight, 0])
+            svg.append("g")
+              .call(d3.axisLeft(y))
+
+            let bars = ["credit", "payment", "due"];
+
+            // add credit, payment, due
+            let xSub = d3.scaleBand()
+              .domain(bars)
+              .range([0, x.bandwidth()])
+              .padding([0.1])
+            // define colors
+            let color = d3.scaleOrdinal()
+              .domain(bars)
+              .range(["#508CB0", "#53b050", "#FC9D00"])
+            //
+            svg.append("g")
+              .selectAll("g")
+              .data(subPeriods) 
+              .enter()
+              .append("g")
+                .attr("transform", function (d, i) { return "translate(" + x(xValues[i]) + ",0)";})   
+              .selectAll("rect")
+              .data(function(d) { return d; })
+              .enter()
+              .append("rect")
+                .attr("x", function(d, i) { return xSub(bars[i]); })
+                .attr("y", function(d) { return y(d); })
+                .attr("width", xSub.bandwidth())
+                .attr("height", function(d) { return graphHeight - y(d); })
+                .attr("fill", function(d, i) { return color(bars[i]); })
+                .classed("bar", true)
+                
+            d3.selectAll(".bar") 
+              .on("mouseover", function (event, d) { tooltip.style("opacity", 1) })
+              .on("mousemove", function (event, d) { 
+                tooltip.html("₱ " + d)
+                  .style("left", (event.offsetX) + 10 + "px")
+                  .style("top", (event.offsetY) - 30 + "px") })
+              .on("mouseleave", function (event, d) { tooltip.style("opacity", 0) })
+
+            if (noData){
+              d3.select("#graph-div")
+                .append("div")
+                .classed("no-data", true)
+                .text("No data available")
+            }
+          }
+        });
+
+        $.ajax({
+          url: "fetch-report.php",
+          type: "POST", 
+          data: {customer: customer, period: period},
+          success: function (data){
+            $("#table-div").html(data);
+          }
+        });
+      }
+
+      function prepareFrames(){
+        // history frame
+        let printFrame = document.getElementById("printFrameHistory");
+        let frameDoc = (printFrame.contentWindow) ? printFrame.contentWindow : (printFrame.contentDocument.document) ? printFrame.contentDocument.document : printFrame.contentDocument;
+        
+        frameDoc.document.open();
+        frameDoc.document.writeln(
+          `<!DOCTYPE html>
+          <html>
+            <head>
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            <link rel="stylesheet" href="style.css"/>
+            </head>
+            <body id="printframe-body">
+              <div id="report-header"></div>
+              <div id="history-list-div"></div>
+            </body>
+          </html>
+          `
+        );
+        frameDoc.document.close(); 
+
+        // report iframe
+        printFrame = document.getElementById("printFrameReport");
+        frameDoc = (printFrame.contentWindow) ? printFrame.contentWindow : (printFrame.contentDocument.document) ? printFrame.contentDocument.document : printFrame.contentDocument;
+
+        frameDoc.document.open();
+        frameDoc.document.writeln(
+          `<!DOCTYPE html>
+          <html>
+            <head>
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            <link rel="stylesheet" href="style.css"/>
+            </head>
+            <body id="printframe-body">
+              <div id="report-header"></div>
+              <div id="graph-div"></div>
+              <div id="table-div"></div>
+            </body>
+          </html>
+          `
+        );
+        frameDoc.document.close(); 
       }
 
       function fetchNotifications(){
@@ -240,6 +479,7 @@ if (!isset($_SESSION['customerLoggedIn'])) {
         showTabContent();
         fetchHistory();
         fetchNotifications();
+        prepareFrames();
       });
       // shorthand for $(document).ready(); is $();
       // can also do $(window).on("load", function(){}); 
