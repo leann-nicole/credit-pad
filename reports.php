@@ -70,6 +70,17 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
     </div>
     <footer>
       <a href="customers.php" id="footer-website-name">Credit Pad</a>
+      <a href="guide.php" class="guide-link">About</a>
+      <a href="guide.php" class="guide-link">Terms of Use</a>
+      <a href="guide.php" class="guide-link">Privacy Policy</a>
+      <a href="guide.php" class="guide-link">Contact Us</a>
+      <div id="external-social-links">
+        <a href="#"><img src="images/facebook.png" alt=""></a>
+        <a href="#"><img src="images/twitter.png" alt=""></a>
+        <a href="#"><img src="images/github.png" alt=""></a>
+        <a href="#"><img src="images/paypal.png" alt=""></a>
+      </div>
+      <p id="copyright"></p>
     </footer>
     <script src="https://d3js.org/d3.v7.min.js" defer></script>
     <script type="text/javascript" src="jquery.js"></script>
@@ -271,6 +282,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
       }
 
       $(document).ready(function () {
+        $("#copyright").text("Copyright " + new Date().getFullYear() + " Credit Pad");
         fetchNotes();
         generateReport();
         prepareFrame();

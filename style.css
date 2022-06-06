@@ -831,17 +831,50 @@ main > * {
 }
 
 footer {
-  height: 150px;
+  height: fit-content;
+  min-height: 150px;
   background-color: #363535;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 30px 0px;
 }
 
 #footer-website-name {
   font-size: 22px;
   font-weight: bold;
-  color: gray;
+  color: #acacac;
+  margin-bottom: 20px;
+  transition: color 0.2s;
+  transition-timing-function: ease;
+}
+
+.guide-link {
+  color: #acacac;
+  line-height: 18px;
+  transition: color 0.2s;
+  transition-timing-function: ease;
+}
+
+#footer-website-name:hover,
+.guide-link:hover {
+  color: white;
+}
+
+#external-social-links {
+  margin-top: 10px;
+}
+
+#external-social-links img {
+  height: 25px;
+  width: 25px;
+}
+
+#copyright {
+  color: #acacac;
+  margin-top: 20px;
+  text-align: center;
 }
 
 #customer-profile-info-div {
@@ -953,7 +986,7 @@ footer {
   box-shadow: 0px 0px 5px 0px #c9c9c9;
   height: fit-content;
   min-height: 315px;
-  padding: 20px 10px 15px 10px;
+  padding: 20px 10px 10px 10px;
   min-width: fit-content;
 }
 
@@ -1039,6 +1072,7 @@ footer {
 #dates-div {
   display: flex;
   position: relative;
+  margin-bottom: 5px;
 }
 
 #dates-div label:nth-of-type(2) {
@@ -1299,8 +1333,12 @@ footer {
 #graph-div {
   width: 600px;
   height: 300px;
-  margin: 5px auto 20px auto;
+  margin: 5px auto;
   position: relative;
+}
+
+#table-div .weekday-content:last-of-type {
+  margin-bottom: 15px;
 }
 
 .no-data {
