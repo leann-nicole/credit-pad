@@ -4,12 +4,12 @@ session_start();
 
 <p id="report-header-sitename">Credit Pad</p>
 <p id="business-name"><?php echo $_SESSION["business_name"]; ?></p><?php
-if ($_SESSION['customerLoggedIn']){
+if (isset($_SESSION['customerLoggedIn'])){
     ?>
 <p><?php echo $_SESSION["store_operator"]; ?></p>
     <?php
 }
-else if ($_SESSION['ownerLoggedIn']){
+else if (isset($_SESSION['ownerLoggedIn'])){
     ?>
 <p><?php echo $_SESSION["username"]; ?></p>
     <?php

@@ -70,10 +70,10 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
     </div>
     <footer>
       <a href="customers.php" id="footer-website-name">Credit Pad</a>
-      <a href="guide.php" class="guide-link">About</a>
-      <a href="guide.php" class="guide-link">Terms of Use</a>
-      <a href="guide.php" class="guide-link">Privacy Policy</a>
-      <a href="guide.php" class="guide-link">Contact Us</a>
+      <a href="guide.php#about-section" class="guide-link">About</a>
+      <a href="guide.php#terms-of-use-section" class="guide-link">Terms of Use</a>
+      <a href="guide.php#privacy-policy-section" class="guide-link">Privacy Policy</a>
+      <a href="guide.php#contact-us-section" class="guide-link">Contact Us</a>
       <div id="external-social-links">
         <a href="#"><img src="images/facebook.png" alt=""></a>
         <a href="#"><img src="images/twitter.png" alt=""></a>
@@ -85,7 +85,6 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
     <script src="https://d3js.org/d3.v7.min.js" defer></script>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
-      
       function toggleAccountOptions(){
         $("#dropdown-menu").toggleClass("hidden-item");
         $("#dropdown-menu").toggleClass("container");
@@ -282,7 +281,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
       }
 
       $(document).ready(function () {
-        $("#copyright").text("Copyright " + new Date().getFullYear() + " Credit Pad");
+        $("#copyright").html("Copyright " + "&copy; " + new Date().getFullYear() + " Credit Pad");
         fetchNotes();
         generateReport();
         prepareFrame();

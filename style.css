@@ -325,7 +325,11 @@ iframe {
 }
 
 #login-button {
-  background-color: #2196f3;
+  background-color: #186ddc;
+}
+
+#login-button:hover {
+  background-color: #1769d3;
 }
 
 .signup-button {
@@ -392,22 +396,28 @@ nav {
   padding-top: 10px;
 }
 
-ul {
+nav ul {
   list-style: none;
   position: sticky;
   top: 60px;
 }
 
 li {
+  padding-left: 40px;
+  display: flex;
+  align-items: center;
+}
+
+nav li {
   height: 40px;
-  min-width: 135px;
+  width: 200px;
   padding-left: 40px;
   display: flex;
   align-items: center;
   border-radius: 0px 25px 25px 0px;
 }
 
-li:hover {
+nav li:hover {
   background-color: #e6e6e6;
 }
 
@@ -913,7 +923,7 @@ footer {
   height: 120px;
   width: 120px;
   border-radius: 5px;
-  background-image: url('images/steven.jpg');
+  background-image: url('images/profile_picture.jpeg');
   background-size: cover;
 }
 
@@ -1507,13 +1517,13 @@ footer {
 
 .approve-button {
   margin-right: 5px;
-  background-color: #2196f3;
+  background-color: #186ddc;
   color: white;
 }
 
 .approve-button:hover {
   margin-right: 5px;
-  background-color: #1690f3;
+  background-color: #1769d3;
 }
 
 .applicant-date, .store-approval-date {
@@ -1687,4 +1697,63 @@ footer {
 
 #business-name {
   font-weight: bold;
+}
+
+#guide-content {
+  display: flex;
+  min-height: calc(100vh - 50px);
+  height: fit-content;
+}
+
+#guide-content main {
+  flex: 8.5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 752px;
+  position: relative;
+}
+
+#guide-container {
+  width: 80%;
+  padding: 20px 50px;
+}
+
+#guide-container p {
+  line-height: 20px;
+}
+
+.guide-section {
+  margin-bottom: 15px;
+  height: fit-content;
+  padding-bottom: 15px;
+}
+
+.guide-section:not(:last-of-type) {
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.guide-section > p:first-of-type {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+#contact-email-message {
+  line-height: 20px;
+  resize: vertical;
+  height: 150px;
+  min-height: 100px;
+}
+
+#send-email-button {
+  background-color: #186DDB;
+  color: white;
+  width: 75px;
+  margin-top: 5px;
+  float: right;
+}
+
+#send-email-button:hover {
+  background-color: #1769d3;
 }

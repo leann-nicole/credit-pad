@@ -41,7 +41,7 @@ else {
                 </tr>
                 <tr>
                     <td>email address</td>
-                    <td><?php echo $row['email']; ?></td>
+                    <td class="applicant-email"><?php echo $row['email']; ?></td>
                 </tr>
             </table>
             <div class="applicant-buttons">

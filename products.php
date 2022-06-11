@@ -188,6 +188,17 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
     </div>
     <footer>
       <a href="customers.php" id="footer-website-name">Credit Pad</a>
+      <a href="guide.php#about-section" class="guide-link">About</a>
+      <a href="guide.php#terms-of-use-section" class="guide-link">Terms of Use</a>
+      <a href="guide.php#privacy-policy-section" class="guide-link">Privacy Policy</a>
+      <a href="guide.php#contact-us-section" class="guide-link">Contact Us</a>
+      <div id="external-social-links">
+        <a href="#"><img src="images/facebook.png" alt=""></a>
+        <a href="#"><img src="images/twitter.png" alt=""></a>
+        <a href="#"><img src="images/github.png" alt=""></a>
+        <a href="#"><img src="images/paypal.png" alt=""></a>
+      </div>
+      <p id="copyright"></p>
     </footer>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
@@ -320,6 +331,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
       }
 
       $(document).ready(function () {
+        $("#copyright").html("Copyright " + "&copy; " + new Date().getFullYear() + " Credit Pad");
         loadProducts();
         fetchNotes();
         loadCategories();

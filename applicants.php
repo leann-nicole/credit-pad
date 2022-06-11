@@ -67,6 +67,17 @@ if (!isset($_SESSION['adminLoggedIn'])) {
     </div>
     <footer>
       <a href="applicants.php" id="footer-website-name">Credit Pad</a>
+      <a href="guide.php#about-section" class="guide-link">About</a>
+      <a href="guide.php#terms-of-use-section" class="guide-link">Terms of Use</a>
+      <a href="guide.php#privacy-policy-section" class="guide-link">Privacy Policy</a>
+      <a href="guide.php#contact-us-section" class="guide-link">Contact Us</a>
+      <div id="external-social-links">
+        <a href="#"><img src="images/facebook.png" alt=""></a>
+        <a href="#"><img src="images/twitter.png" alt=""></a>
+        <a href="#"><img src="images/github.png" alt=""></a>
+        <a href="#"><img src="images/paypal.png" alt=""></a>
+      </div>
+      <p id="copyright"></p>
     </footer>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
@@ -172,6 +183,7 @@ if (!isset($_SESSION['adminLoggedIn'])) {
       }
 
       $(document).ready(function () {
+        $("#copyright").html("Copyright " + "&copy; " + new Date().getFullYear() + " Credit Pad");
         fetchNotes();
         loadApplicants("default");
       });
@@ -216,11 +228,11 @@ if (!isset($_SESSION['adminLoggedIn'])) {
         let storeOperator = applicantItem.getElementsByClassName("applicant-name")[0].textContent;
         let storeLocation = applicantItem.getElementsByClassName("applicant-business-location")[0].textContent;
         let applicationDate = applicantItem.getElementsByClassName("applicant-date")[0].textContent;
-        console.log(storeName, storeOperator, storeLocation, applicationDate);
+        let applicationEmail = applicantItem.getElementsByClassName("applicant-email")[0].textContent;
         $.ajax({
           url: "reject-applicant.php",
           type: "POST",
-          data: {storeName: storeName, storeOperator: storeOperator, storeLocation: storeLocation, applicationDate: applicationDate},
+          data: {storeName : storeName, storeOperator : storeOperator, storeLocation : storeLocation, applicationEmail : applicationEmail, applicationDate : applicationDate},
           success: function(data){
             loadApplicants();
           }
