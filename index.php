@@ -1,9 +1,5 @@
 <?php
 session_start();
-if (!isset($_SESSION['ownerLoggedIn']) && !isset($_SESSION['customerLoggedIn']) && !isset($_SESSION['adminLoggedIn'])) {
-    header('Location: login.php');
-    die();
-}
 ?>
 
 <!DOCTYPE html>
@@ -30,14 +26,27 @@ if (!isset($_SESSION['ownerLoggedIn']) && !isset($_SESSION['customerLoggedIn']) 
       if (isset($_SESSION["ownerLoggedIn"])) echo "customers.php";
       else if (isset($_SESSION["customerLoggedIn"])) echo "customer-home.php";
       else if (isset($_SESSION["adminLoggedIn"])) echo "applicants.php";
+      else echo "login.php";
       ?>">Credit Pad</a></p>
+      <?php
+      if (!isset($_SESSION['ownerLoggedIn']) && !isset($_SESSION['customerLoggedIn']) && !isset($_SESSION['adminLoggedIn'])) {?>
+      <div id="header-login-signup-buttons-div">
+        <a href="login.php" class="button" id="login-button">Log in</a>
+        <a href="signup.php" class="button" id="signup-button">Sign up</a>
+      </div>
+      <?php }
+      else {?>
       <div id="dropdown">
-        <button type="button" id="dropdown-button" class="material-icons" onclick="toggleAccountOptions()">storefront<span class="material-icons">arrow_drop_down</span></button>
+        <button type="button" id="dropdown-button" class="material-icons" onclick="toggleAccountOptions()"><?php
+        if (isset($_SESSION['ownerLoggedIn'])) echo "storefront";
+        else echo "person";
+        ?><span class="material-icons">arrow_drop_down</span></button>
         <div id="dropdown-menu" class="hidden-item">
           <a href="profile.php">Profile</a>
           <a href="logout.php">Log out</a>
         </div>
       </div>
+      <?php } ?>
     </header>
     <div id="guide-content">
       <nav>
@@ -413,7 +422,7 @@ if (!isset($_SESSION['ownerLoggedIn']) && !isset($_SESSION['customerLoggedIn']) 
                 <p>If you have any questions about this Privacy Policy, You can contact us:</p>
                 <br>
                 <ul>
-                  <li><p>By visiting this page on our website: <a href="www.creditpad.com/guide.php#privacy-policy-section" rel="external nofollow noopener" target="_blank">www.creditpad.com/guide.php#privacy-policy-section</a></p></li>
+                  <li><p>By visiting this page on our website: <a href="www.creditpad.com/index.php#privacy-policy-section" rel="external nofollow noopener" target="_blank">www.creditpad.com/index.php#privacy-policy-section</a></p></li>
                 </ul>
               </section>
               <section class="guide-section" id="contact-us-section">
@@ -440,11 +449,12 @@ if (!isset($_SESSION['ownerLoggedIn']) && !isset($_SESSION['customerLoggedIn']) 
       if (isset($_SESSION["ownerLoggedIn"])) echo "customers.php";
       else if (isset($_SESSION["customerLoggedIn"])) echo "customer-home.php";
       else if (isset($_SESSION["adminLoggedIn"])) echo "applicants.php";
+      else echo "login.php";
       ?>" id="footer-website-name">Credit Pad</a>
-      <a href="guide.php#about-section" class="guide-link">About</a>
-      <a href="guide.php#terms-of-use-section" class="guide-link">Terms of Use</a>
-      <a href="guide.php#privacy-policy-section" class="guide-link">Privacy Policy</a>
-      <a href="guide.php#contact-us-section" class="guide-link">Contact Us</a>
+      <a href="index.php#about-section" class="guide-link" onclick="makeActive(1)">About</a>
+      <a href="index.php#terms-of-use-section" class="guide-link" onclick="makeActive(2)">Terms of Use</a>
+      <a href="index.php#privacy-policy-section" class="guide-link" onclick="makeActive(3)">Privacy Policy</a>
+      <a href="index.php#contact-us-section" class="guide-link" onclick="makeActive(4)">Contact Us</a>
       <div id="external-social-links">
         <a href="#"><img src="images/facebook.png" alt=""></a>
         <a href="#"><img src="images/twitter.png" alt=""></a>
@@ -478,16 +488,20 @@ if (!isset($_SESSION['ownerLoggedIn']) && !isset($_SESSION['customerLoggedIn']) 
 
       function makeActive(element){
         $(".selected-navbar-item").removeClass("selected-navbar-item");
-        element.classList.add("selected-navbar-item");
+        if (Number.isInteger(element)) $(".navItem:nth-of-type(" + element + ")").addClass("selected-navbar-item");
+        else element.classList.add("selected-navbar-item");
       }
 
       $(document).ready(function () {
         $("#copyright").html("Copyright " + "&copy; " + new Date().getFullYear() + " Credit Pad");
         let section = window.location.hash;
-        let navItems = document.querySelectorAll(".navItem");
-        navItems.forEach(function (item, index, array){
-          if (item.getElementsByTagName("a")[0].href.includes(section)) makeActive(item); 
-        });
+        if (section == "") makeActive(document.querySelector(".navItem"));
+        else {
+          let navItems = document.querySelectorAll(".navItem");
+          navItems.forEach(function (item, index, array){
+            if (item.getElementsByTagName("a")[0].href.includes(section)) makeActive(item); 
+          });
+        }
       });
     </script>
     </body>

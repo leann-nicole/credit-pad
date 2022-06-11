@@ -325,15 +325,19 @@ iframe {
 }
 
 #login-button {
+  width: 75px;
   background-color: #186ddc;
+  color: white;
 }
 
 #login-button:hover {
   background-color: #1769d3;
 }
 
-.signup-button {
+#signup-button {
+  width: 75px;
   background-color: #53b050;
+  color: white;
 }
 
 .signup-button:hover {
@@ -383,6 +387,17 @@ header {
 header > a {
   display: flex;
   align-items: center;
+}
+
+#header-login-signup-buttons-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#header-login-signup-buttons-div a{
+  margin-left: 5px;
+  height: 35px;
 }
 
 #content {
