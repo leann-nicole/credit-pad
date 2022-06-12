@@ -856,8 +856,7 @@ main > * {
 }
 
 footer {
-  height: fit-content;
-  min-height: 150px;
+  height: 250px;
   background-color: #363535;
   display: flex;
   flex-direction: column;
@@ -938,7 +937,7 @@ footer {
   height: 120px;
   width: 120px;
   border-radius: 5px;
-  background-image: url('images/profile_picture.jpeg');
+  background-image: url('images/profile_picture_blue.jpg');
   background-size: cover;
 }
 
@@ -1721,7 +1720,7 @@ footer {
 }
 
 #guide-content main {
-  flex: 8.5;
+  flex: 7.5;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1730,8 +1729,33 @@ footer {
   position: relative;
 }
 
+#guide-content #extra {
+  position: sticky;
+  top: 50px;
+  flex: 1;
+  height: 100vh;
+}
+
+#jump-buttons-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  height: 86px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+.jump-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+}
+
 #guide-container {
-  width: 80%;
+  width: 90%;
   padding: 20px 50px;
 }
 
@@ -1739,10 +1763,23 @@ footer {
   line-height: 20px;
 }
 
+.offsetElement {
+  display: block;
+  visibility: hidden;
+  height: 50px;
+  margin-top: -50px;
+}
+
+.offsetElement:first-of-type {
+  display: block;
+  visibility: hidden;
+  height: 180px;
+  margin-top: -120px;
+}
+
 .guide-section {
-  margin-bottom: 15px;
   height: fit-content;
-  padding-bottom: 15px;
+  padding-bottom: 40px;
 }
 
 .guide-section:not(:last-of-type) {
@@ -1752,6 +1789,68 @@ footer {
 .guide-section > p:first-of-type {
   font-size: 16px;
   font-weight: bold;
+  margin-top: 40px;
+}
+
+#splash-div {
+  margin-top: 80px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#splash-greeting-div {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#splash-greeting-div p:first-of-type {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+#splash-greeting-div p:nth-of-type(2){
+  font-size: 50px;
+  font-weight: bold;
+  color: #108531;
+}
+
+#splash-greeting-div p:nth-of-type(3) {
+  font-size: 16px;
+  margin-top: 40px;
+  text-align: center;
+}
+
+#splash-greeting-div p:nth-of-type(4) {
+  font-size: 18px;
+  margin-top: 30px;
+  font-weight: bold;
+  color: #108531;
+  background-color: #53b05032;
+  padding: 15px;
+}
+
+#splash-div img {
+  width: 60%;
+  height: auto;
+  float: right;
+  margin-top: 30px;
+}
+
+#email-status-message-div {
+  margin: 10px 0px;
+}
+
+#email-status-message {
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
 }
 
 #contact-email-message {

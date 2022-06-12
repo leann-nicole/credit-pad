@@ -20,7 +20,7 @@ session_start();
             echo $_GET['error'];
         }?>
     </p>      
-    <header>
+    <header id="top">
       <p id="sitename-header"><a href="
       <?php
       if (isset($_SESSION["ownerLoggedIn"])) echo "customers.php";
@@ -51,18 +51,29 @@ session_start();
     <div id="guide-content">
       <nav>
         <ul>
-          <li class="navItem" onclick="makeActive(this)"><a href="#about-section">ABOUT</a></li>
-          <li class="navItem" onclick="makeActive(this)"><a href="#terms-of-use-section">TERMS OF USE</a></li>
-          <li class="navItem" onclick="makeActive(this)"><a href="#privacy-policy-section">PRIVACY POLICY</a></li>
-          <li class="navItem" onclick="makeActive(this)"><a href="#contact-us-section">CONTACT US</a></li>
+          <li class="navItem"><a href="#about-section" onclick="makeActive(1)">ABOUT</a></li>
+          <li class="navItem"><a href="#terms-of-use-section" onclick="makeActive(2)">TERMS OF USE</a></li>
+          <li class="navItem"><a href="#privacy-policy-section" onclick="makeActive(3)">PRIVACY POLICY</a></li>
+          <li class="navItem"><a href="#contact-us-section" onclick="makeActive(4)">CONTACT US</a></li>
         </ul>
       </nav>
       <main>
           <div class="container" id="guide-container">
-              <section class="guide-section" id="about-section">
+              <div id="splash-div">
+                <div id="splash-greeting-div">
+                  <p>Welcome to</p>
+                  <p>Credit Pad</p>
+                  <p>Our mission is to improve the way sari-sari stores manage credit transactions with their customers through the use of different web technologies.</p>
+                  <p>#BetterRecordkeeping</p>
+                </div>
+                <img src="images/splash_image.jpg" alt="representation_of_online_store">
+              </div>
+              <span class="offsetElement"></span>
+              <section class="guide-section" data-id="#about-section">
                 <p>About</p><br>
               </section>
-              <section class="guide-section" id="terms-of-use-section">
+              <span id="terms-of-use-section" class="offsetElement"></span>
+              <section class="guide-section" data-id="#terms-of-use-section">
                 <p>Terms of Use</p><br>
                 <p>Welcome to Credit Pad!</p>
                 <br>
@@ -181,7 +192,8 @@ session_start();
                 <br>
                 <p>As long as the website and the information and services on the website are provided free of charge, we will not be liable for any loss or damage of any nature.</p>
               </section>
-              <section class="guide-section" id="privacy-policy-section">
+              <span id="privacy-policy-section" class="offsetElement"></span>
+              <section class="guide-section" data-id="#privacy-policy-section">
                 <p>Privacy Policy</p><br>
                 <p>Last updated: June 09, 2022</p><br>
                 <p>This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.</p>
@@ -425,11 +437,14 @@ session_start();
                   <li><p>By visiting this page on our website: <a href="www.creditpad.com/index.php#privacy-policy-section" rel="external nofollow noopener" target="_blank">www.creditpad.com/index.php#privacy-policy-section</a></p></li>
                 </ul>
               </section>
-              <section class="guide-section" id="contact-us-section">
+              <span id="contact-us-section" class="offsetElement"></span>
+              <section class="guide-section" data-id="#contact-us-section">
                 <p>Contact Us</p>
                 <br>
                 <p>For more inquiries, comments, and suggestions, feel free to message us through the contact form below.</p>
-                <br>
+                <div id="email-status-message-div">
+
+                </div>
                 <form id="contact-us-form">
                   <label for="contact-email-address" class="field-name">Your email address</label>
                   <input type="email" id="contact-email-address" class="field" placeholder="required" required>
@@ -442,6 +457,12 @@ session_start();
               </section>
           </div>
       </main>
+      <div id="extra">
+        <div id="jump-buttons-div">
+          <button type="button" id="scroll-jump-up-button" class="material-icons gray-button jump-button" onclick="jumpTop()">arrow_upward<a href="#guide-content"></a></button>
+          <button type="button" id="scroll-jump-down-button" class="material-icons gray-button jump-button" onclick="jumpBottom()">arrow_downward<a href="#guide-content"></a></button>
+        </div>
+      </div>
     </div>
     <footer>
       <a href="
@@ -451,10 +472,10 @@ session_start();
       else if (isset($_SESSION["adminLoggedIn"])) echo "applicants.php";
       else echo "login.php";
       ?>" id="footer-website-name">Credit Pad</a>
-      <a href="index.php#about-section" class="guide-link" onclick="makeActive(1)">About</a>
-      <a href="index.php#terms-of-use-section" class="guide-link" onclick="makeActive(2)">Terms of Use</a>
-      <a href="index.php#privacy-policy-section" class="guide-link" onclick="makeActive(3)">Privacy Policy</a>
-      <a href="index.php#contact-us-section" class="guide-link" onclick="makeActive(4)">Contact Us</a>
+      <a href="#about-section" class="guide-link" onclick="makeActive(1)">About</a>
+      <a href="#terms-of-use-section" class="guide-link" onclick="makeActive(2)">Terms of Use</a>
+      <a href="#privacy-policy-section" class="guide-link" onclick="makeActive(3)">Privacy Policy</a>
+      <a href="#contact-us-section" class="guide-link" onclick="makeActive(4)">Contact Us</a>
       <div id="external-social-links">
         <a href="#"><img src="images/facebook.png" alt=""></a>
         <a href="#"><img src="images/twitter.png" alt=""></a>
@@ -465,19 +486,70 @@ session_start();
     </footer>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
+      function jumpTop(){
+        let navItem = document.querySelector(".navItem");
+        navItem.click(navItem);
+        navItem.querySelector("a").click();
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      }
+
+      function jumpBottom(){
+        let vh = document.documentElement.clientHeight;
+        let y = document.body.scrollHeight - vh - 250 - 50;
+        window.scrollTo(0, y);
+        let navItem = document.querySelector(".navItem:last-of-type");
+        navItem.click(navItem);
+        navItem.querySelector("a").click();
+      }
+      
+      window.onscroll = () => {
+        let current = "";
+        let sections = document.querySelectorAll("section");
+        sections.forEach((section) => {
+          let sectionTop = section.offsetTop;
+          if (pageYOffset >= sectionTop) current = section.getAttribute("data-id");
+
+          let navItems = document.querySelectorAll(".navItem");
+          navItems.forEach((navItem) => {
+            navItem.classList.remove("selected-navbar-item");
+            if (navItem.querySelector("a").getAttribute("href") == current) makeActive(navItem);
+          });
+        });
+        if (current == "") $(".navItem:first-of-type").addClass("selected-navbar-item");
+      }
+
       function sendEmail(){
+        $("#email-status-message-div").empty();
         let contactAddress = $("#contact-email-address").val();
         let contactSubject = $("#contact-email-subject").val();
         let contactMessage = $("#contact-email-message").val();
         $.ajax({
           url: "submit-email.php",
           type: "post",
+          dataType: "json",
           data: {contactAddress : contactAddress, contactSubject : contactSubject, contactMessage : contactMessage},
           success: function (data){
-            console.log(data);
+            let emailStatusMessage = document.createElement("div");
+            emailStatusMessage.id = "email-status-message";
+            emailStatusMessage.addEventListener("click", closeStatusMessage);
+            document.querySelector("#email-status-message-div").appendChild(emailStatusMessage);
+            $("#email-status-message").text(data[1]);
+            if (data[0] == "success") {
+              $("#email-status-message").css("background-color", "#53b05032");
+              $("#email-status-message").css("color", "#108531");
+            }
+            else {
+              $("#email-status-message").css("background-color", "#b0505032");
+              $("#email-status-message").css("color", "#851010");
+            }
           }
         })
       }
+
+      function closeStatusMessage(){
+        $("#email-status-message").remove();   
+      } 
 
       function toggleAccountOptions(){
         $("#dropdown-menu").toggleClass("hidden-item");
@@ -488,7 +560,11 @@ session_start();
 
       function makeActive(element){
         $(".selected-navbar-item").removeClass("selected-navbar-item");
-        if (Number.isInteger(element)) $(".navItem:nth-of-type(" + element + ")").addClass("selected-navbar-item");
+        if (Number.isInteger(element)){
+          $(".navItem:nth-of-type(" + element + ")").addClass("selected-navbar-item");
+          if (element == 1) jumpTop();
+          else if (element == 4) jumpBottom();
+        }
         else element.classList.add("selected-navbar-item");
       }
 
@@ -499,7 +575,11 @@ session_start();
         else {
           let navItems = document.querySelectorAll(".navItem");
           navItems.forEach(function (item, index, array){
-            if (item.getElementsByTagName("a")[0].href.includes(section)) makeActive(item); 
+            if (item.getElementsByTagName("a")[0].href.includes(section)){
+              if (index == 0) jumpTop();
+              else if (index == 3) jumpBottom();
+              else makeActive(item); 
+            } 
           });
         }
       });
