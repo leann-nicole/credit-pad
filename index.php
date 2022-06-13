@@ -1,6 +1,5 @@
 <?php
-session_start();
-?>
+session_start(); ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,35 +13,43 @@ session_start();
   </head>
   <body>
     <p id="error" class="<?php if (!isset($_GET['error'])) {
-          echo 'hidden-item';
-      }?>">
+        echo 'hidden-item';
+    } ?>">
         <?php if (isset($_GET['error'])) {
             echo $_GET['error'];
-        }?>
+        } ?>
     </p>      
     <header id="top">
       <p id="sitename-header"><a href="
-      <?php
-      if (isset($_SESSION["ownerLoggedIn"])) echo "customers.php";
-      else if (isset($_SESSION["customerLoggedIn"])) echo "customer-home.php";
-      else if (isset($_SESSION["adminLoggedIn"])) echo "applicants.php";
-      else echo "login.php";
-      ?>">Credit Pad</a></p>
-      <?php
-      if (!isset($_SESSION['ownerLoggedIn']) && !isset($_SESSION['customerLoggedIn']) && !isset($_SESSION['adminLoggedIn'])) {?>
+      <?php if (isset($_SESSION['ownerLoggedIn'])) {
+          echo 'customers.php';
+      } elseif (isset($_SESSION['customerLoggedIn'])) {
+          echo 'customer-home.php';
+      } elseif (isset($_SESSION['adminLoggedIn'])) {
+          echo 'applicants.php';
+      } else {
+          echo 'login.php';
+      } ?>">Credit Pad</a></p>
+      <?php if (
+          !isset($_SESSION['ownerLoggedIn']) &&
+          !isset($_SESSION['customerLoggedIn']) &&
+          !isset($_SESSION['adminLoggedIn'])
+      ) { ?>
       <div id="header-login-signup-buttons-div">
         <a href="login.php" class="button" id="login-button">Log in</a>
         <a href="signup.php" class="button" id="signup-button">Sign up</a>
       </div>
-      <?php }
-      else {?>
+      <?php } else { ?>
       <div id="dropdown">
-        <button type="button" id="dropdown-button" class="material-icons" onclick="toggleAccountOptions()"><?php
-        if (isset($_SESSION['ownerLoggedIn'])) echo "storefront";
-        else echo "person";
-        ?><span class="material-icons">arrow_drop_down</span></button>
+        <button type="button" id="dropdown-button" class="material-icons" onclick="toggleAccountOptions()"><?php if (
+            isset($_SESSION['ownerLoggedIn'])
+        ) {
+            echo 'storefront';
+        } else {
+            echo 'person';
+        } ?><span class="material-icons">arrow_drop_down</span></button>
         <div id="dropdown-menu" class="hidden-item">
-          <a href="profile.php">Profile</a>
+          <a href="#">Profile</a>
           <a href="logout.php">Log out</a>
         </div>
       </div>
@@ -63,7 +70,7 @@ session_start();
                 <div id="splash-greeting-div">
                   <p>Welcome to</p>
                   <p>Credit Pad</p>
-                  <p>Our mission is to improve the way sari-sari stores manage credit transactions with their customers through the use of different web technologies.</p>
+                  <p>Our goal is to improve the way sari&#8209;sari stores manage credit transactions with their customers with the help of different web technologies.</p>
                   <p>#BetterRecordkeeping</p>
                 </div>
                 <img src="images/splash_image.jpg" alt="representation_of_online_store">
@@ -71,6 +78,38 @@ session_start();
               <span class="offsetElement"></span>
               <section class="guide-section" data-id="#about-section">
                 <p>About</p><br>
+                <p>Credit Pad is a web application designed to function as a customer credit recordkeeping system for sari-sari stores. The goal is to improve the way sari-sari stores manage credit transactions with their customers by using web technologies. Compared to the traditional pen and paper method, Credit Pad is a digital solution that encourages better recordkeeping practices. It provides sari-sari store owners a more convenient, more secure, and more environmental-friendly system for recording customer credit transactions.</p>
+                <br>
+                <p>The system has three types of users, namely, store owners, customers, and administrators. The following is a list of features and functionalities associated with each.</p>
+                <br>
+                <h3><strong>Store Owners</strong></h3>
+                <br>
+                <ul>
+                  <li>customer list</li><br>
+                  <li>product inventory</li><br>
+                  <li>transaction history</li><br>
+                  <li>financial report</li><br>
+                  <li>notes</li><br>
+                </ul>
+                <p>By signing up, a store owner submits an application to create an account for their store. Applicants are notified whether their application is accepted or rejected via email. After the administrator approves the application, the store owner can create and delete customer accounts under the name of their store.</p>
+                <br>
+                <h3><strong>Store Customers</strong></h3>
+                <br>
+                <ul>
+                  <li>transaction history</li><br>
+                  <li>financial report</li><br>
+                  <li>notes</li><br>
+                </ul>
+                <p>Store customers can sign up by providing the name of their account, as created by the store owner, and the name of the store. By signing up, customers can view their history of transactions with a particular store.</p>
+                <br>
+                <h3><strong>Administrators</strong></h3>
+                <br>
+                <ul>
+                  <li>applicant list</li><br>
+                  <li>store list</li><br>
+                  <li>notes</li><br>
+                </ul>
+                <p>Administrators can log in using the administrator account. The administrator is responsible for accepting or rejecting applications submitted by store owners.</p>
               </section>
               <span id="terms-of-use-section" class="offsetElement"></span>
               <section class="guide-section" data-id="#terms-of-use-section">
@@ -466,12 +505,15 @@ session_start();
     </div>
     <footer>
       <a href="
-      <?php
-      if (isset($_SESSION["ownerLoggedIn"])) echo "customers.php";
-      else if (isset($_SESSION["customerLoggedIn"])) echo "customer-home.php";
-      else if (isset($_SESSION["adminLoggedIn"])) echo "applicants.php";
-      else echo "login.php";
-      ?>" id="footer-website-name">Credit Pad</a>
+      <?php if (isset($_SESSION['ownerLoggedIn'])) {
+          echo 'customers.php';
+      } elseif (isset($_SESSION['customerLoggedIn'])) {
+          echo 'customer-home.php';
+      } elseif (isset($_SESSION['adminLoggedIn'])) {
+          echo 'applicants.php';
+      } else {
+          echo 'login.php';
+      } ?>" id="footer-website-name">Credit Pad</a>
       <a href="#about-section" class="guide-link" onclick="makeActive(1)">About</a>
       <a href="#terms-of-use-section" class="guide-link" onclick="makeActive(2)">Terms of Use</a>
       <a href="#privacy-policy-section" class="guide-link" onclick="makeActive(3)">Privacy Policy</a>

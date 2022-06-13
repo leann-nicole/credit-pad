@@ -78,7 +78,9 @@ if ($name != $current_customer_name){
 }
 
 // update customer information
-$query2 = "UPDATE customers SET birthdate = '$birthdate', sex = '$sex', mobile_no = '$mobile_no', email = '$email', address = '$address', rating = '$rating' WHERE name = '$current_customer_name' AND business_name = '$store'";
+if (!empty($email)) $query2 = "UPDATE customers SET birthdate = '$birthdate', sex = '$sex', mobile_no = '$mobile_no', email = '$email', address = '$address', rating = '$rating' WHERE name = '$current_customer_name' AND business_name = '$store'";
+else $query2 = "UPDATE customers SET birthdate = '$birthdate', sex = '$sex', mobile_no = '$mobile_no', address = '$address', rating = '$rating' WHERE name = '$current_customer_name' AND business_name = '$store'";
+
 $query3 = "UPDATE customers SET name = '$name' WHERE name = '$current_customer_name' AND business_name = '$store'";
 
 // update information from previous payment and credit transactions

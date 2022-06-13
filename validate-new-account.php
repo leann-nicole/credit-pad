@@ -74,7 +74,9 @@ if (strlen($mobile_no) != 11 or !is_numeric($mobile_no)){
 }
 
 // save data to database
-$query = "INSERT INTO customers (name, birthdate, sex, mobile_no, email, address, business_name, rating) VALUES ('$name', '$birthdate', '$sex', '$mobile_no', '$email', '$address', '$store', '$rating')";
+if (!empty($email)) $query = "INSERT INTO customers (name, birthdate, sex, mobile_no, email, address, business_name, rating) VALUES ('$name', '$birthdate', '$sex', '$mobile_no', '$email', '$address', '$store', '$rating')";
+else $query = "INSERT INTO customers (name, birthdate, sex, mobile_no, address, business_name, rating) VALUES ('$name', '$birthdate', '$sex', '$mobile_no', '$address', '$store', '$rating')";
+
 
 if (mysqli_query($con, $query)) {
     // if new account information is successfully saved to database, we can clear the form for new input
