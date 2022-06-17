@@ -85,9 +85,30 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
     <script src="https://d3js.org/d3.v7.min.js" defer></script>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
+      $(document).click(function(){
+        if (!$("#dropdown-menu").hasClass("hidden-item")) {
+          document.getElementById("dropdown-menu").classList.add("hidden-item");
+          $("#dropdown-button span").text("arrow_drop_down");
+        }
+      });
+
+      $("#dropdown-button").click(function(e){ // ignore clicks inside delete item popup
+        e.stopPropagation();
+      });
+      
+      $("#dropdown-menu a").click(function(e){ // ignore clicks inside delete item popup
+        e.stopPropagation();
+      });
+
       function toggleAccountOptions(){
-        $("#dropdown-menu").toggleClass("hidden-item");
-        $("#dropdown-menu").toggleClass("container");
+        if ($("#dropdown-menu").hasClass("hidden-item")) {
+          $("#dropdown-menu").removeClass("hidden-item");
+          $("#dropdown-menu").addClass("container");
+        }
+        else {
+          $("#dropdown-menu").addClass("hidden-item");
+          $("#dropdown-menu").removeClass("container");
+        }
         let arrow = $("#dropdown-button span").text();
         (arrow == "arrow_drop_down")? $("#dropdown-button span").text("arrow_drop_up") : $("#dropdown-button span").text("arrow_drop_down");
       }
@@ -179,25 +200,28 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
               biggestVal= 10;
             }
 
-            // set up svg element
+            // set up svg container element
             let svg = d3.select("#graph-div")
               .append("svg")
                 .attr("width", graphWidth + margin.left + margin.right)
                 .attr("height", graphHeight + margin.top + margin.bottom)
               .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            // add X axis
+
+            // set up X axis
             let x = d3.scaleBand()
               .domain(xValues)
               .range([0, graphWidth])
               .padding([0.2])
+
             svg.append("g")
               .attr("transform", "translate(0," + graphHeight + ")")
               .call(d3.axisBottom(x).tickSize(0))
-            // add Y axis
+
+            // set up Y axis
             let y = d3.scaleLinear()
               .domain([0, biggestVal])
-              .range([graphHeight, 0])
+              .range([graphHeight, 0])  // here it's [graphHeight, 0] instead of [0, graphHeight] because in the d3 coordinate system, 0 is at the top left and the max Y value is at the bottom left
             svg.append("g")
               .call(d3.axisLeft(y))
 
@@ -208,6 +232,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
               .domain(bars)
               .range([0, x.bandwidth()])
               .padding([0.1])
+              
             // define colors
             let color = d3.scaleOrdinal()
               .domain(bars)
@@ -239,10 +264,10 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
               .on("mouseleave", function (event, d) { tooltip.style("opacity", 0) })
 
             if (noData){
-            d3.select("#graph-div")
-              .append("div")
-              .classed("no-data", true)
-              .text("No data available")
+              d3.select("#graph-div")
+                .append("div")
+                .classed("no-data", true)
+                .text("No data available")
             }
           }
         });

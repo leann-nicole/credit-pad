@@ -312,8 +312,15 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
       }
 
       function toggleAccountOptions(){
-        $("#dropdown-menu").toggleClass("hidden-item");
-        $("#dropdown-menu").toggleClass("container");
+        document.getElementById("deletion-confirmation-popup").classList.add("hidden-item");
+        if ($("#dropdown-menu").hasClass("hidden-item")) {
+          $("#dropdown-menu").removeClass("hidden-item");
+          $("#dropdown-menu").addClass("container");
+        }
+        else {
+          $("#dropdown-menu").addClass("hidden-item");
+          $("#dropdown-menu").removeClass("container");
+        }
         let arrow = $("#dropdown-button span").text();
         (arrow == "arrow_drop_down")? $("#dropdown-button span").text("arrow_drop_up") : $("#dropdown-button span").text("arrow_drop_down");
       }
@@ -339,6 +346,15 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
 
       $(document).click(function(){
         document.getElementById("deletion-confirmation-popup").classList.add("hidden-item");
+        document.getElementById("dropdown-menu").classList.add("hidden-item");
+      });
+
+      $("#dropdown-button").click(function(e){ // ignore clicks inside delete item popup
+        e.stopPropagation();
+      });
+      
+      $("#dropdown-menu a").click(function(e){ // ignore clicks inside delete item popup
+        e.stopPropagation();
       });
 
       $("#delete-item-clickable-text").click(function(e){
@@ -362,6 +378,8 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
       }
 
       function toggleDeleteItem(){
+        $("#dropdown-menu").addClass("hidden-item");
+        $("#dropdown-menu").removeClass("container");
         document.getElementById("account-to-delete").textContent = document.getElementById("customer-name-copy").value;
         document.getElementById("deletion-confirmation-popup").classList.toggle("hidden-item");
         document.getElementById("error").classList.add("hidden-item");

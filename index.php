@@ -593,9 +593,30 @@ session_start(); ?>
         $("#email-status-message").remove();   
       } 
 
+      $(document).click(function(){
+        if (!$("#dropdown-menu").hasClass("hidden-item")) {
+          document.getElementById("dropdown-menu").classList.add("hidden-item");
+          $("#dropdown-button span").text("arrow_drop_down");
+        }
+      });
+
+      $("#dropdown-button").click(function(e){ // ignore clicks inside delete item popup
+        e.stopPropagation();
+      });
+      
+      $("#dropdown-menu a").click(function(e){ // ignore clicks inside delete item popup
+        e.stopPropagation();
+      });
+
       function toggleAccountOptions(){
-        $("#dropdown-menu").toggleClass("hidden-item");
-        $("#dropdown-menu").toggleClass("container");
+        if ($("#dropdown-menu").hasClass("hidden-item")) {
+          $("#dropdown-menu").removeClass("hidden-item");
+          $("#dropdown-menu").addClass("container");
+        }
+        else {
+          $("#dropdown-menu").addClass("hidden-item");
+          $("#dropdown-menu").removeClass("container");
+        }
         let arrow = $("#dropdown-button span").text();
         (arrow == "arrow_drop_down")? $("#dropdown-button span").text("arrow_drop_up") : $("#dropdown-button span").text("arrow_drop_down");
       }
