@@ -926,6 +926,7 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
       let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
       function generateReport(){
+        let currentCredit = Number(document.getElementById("customer-credit").textContent.substr(2).replace(/,/g, ''));
         let period = $("#period option:selected").data("period");
         $("#graph-div").html("");
 
@@ -1018,9 +1019,9 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
               .enter()
               .append("rect")
                 .attr("x", function(d, i) { return xSub(bars[i]); })
-                .attr("y", function(d) { return y(d); })
+                .attr("y", function(d, i) { if (i == 2) return y((currentCredit > d)? d : currentCredit); else return y(d); })
                 .attr("width", xSub.bandwidth())
-                .attr("height", function(d) { return graphHeight - y(d); })
+                .attr("height", function(d, i) { if (i == 2) return graphHeight - y((currentCredit > d)? d : currentCredit); else return graphHeight - y(d); })
                 .attr("fill", function(d, i) { return color(bars[i]); })
                 .classed("bar", true)
                 

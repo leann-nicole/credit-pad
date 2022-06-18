@@ -1460,13 +1460,15 @@ footer {
   padding: 0px 10px;
   width: 28%;
   border-right: 1px solid #e6e6e6;
+  vertical-align: top;
 }
 
 .period-transaction td:first-of-type {
   width: 16%;
+  padding: 10px;
 }
 
-.transaction-type span {
+.transaction-type > span {
   color: white;
   border-radius: 10px;
   display: inline-block;
@@ -1476,15 +1478,33 @@ footer {
   text-align: center;
 }
 
-.credit-transaction-type span {
+.transaction-details {
+  display: flex;
+  justify-content: space-between;
+}
+
+.transaction-details:first-of-type {
+  margin-top: 10px;
+}
+
+.transaction-details span {
+  line-height: 15px;
+  font-size: 12px;
+}
+
+.transaction-type p:last-of-type {
+  margin-bottom: 10px;
+}
+
+.credit-transaction-type > span {
   background-color: #508CB0;
 }
 
-.payment-transaction-type span {
+.payment-transaction-type > span {
   background-color: #53b050;
 }
 
-.due-transaction-type span {
+.due-transaction-type > span {
   background-color: #FC9D00;
 }
 
