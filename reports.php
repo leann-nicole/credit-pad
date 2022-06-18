@@ -29,7 +29,6 @@ if (!isset($_SESSION['ownerLoggedIn'])) {
       <div id="dropdown">
         <button type="button" id="dropdown-button" class="material-icons" onclick="toggleAccountOptions()">storefront<span class="material-icons">arrow_drop_down</span></button>
         <div id="dropdown-menu" class="hidden-item">
-          <a href="#">Profile</a>
           <a href="logout.php">Log out</a>
         </div>
       </div>
