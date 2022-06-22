@@ -34,9 +34,11 @@ function getRecords($transactionFilter, $dueFilter){
             $customers .= "'" . mysqli_real_escape_string($con, $row['customer']) . "', ";
         $customers = substr($customers, 0, -2);
 
-        $query = "SELECT SUM(current_debt) AS totalOutstanding FROM customers WHERE name IN (" . $customers . ")";
-        $result = mysqli_query($con, $query);
-        $outstandingDebt = mysqli_fetch_assoc($result)["totalOutstanding"];
+        if (mysqli_num_rows($result)){
+            $query = "SELECT SUM(current_debt) AS totalOutstanding FROM customers WHERE name IN (" . $customers . ")";
+            $result = mysqli_query($con, $query);
+            $outstandingDebt = mysqli_fetch_assoc($result)["totalOutstanding"];
+        }
     }
 
     return $records;

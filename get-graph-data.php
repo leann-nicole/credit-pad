@@ -89,7 +89,7 @@ function getPeriodData($transactionFilter, $dueFilter, $period){
     }
 
     if ($period == "week"){
-        for ($i = 1; $i < 7; $i++){
+        for ($i = 0; $i < 7; $i++){
             if ($days[$i][0]) {
                 $weekdays[$i][0] += $days[$i][1];
                 $weekdays[$i][1] += $days[$i][2];

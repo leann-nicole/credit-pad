@@ -340,7 +340,7 @@ iframe {
   color: white;
 }
 
-.signup-button:hover {
+#signup-button:hover {
   background-color: #4fa94c;
 }
 

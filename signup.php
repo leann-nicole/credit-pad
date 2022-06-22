@@ -96,7 +96,7 @@ session_start(); // if you want to use the $_SESSION superglobal, for accessing 
         </form>
         <div class="login-signup-buttons">
             <a href="login.php"><p class="switch-form-link">Log in</p></a>
-            <button type="submit" form="store-owner-signup-form" class="button signup-button">Sign up</button>
+            <button type="submit" form="store-owner-signup-form" class="button" id="signup-button">Sign up</button>
         </div>
     </div>
     <script type="text/javascript" src="jquery.js"></script>
